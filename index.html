@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sandra Berná Zaplana — Portafolio</title>
+  <meta name="description" content="Portafolio profesional de Sandra Berná Zaplana — Desarrolladora Web (DAW) y entusiasta de Java y IA. Proyectos, experiencia, habilidades y contacto." />
+  <meta name="author" content="Sandra Berná Zaplana" />
+
+  <style>
+    :root{
+      --bg:#070917; --surface:#0f1724; --muted:#9fb2c8; --text:#e6f3ff; --accent:#6fd3ff; --accent-2:#9b8aff; --glass:rgba(255,255,255,0.03);
+      --card-radius:14px; --container:1100px; --shadow:0 10px 30px rgba(2,6,23,0.6);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;background:linear-gradient(180deg,#02040a 0%,var(--bg) 100%);color:var(--text);-webkit-font-smoothing:antialiased}
+    a{color:var(--accent);text-decoration:none}
+
+    .container{max-width:var(--container);margin:0 auto;padding:28px}
+
+    /* Header */
+    header{position:sticky;top:0;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,0.03);z-index:40}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:12px 20px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:800;color:#041025}
+    .brand h1{font-size:1rem;margin:0}
+    nav a{margin-left:16px;font-size:0.95rem;color:var(--text);opacity:0.95}
+
+    /* Hero */
+    .hero{display:grid;grid-template-columns:1fr;gap:18px;padding:36px 0}
+    @media(min-width:960px){.hero{grid-template-columns:1fr 360px;align-items:center}}
+    .intro h2{font-size:clamp(26px,4vw,40px);margin:0 0 8px}
+    .intro p.lead{color:var(--muted);margin:0 0 18px}
+    .cta{display:flex;gap:12px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);font-weight:600;transition:all 0.2s}
+    .btn:hover{background:rgba(111,211,255,0.12)}
+    .btn.primary{background:linear-gradient(180deg, rgba(111,211,255,0.12), rgba(111,211,255,0.06));border-color:rgba(111,211,255,0.16)}
+
+    .profile-card{background:linear-gradient(180deg, var(--glass), transparent);border:1px solid rgba(255,255,255,0.04);padding:18px;border-radius:12px;box-shadow:var(--shadow)}
+    .avatar{width:100%;height:220px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);font-weight:700;overflow:hidden}
+    .avatar img{width:100%;height:100%;object-fit:cover;border-radius:10px}
+    .meta{color:var(--muted);font-size:0.95rem}
+
+    /* Sections */
+    section{padding:28px 0}
+    h3.section-title{margin:0 0 14px;font-size:1.18rem}
+
+    /* Projects */
+    .projects{display:grid;grid-template-columns:1fr;gap:14px}
+    @media(min-width:860px){.projects{grid-template-columns:repeat(2,1fr)}}
+    .proj-card{background:var(--surface);border-radius:12px;padding:14px;display:flex;gap:12px;align-items:flex-start;border:1px solid rgba(255,255,255,0.03)}
+    .proj-thumb{width:120px;height:80px;border-radius:8px;background:#0b1522;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:0.9rem}
+    .proj-body{flex:1}
+    .proj-body h4{margin:0 0 6px}
+    .tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .tag{font-size:0.78rem;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+
+    /* Experience timeline */
+    .timeline{display:flex;flex-direction:column;gap:12px}
+    .exp{display:grid;grid-template-columns:1fr 220px;gap:12px;align-items:center}
+    .exp .role{background:var(--surface);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+    .exp .when{text-align:right;color:var(--muted);font-size:0.92rem}
+    @media(max-width:700px){.exp{grid-template-columns:1fr}}
+
+    /* Skills */
+    .skills{display:flex;flex-wrap:wrap;gap:10px}
+    .skill{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);font-weight:600}
+
+    /* Footer */
+    footer{padding:28px 0;color:var(--muted);font-size:0.92rem;text-align:center}
+
+    /* Small helpers */
+    .muted{color:var(--muted)}
+    .row{display:flex;gap:12px;align-items:center}
+    .stack{display:flex;gap:8px;flex-wrap:wrap}
+
+    /* Animations */
+    .fade-up{opacity:0;transform:translateY(6px);animation:fadeUp .6s ease forwards}
+    .delay-1{animation-delay:0.08s}.delay-2{animation-delay:0.16s}.delay-3{animation-delay:0.24s}
+    @keyframes fadeUp{to{opacity:1;transform:none}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand"><div class="logo">SB</div><h1>Sandra Berná Zaplana</h1></div>
+      <nav aria-label="Navegación principal">
+        <a href="#proyectos">Proyectos</a>
+        <a href="#experiencia">Experiencia</a>
+        <a href="#habilidades">Habilidades</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="intro fade-up delay-1">
+        <h2>Sandra Berná Zaplana — <span style="color:var(--accent)">Desarrolladora Web</span> & Java</h2>
+        <p class="lead">Estudiante de CFGS DAW. Creo aplicaciones web y juegos en Java. Experiencia como becaria en NTT Data y formación en programación orientada a objetos.</p>
+
+        <div class="cta">
+          <a class="btn primary" href="#proyectos">🚀 Ver proyectos</a>
+          <a class="btn" href="#contacto">✉️ Contactar</a>
+          <a class="btn" href="/Sandra_CV.pdf" download>⬇️ Descargar CV</a>
+        </div>
+
+        <div style="margin-top:18px" class="profile-card fade-up delay-2">
+          <div class="meta">📍 Albatera (Alicante) · Permiso B · Disponibilidad: prácticas/primer empleo</div>
+          <div class="meta">📧 <a href="mailto:sandraberna2006@gmail.com">sandraberna2006@gmail.com</a> · ☎️ <a href="tel:+34652294030">+34 652 29 40 30</a></div>
+          <div class="meta">LinkedIn: <a href="https://www.linkedin.com/in/sandra-bern%C3%A1-zaplana/" target="_blank" rel="noopener">sandra-berná-zaplana</a></div>
+        </div>
+      </div>
+
+      <aside class="fade-up delay-3">
+        <div class="avatar">
+          <img src="/ruta/a/tu-foto.jpg" alt="Foto de Sandra Berná Zaplana">
+        </div>
+        <div style="height:14px"></div>
+        <div class="profile-card">
+          <strong>Sobre mí</strong>
+          <p class="muted">Soy una desarrolladora en formación con interés por crear proyectos web y juegos en Java. Me gusta trabajar en equipo y aprender mediante proyectos prácticos.</p>
+        </div>
+      </aside>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="proyectos">
+      <h3 class="section-title">Proyectos destacados</h3>
+      <div class="projects">
+
+        <article class="proj-card fade-up">
+          <div class="proj-thumb">Juego</div>
+          <div class="proj-body">
+            <h4>Héroes del Reino — Ejercicio Java</h4>
+            <p class="muted">Juego de combate por turnos con POO y herencia, incluyendo un sistema de pociones y gestión de enemigos. Ideal para prácticas y preparación de exámenes en Java.</p>
+            <div class="tags"><span class="tag">Java</span><span class="tag">POO</span><span class="tag">Arrays</span></div>
+            <div style="margin-top:10px" class="row">
+              <a class="btn" href="https://github.com/SandraB/HeroesDelReino" target="_blank">Código</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="proj-card fade-up">
+          <div class="proj-thumb">Juego</div>
+          <div class="proj-body">
+            <h4>Juego de Ajedrez — Java</h4>
+            <p class="muted">Juego de ajedrez completo con interfaz de texto, movimientos legales, turnos y control de victoria. Práctica de lógica, estructuras de datos y POO en Java.</p>
+            <div class="tags"><span class="tag">Java</span><span class="tag">POO</span><span class="tag">Arrays</span></div>
+            <div style="margin-top:10px" class="row">
+              <a class="btn" href="https://github.com/SandraB/JuegoAjedrez" target="_blank">Código</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experiencia">
+      <h3 class="section-title">Experiencia & Formación</h3>
+      <div class="timeline">
+        <div class="exp">
+          <div class="role">
+            <strong>Becaria — NTT Data</strong>
+            <p class="muted">Abril 2025 — Mayo 2025</p>
+            <ul class="muted">
+              <li>Participación en desarrollo con Java y soporte en proyectos reales.</li>
+              <li>Control de versiones con Git y trabajo en equipo bajo Scrum.</li>
+              <li>Documentación técnica y pruebas.</li>
+            </ul>
+          </div>
+          <div class="when">NTT Data</div>
+        </div>
+
+        <div class="exp">
+          <div class="role">
+            <strong>CFGS — Desarrollo de Aplicaciones Web</strong>
+            <p class="muted">En curso</p>
+            <p class="muted">Formación práctica en frontend, backend y bases de datos. Uso de Java, PHP/Node, MySQL y Git.</p>
+          </div>
+          <div class="when">Centro educativo</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="habilidades">
+      <h3 class="section-title">Habilidades técnicas</h3>
+      <div class="skills">
+        <span class="skill">Java</span>
+        <span class="skill">HTML</span>
+        <span class="skill">CSS</span>
+        <span class="skill">JavaScript</span>
+        <span class="skill">Node.js</span>
+        <span class="skill">MySQL</span>
+        <span class="skill">Git & GitHub</span>
+      </div>
+
+      <div style="margin-top:16px" class="card muted">
+        <strong>Idiomas:</strong> Español (nativo) · Inglés B1/B2 (en curso) · Valenciano B1
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contacto">
+      <h3 class="section-title">Contacto</h3>
+      <div class="profile-card">
+        <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap">
+          <a class="btn" href="mailto:sandraberna2006@gmail.com" aria-label="Enviar email a Sandra Berná">✉️ Email</a>
+          <a class="btn" href="https://www.linkedin.com/in/sandra-bern%C3%A1-zaplana/" target="_blank" aria-label="Visitar LinkedIn de Sandra Berná">🔗 LinkedIn</a>
+          <a class="btn" href="https://github.com/SandraB" target="_blank" aria-label="Visitar GitHub de Sandra Berná">🐙 GitHub</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">© <span id="year"></span> Sandra Berná Zaplana · Hecho con curiosidad y código</div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    window.addEventListener('load', ()=>{
+      document.querySelectorAll('.fade-up').forEach(el=>{
+        el.style.opacity='0';
+        void el.offsetWidth;
+        el.classList.add('fade-up');
+      });
+    });
+  </script>
+</body>
+</html>
