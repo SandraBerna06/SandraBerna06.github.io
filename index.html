@@ -226,7 +226,7 @@
       font-family: 'Clash Display';
       font-weight: 700;
       font-size: clamp(48px, 20vw, 300px);
-      line-height: 0.78;
+      line-height: 0.82;
       text-align: center;
       letter-spacing: -0.06em;
       mix-blend-mode: difference;
@@ -696,20 +696,6 @@
     #chatbot-messages::-webkit-scrollbar-track { background: transparent; }
     #chatbot-messages::-webkit-scrollbar-thumb { background: var(--cyan); border-radius: 10px; }
 
-    @media (max-width: 480px) {
-      #chatbot-container { bottom: 16px; right: 16px; }
-      #chatbot-toggle { width: 52px; height: 52px; font-size: 24px; }
-      #chatbot-window {
-        bottom: 72px;
-        width: 92vw;
-        height: 70vh;
-        right: -4vw;
-        border-radius: 16px;
-      }
-      #chatbot-messages .bot,
-      #chatbot-messages .user { font-size: 13px; padding: 8px 14px; }
-    }
-
     /* ===== RESPONSIVE ===== */
     @media (max-width: 480px) {
       .topbar { padding: 10px 5vw; }
@@ -731,6 +717,26 @@
       .tools { padding: 6vh 5vw 8vh; }
       .tools .pin-label { top: 20px; left: 5vw; }
       .tools-grid { margin-top: 40px; gap: 10px; }
+
+      /* Chatbot en móvil: más pequeño y mejor posicionado */
+      #chatbot-container { bottom: 16px; right: 16px; }
+      #chatbot-toggle { width: 52px; height: 52px; font-size: 24px; }
+      #chatbot-window {
+        width: 90vw;
+        max-width: 400px;
+        height: 55vh;
+        bottom: 75px;
+        right: 5vw;
+        border-radius: 16px;
+      }
+      #chatbot-messages .bot,
+      #chatbot-messages .user {
+        font-size: 12px;
+        padding: 6px 12px;
+      }
+      #chatbot-input { font-size: 12px; padding: 8px 12px; }
+      #chatbot-send { font-size: 12px; padding: 0 14px; }
+      #chatbot-header { font-size: 12px; padding: 12px 16px; }
     }
   </style>
 </head>
@@ -1695,11 +1701,12 @@
     setTimeout(resizeRobot, 100);
 
     // ============================================================
-    //  CHATBOT — Sandra AI (Frontend)
-    //  ★★★ CAMBIA LA URL POR LA DE TU BACKEND EN RENDER ★★★
+    //  CHATBOT — Sandra AI (Frontend) CORREGIDO
+    //  ★★★ URL CORRECTA CON /api/chat ★★★
     // ============================================================
     (function() {
-      const API_URL = 'https://chatbot-server-rx8o.onrender.com'; // ← CAMBIA ESTA URL
+      // ★ CAMBIA ESTA URL POR LA DE TU BACKEND EN RENDER ★
+      const API_URL = 'https://chatbot-server-rx8o.onrender.com/api/chat';
 
       const toggleBtn = document.getElementById('chatbot-toggle');
       const chatWindow = document.getElementById('chatbot-window');
@@ -1739,15 +1746,23 @@
             body: JSON.stringify({ message })
           });
 
-          if (!response.ok) throw new Error('Error en el servidor');
+          if (!response.ok) {
+            // Intentar leer el mensaje de error del servidor
+            let errorText = 'Error en el servidor';
+            try {
+              const errorData = await response.json();
+              if (errorData.error) errorText = errorData.error;
+            } catch (_) {}
+            throw new Error(errorText);
+          }
 
           const data = await response.json();
           removeTypingIndicator(typingEl);
           addMessage('bot', data.reply || 'No pude procesar tu pregunta.');
         } catch (error) {
-          console.error('Error:', error);
+          console.error('Error en el chatbot:', error);
           removeTypingIndicator(typingEl);
-          addMessage('bot', '⚠️ Ocurrió un error. Inténtalo de nuevo más tarde.');
+          addMessage('bot', `⚠️ ${error.message || 'Ocurrió un error. Inténtalo de nuevo más tarde.'}`);
         } finally {
           inputField.disabled = false;
           sendBtn.disabled = false;
@@ -1784,7 +1799,7 @@
         }
       });
 
-      // Mensaje de bienvenida (con acento)
+      // Mensaje de bienvenida
       setTimeout(() => {
         addMessage('bot', '👋 ¡Hola! Soy Sandra AI. Pregúntame sobre mi trayectoria profesional.');
       }, 500);
