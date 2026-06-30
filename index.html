@@ -33,57 +33,108 @@
       overflow-x: hidden;
       scroll-behavior: smooth;
       -webkit-tap-highlight-color: transparent;
+      user-select: none;
     }
     ::selection { background: var(--magenta); color: #000; }
     .disp { font-family: 'Clash Display', sans-serif; font-weight: 700; letter-spacing: -0.02em; }
 
-    /* ===== CURSOR (solo escritorio) ===== */
-    #cursor, #cursor-trail { display: none; }
+    /* ===== CURSOR PERSONALIZADO (escritorio y móvil) ===== */
+    #cursor {
+      position: fixed;
+      top: 0; left: 0;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--cyan) 10%, transparent 80%);
+      mix-blend-mode: difference;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.5s, height 0.5s, background 0.5s, opacity 0.3s;
+      box-shadow: 0 0 100px rgba(0, 245, 255, 0.35);
+      will-change: transform;
+      opacity: 0;
+    }
+    #cursor.big {
+      width: 140px;
+      height: 140px;
+      background: radial-gradient(circle, var(--magenta) 10%, transparent 80%);
+      box-shadow: 0 0 120px rgba(255, 0, 230, 0.45);
+    }
+    #cursor-trail {
+      position: fixed;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--gold);
+      pointer-events: none;
+      z-index: 9998;
+      opacity: 0;
+      filter: blur(10px);
+      transform: translate(-50%, -50%);
+      transition: all 0.05s linear;
+    }
+    /* En escritorio mostramos el cursor, en móvil lo ocultamos excepto cuando se toca */
     @media (hover: hover) {
-      #cursor {
-        display: block;
-        position: fixed;
-        top: 0; left: 0;
-        width: 32px; height: 32px;
-        border-radius: 50%;
-        background: radial-gradient(circle, var(--cyan) 10%, transparent 80%);
-        mix-blend-mode: difference;
-        pointer-events: none;
-        z-index: 9999;
-        transform: translate(-50%, -50%);
-        transition: width 0.5s, height 0.5s, background 0.5s;
-        box-shadow: 0 0 100px rgba(0, 245, 255, 0.35);
-        will-change: transform;
-      }
-      #cursor.big {
-        width: 140px;
-        height: 140px;
-        background: radial-gradient(circle, var(--magenta) 10%, transparent 80%);
-        box-shadow: 0 0 120px rgba(255, 0, 230, 0.45);
-      }
-      #cursor-trail {
-        display: block;
-        position: fixed;
-        width: 10px; height: 10px;
-        border-radius: 50%;
-        background: var(--gold);
-        pointer-events: none;
-        z-index: 9998;
-        opacity: 0.15;
-        filter: blur(10px);
-        transform: translate(-50%, -50%);
-        transition: all 0.05s linear;
-      }
+      #cursor { opacity: 1; }
+      #cursor-trail { opacity: 0.15; }
       body { cursor: none; }
     }
+    @media (hover: none) {
+      #cursor, #cursor-trail { display: none; }
+      /* Cursor táctil se crea dinámicamente */
+    }
 
-    /* ===== CANVAS 3D ===== */
+    /* ===== CANVAS 3D PRINCIPAL ===== */
     #webgl {
       position: fixed;
       inset: 0;
       z-index: 1;
       pointer-events: none;
     }
+
+    /* ===== ROBOT 3D FLOTANTE (arrastrable) ===== */
+    #robotContainer {
+      position: fixed;
+      width: 160px;
+      height: 160px;
+      z-index: 100;
+      pointer-events: all;
+      touch-action: none;
+      cursor: grab;
+      left: calc(50% - 80px);
+      top: calc(50% - 80px);
+      border-radius: 50%;
+      background: rgba(0, 245, 255, 0.03);
+      backdrop-filter: blur(2px);
+      border: 1px solid rgba(255,255,255,0.04);
+      box-shadow: 0 0 60px rgba(0,245,255,0.04);
+      transition: transform 0.2s ease;
+      will-change: transform, left, top;
+    }
+    #robotContainer:active { cursor: grabbing; transform: scale(1.05); }
+    #robotContainer canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+      border-radius: 50%;
+    }
+    @media (max-width: 480px) {
+      #robotContainer { width: 120px; height: 120px; left: calc(50% - 60px); top: calc(50% - 60px); }
+    }
+    /* Indicador de arrastre */
+    #robotContainer .drag-hint {
+      position: absolute;
+      bottom: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      color: var(--dim);
+      opacity: 0.4;
+      white-space: nowrap;
+      pointer-events: none;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    @media (max-width: 480px) { #robotContainer .drag-hint { display: none; } }
 
     /* ===== TOP BAR ===== */
     .topbar {
@@ -93,9 +144,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 5vw;
+      padding: 12px 5vw;
       mix-blend-mode: difference;
       background: linear-gradient(180deg, rgba(3,3,8,0.7) 0%, transparent 100%);
+      gap: 10px;
+      flex-wrap: wrap;
     }
     .topbar .mark {
       font-size: clamp(14px, 2vw, 20px);
@@ -104,27 +157,34 @@
       opacity: 0.5;
       font-weight: 500;
     }
-    .menu-btn {
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .menu-btn, .lang-btn {
       background: var(--glass);
       backdrop-filter: blur(20px);
       border: 1px solid rgba(255,255,255,0.06);
       color: var(--ink);
       font-family: 'JetBrains Mono';
-      font-size: clamp(10px, 1.5vw, 12px);
-      letter-spacing: 0.25em;
-      padding: 8px 20px;
+      font-size: clamp(9px, 1.2vw, 12px);
+      letter-spacing: 0.15em;
+      padding: 6px 14px;
       border-radius: 80px;
       cursor: pointer;
       transition: all 0.4s;
       text-transform: uppercase;
       background: rgba(255,255,255,0.04);
     }
-    .menu-btn:hover {
+    .menu-btn:hover, .lang-btn:hover {
       background: rgba(255,255,255,0.08);
       border-color: var(--cyan);
-      transform: scale(1.06);
+      transform: scale(1.05);
     }
-    @media (hover: hover) { .menu-btn { cursor: none; } }
+    .lang-btn.active { border-color: var(--gold); color: var(--gold); }
+    @media (hover: hover) { .menu-btn, .lang-btn { cursor: none; } }
 
     /* ===== MENU OVERLAY ===== */
     .menu-overlay {
@@ -292,6 +352,59 @@
       letter-spacing: 0.02em;
     }
 
+    /* ===== TOOLS SECTION ===== */
+    .tools {
+      padding: 8vh 6vw 10vh;
+      position: relative;
+      z-index: 5;
+    }
+    .tools .pin-label {
+      position: absolute;
+      top: 30px;
+      left: 6vw;
+    }
+    .tools-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 50px;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .tools-grid .tool-item {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      filter: grayscale(1) brightness(0.7);
+      transition: all 0.4s;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+      padding: 8px;
+      border: 1px solid rgba(255,255,255,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--dim);
+      text-align: center;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      line-height: 1.2;
+      background: var(--glass);
+      backdrop-filter: blur(4px);
+    }
+    .tools-grid .tool-item:hover {
+      filter: grayscale(0) brightness(1);
+      transform: scale(1.1);
+      border-color: var(--cyan);
+      box-shadow: var(--glow-cyan);
+    }
+    @media (max-width: 480px) {
+      .tools-grid .tool-item { width: 48px; height: 48px; padding: 6px; }
+      .tools-grid { gap: 12px; }
+    }
+
     /* ===== EXPERIENCE ===== */
     .exp {
       min-height: 80vh;
@@ -353,7 +466,7 @@
       line-height: 1.7;
     }
 
-    /* ===== PROJECTS (horizontal con scroll nativo en móvil) ===== */
+    /* ===== PROJECTS (horizontal) ===== */
     .h-wrap {
       height: 100vh;
       overflow: hidden;
@@ -378,9 +491,7 @@
       padding: 0 6vw;
       position: relative;
     }
-    .h-panel .project-label {
-      margin-bottom: 12px;
-    }
+    .h-panel .project-label { margin-bottom: 12px; }
     .h-panel .pidx {
       font-size: clamp(11px, 1.2vw, 13px);
       color: var(--gold);
@@ -519,19 +630,19 @@
     .scroll-top {
       position: fixed;
       bottom: 20px;
-      right: 5vw;
+      left: 5vw;
       z-index: 50;
       background: var(--glass);
       backdrop-filter: blur(20px);
       border: 1px solid rgba(255,255,255,0.04);
       color: var(--ink);
-      width: 50px;
-      height: 50px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
+      font-size: 18px;
       cursor: pointer;
       transition: all 0.5s;
       opacity: 0;
@@ -543,7 +654,7 @@
       background: var(--cyan);
       color: #030308;
       border-color: var(--cyan);
-      transform: scale(0.9) rotate(-15deg);
+      transform: scale(0.9);
     }
     @media (hover: hover) { .scroll-top { cursor: none; } }
 
@@ -565,8 +676,8 @@
 
     /* ===== RESPONSIVE ===== */
     @media (max-width: 480px) {
-      .topbar { padding: 12px 5vw; }
-      .menu-btn { padding: 6px 14px; font-size: 10px; }
+      .topbar { padding: 10px 5vw; }
+      .menu-btn, .lang-btn { padding: 4px 12px; font-size: 8px; }
       .hero-title { font-size: clamp(36px, 18vw, 60px); }
       .about { padding: 14vh 5vw 10vh; min-height: 90vh; }
       .about .pin-label { top: 20px; left: 5vw; }
@@ -580,33 +691,46 @@
       .contact { min-height: 60vh; padding: 0 5vw; }
       .contact .pin-label { top: 20px; left: 5vw; }
       .contact h2 { font-size: clamp(32px, 12vw, 56px); }
-      .scroll-top { width: 44px; height: 44px; font-size: 18px; bottom: 16px; }
+      .scroll-top { width: 38px; height: 38px; font-size: 16px; bottom: 16px; left: 5vw; }
+      .tools { padding: 6vh 5vw 8vh; }
+      .tools .pin-label { top: 20px; left: 5vw; }
+      .tools-grid { margin-top: 40px; gap: 10px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Cursor -->
+  <!-- Cursor personalizado -->
   <div id="cursor"></div>
   <div id="cursor-trail"></div>
 
-  <!-- Canvas 3D -->
+  <!-- Canvas 3D principal -->
   <canvas id="webgl"></canvas>
+
+  <!-- Robot 3D flotante (arrastrable) -->
+  <div id="robotContainer">
+    <canvas id="robotCanvas"></canvas>
+    <div class="drag-hint">↕ arrastra</div>
+  </div>
 
   <!-- Top Bar -->
   <header class="topbar">
     <div class="mark disp">S.B.</div>
-    <button class="menu-btn" id="menuOpen">MENÚ ＋</button>
+    <div class="topbar-right">
+      <button class="lang-btn active" data-lang="es" id="langEs">ES</button>
+      <button class="lang-btn" data-lang="en" id="langEn">EN</button>
+      <button class="menu-btn" id="menuOpen">MENÚ ＋</button>
+    </div>
   </header>
 
   <!-- Menu -->
   <div class="menu-overlay" id="menuOverlay">
     <button class="menu-close" id="menuClose">CERRAR ✕</button>
-    <a href="#about">SOBRE MÍ</a>
-    <a href="#exp">EXPERIENCIA</a>
-    <a href="#proyectos">PROYECTOS</a>
-    <a href="#skills">SKILLS</a>
-    <a href="#contacto">CONTACTO</a>
+    <a href="#about" data-i18n="menu_about">SOBRE MÍ</a>
+    <a href="#exp" data-i18n="menu_exp">EXPERIENCIA</a>
+    <a href="#proyectos" data-i18n="menu_projects">PROYECTOS</a>
+    <a href="#skills" data-i18n="menu_skills">SKILLS</a>
+    <a href="#contacto" data-i18n="menu_contact">CONTACTO</a>
     <div class="menu-foot">
       <a href="mailto:sandraberna2006@gmail.com">EMAIL</a>
       <a href="https://www.linkedin.com/in/sandra-bern%C3%A1-zaplana/" target="_blank">LINKEDIN</a>
@@ -620,76 +744,93 @@
       SANDRA<br>
       <span class="line2">BERNÁ</span>
     </h1>
-    <div class="hero-sub">DESARROLLO WEB — INTELIGENCIA ARTIFICIAL</div>
-    <div class="hero-scroll">SCROLL ↓</div>
+    <div class="hero-sub" data-i18n="hero_sub">DESARROLLO WEB — INTELIGENCIA ARTIFICIAL</div>
+    <div class="hero-scroll" data-i18n="hero_scroll">SCROLL ↓</div>
   </section>
 
   <!-- ABOUT -->
   <section class="about" id="about">
-    <div class="pin-label">001 / SOBRE MÍ</div>
-    <p>
+    <div class="pin-label" data-i18n="about_label">001 / SOBRE MÍ</div>
+    <p data-i18n="about_text">
       Estudio <span class="hl">Desarrollo de Aplicaciones Web</span> y construyo lógica con Java
       mientras me formo, por mi cuenta, en <span class="hl2">Inteligencia Artificial</span> y
       Machine Learning. Creo en el código sólido antes que en el código bonito.
     </p>
     <div class="about-meta">
-      <div><strong>Base</strong>Albatera, Alicante — Permiso B</div>
-      <div><strong>Disponibilidad</strong>Prácticas / primer empleo</div>
-      <div><strong>Formación IA</strong>Stanford · DeepLearning.AI · Google · IBM</div>
+      <div><strong data-i18n="about_base_label">Base</strong><span data-i18n="about_base">Albatera, Alicante — Permiso B</span></div>
+      <div><strong data-i18n="about_availability_label">Disponibilidad</strong><span data-i18n="about_availability">Prácticas / primer empleo</span></div>
+      <div><strong data-i18n="about_ai_label">Formación IA</strong><span data-i18n="about_ai">Stanford · DeepLearning.AI · Google · IBM</span></div>
+      <div><strong data-i18n="about_lang_label">Idiomas</strong><span data-i18n="about_lang">Español (nativo) · Inglés (B2) · Valenciano (C1)</span></div>
+    </div>
+  </section>
+
+  <!-- TOOLS -->
+  <section class="tools" id="tools">
+    <div class="pin-label" data-i18n="tools_label">HERRAMIENTAS</div>
+    <div class="tools-grid" id="toolsGrid">
+      <div class="tool-item" style="background:#2d2d2d;">Eclipse</div>
+      <div class="tool-item" style="background:#2d2d2d;">IntelliJ</div>
+      <div class="tool-item" style="background:#2d2d2d;">MySQL</div>
+      <div class="tool-item" style="background:#2d2d2d;">MariaDB</div>
+      <div class="tool-item" style="background:#2d2d2d;">Jira</div>
+      <div class="tool-item" style="background:#2d2d2d;">Scrum</div>
+      <div class="tool-item" style="background:#2d2d2d;">Kanban</div>
+      <div class="tool-item" style="background:#2d2d2d;">AWS</div>
+      <div class="tool-item" style="background:#2d2d2d;">GitHub</div>
     </div>
   </section>
 
   <!-- EXPERIENCE -->
   <section class="exp" id="exp">
-    <div class="pin-label">002 / TRAYECTORIA</div>
+    <div class="pin-label" data-i18n="exp_label">002 / TRAYECTORIA</div>
 
-    <div class="exp-subtitle">▸ Experiencia</div>
+    <div class="exp-subtitle" data-i18n="exp_exp_sub">▸ Experiencia</div>
     <div class="exp-row">
-      <div class="y">ABR—MAY 2025</div>
+      <div class="y" data-i18n="exp_ntt_date">ABR—MAY 2025</div>
       <div>
         <h3 class="disp">NTT DATA</h3>
-        <div class="org">Becaria de desarrollo</div>
-        <div class="desc">Desarrollo con Java y soporte en proyectos reales. Control de versiones con Git, trabajo en equipo bajo metodología Scrum, documentación técnica y pruebas.</div>
+        <div class="org" data-i18n="exp_ntt_role">Becaria de desarrollo</div>
+        <div class="desc" data-i18n="exp_ntt_desc">Desarrollo con Java y soporte en proyectos reales. Control de versiones con Git, trabajo en equipo bajo metodología Scrum, documentación técnica y pruebas.</div>
       </div>
     </div>
 
-    <div class="exp-subtitle">▸ Formación</div>
+    <div class="exp-subtitle" data-i18n="exp_edu_sub">▸ Formación</div>
     <div class="exp-row">
-      <div class="y">EN CURSO</div>
+      <div class="y" data-i18n="exp_ucam_date">EN CURSO</div>
       <div>
         <h3 class="disp">UCAM</h3>
-        <div class="org">CFGS Desarrollo de Aplicaciones Web</div>
-        <div class="desc">Formación práctica en frontend, backend y bases de datos: Java, PHP/Node, MySQL y Git.</div>
+        <div class="org" data-i18n="exp_ucam_role">CFGS Desarrollo de Aplicaciones Web</div>
+        <div class="desc" data-i18n="exp_ucam_desc">Formación práctica en frontend, backend y bases de datos: Java, PHP/Node, MySQL y Git.</div>
       </div>
     </div>
   </section>
 
-  <!-- PROJECTS (horizontal) -->
+  <!-- PROJECTS -->
   <section id="proyectos">
     <div class="h-wrap">
       <div class="h-track" id="hTrack">
         <div class="h-panel">
-          <div class="pin-label project-label">003 / PROYECTOS</div>
-          <div class="pidx">01 — JAVA / POO</div>
-          <h2>HÉROES<br>DEL REINO</h2>
-          <p class="ptag">Juego de combate por turnos con herencia y polimorfismo, sistema de pociones y gestión de enemigos. Ideal para practicar y preparar exámenes en Java.</p>
+          <div class="pin-label project-label" data-i18n="projects_label">003 / PROYECTOS</div>
+          <div class="pidx" data-i18n="project1_idx">01 — JAVA / POO</div>
+          <h2 data-i18n="project1_title">HÉROES<br>DEL REINO</h2>
+          <p class="ptag" data-i18n="project1_desc">Juego de combate por turnos con herencia y polimorfismo, sistema de pociones y gestión de enemigos. Ideal para practicar y preparar exámenes en Java.</p>
           <div class="pstack"><span>JAVA</span><span>POO</span><span>ARRAYS</span></div>
-          <a class="plink" href="https://github.com/SandraBerna06/Heroes.git" target="_blank">VER CÓDIGO →</a>
+          <a class="plink" href="https://github.com/SandraBerna06/Heroes.git" target="_blank" data-i18n="project1_link">VER CÓDIGO →</a>
         </div>
         <div class="h-panel">
-          <div class="pidx">02 — JAVA / POO</div>
-          <h2>JUEGO DE<br>AJEDREZ</h2>
-          <p class="ptag">Ajedrez completo con interfaz de texto, movimientos legales, turnos y control de victoria. Práctica de lógica, estructuras de datos y POO.</p>
+          <div class="pidx" data-i18n="project2_idx">02 — JAVA / POO</div>
+          <h2 data-i18n="project2_title">JUEGO DE<br>AJEDREZ</h2>
+          <p class="ptag" data-i18n="project2_desc">Ajedrez completo con interfaz de texto, movimientos legales, turnos y control de victoria. Práctica de lógica, estructuras de datos y POO.</p>
           <div class="pstack"><span>JAVA</span><span>POO</span><span>ARRAYS</span></div>
-          <a class="plink" href="https://github.com/manberper/ProyectoAjedrez.git" target="_blank">VER CÓDIGO →</a>
+          <a class="plink" href="https://github.com/manberper/ProyectoAjedrez.git" target="_blank" data-i18n="project2_link">VER CÓDIGO →</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- SKILLS MARQUEE -->
+  <!-- SKILLS -->
   <section class="marquee-wrap" id="skills">
-    <div class="pin-label">004 / SKILLS</div>
+    <div class="pin-label" data-i18n="skills_label">004 / SKILLS</div>
     <div class="mq-row r1" id="mqRow1">
       <span class="fill">JAVA</span><span>AWS</span><span class="fill">MACHINE LEARNING</span><span>SQL</span><span class="fill">GIT</span><span>HTML/CSS</span>
       <span class="fill">JAVA</span><span>AWS</span><span class="fill">MACHINE LEARNING</span><span>SQL</span><span class="fill">GIT</span><span>HTML/CSS</span>
@@ -702,8 +843,8 @@
 
   <!-- CONTACT -->
   <section class="contact" id="contacto">
-    <div class="pin-label">005 / CONTACTO</div>
-    <h2>¿HABLAMOS?<br><a href="mailto:sandraberna2006@gmail.com">ESCRÍBEME →</a></h2>
+    <div class="pin-label" data-i18n="contact_label">005 / CONTACTO</div>
+    <h2 data-i18n="contact_title">¿HABLAMOS?<br><a href="mailto:sandraberna2006@gmail.com">ESCRÍBEME →</a></h2>
     <div class="contact-links">
       <a href="mailto:sandraberna2006@gmail.com">EMAIL</a>
       <a href="https://www.linkedin.com/in/sandra-bern%C3%A1-zaplana/" target="_blank">LINKEDIN</a>
@@ -722,20 +863,164 @@
 
   <script>
     // ============================================================
-    //  CURSOR (solo escritorio)
+    //  TRADUCCIONES
     // ============================================================
-    if (window.matchMedia('(hover: hover)').matches) {
-      const cursor = document.getElementById('cursor');
-      const trail = document.getElementById('cursor-trail');
-      document.addEventListener('mousemove', e => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-        trail.style.left = e.clientX + 'px';
-        trail.style.top = e.clientY + 'px';
+    const translations = {
+      es: {
+        menu_about: "SOBRE MÍ",
+        menu_exp: "EXPERIENCIA",
+        menu_projects: "PROYECTOS",
+        menu_skills: "SKILLS",
+        menu_contact: "CONTACTO",
+        hero_sub: "DESARROLLO WEB — INTELIGENCIA ARTIFICIAL",
+        hero_scroll: "SCROLL ↓",
+        about_label: "001 / SOBRE MÍ",
+        about_text: 'Estudio <span class="hl">Desarrollo de Aplicaciones Web</span> y construyo lógica con Java mientras me formo, por mi cuenta, en <span class="hl2">Inteligencia Artificial</span> y Machine Learning. Creo en el código sólido antes que en el código bonito.',
+        about_base_label: "Base",
+        about_base: "Albatera, Alicante — Permiso B",
+        about_availability_label: "Disponibilidad",
+        about_availability: "Prácticas / primer empleo",
+        about_ai_label: "Formación IA",
+        about_ai: "Stanford · DeepLearning.AI · Google · IBM",
+        about_lang_label: "Idiomas",
+        about_lang: "Español (nativo) · Inglés (B2) · Valenciano (C1)",
+        tools_label: "HERRAMIENTAS",
+        exp_label: "002 / TRAYECTORIA",
+        exp_exp_sub: "▸ Experiencia",
+        exp_ntt_date: "ABR—MAY 2025",
+        exp_ntt_role: "Becaria de desarrollo",
+        exp_ntt_desc: "Desarrollo con Java y soporte en proyectos reales. Control de versiones con Git, trabajo en equipo bajo metodología Scrum, documentación técnica y pruebas.",
+        exp_edu_sub: "▸ Formación",
+        exp_ucam_date: "EN CURSO",
+        exp_ucam_role: "CFGS Desarrollo de Aplicaciones Web",
+        exp_ucam_desc: "Formación práctica en frontend, backend y bases de datos: Java, PHP/Node, MySQL y Git.",
+        projects_label: "003 / PROYECTOS",
+        project1_idx: "01 — JAVA / POO",
+        project1_title: "HÉROES<br>DEL REINO",
+        project1_desc: "Juego de combate por turnos con herencia y polimorfismo, sistema de pociones y gestión de enemigos. Ideal para practicar y preparar exámenes en Java.",
+        project1_link: "VER CÓDIGO →",
+        project2_idx: "02 — JAVA / POO",
+        project2_title: "JUEGO DE<br>AJEDREZ",
+        project2_desc: "Ajedrez completo con interfaz de texto, movimientos legales, turnos y control de victoria. Práctica de lógica, estructuras de datos y POO.",
+        project2_link: "VER CÓDIGO →",
+        skills_label: "004 / SKILLS",
+        contact_label: "005 / CONTACTO",
+        contact_title: '¿HABLAMOS?<br><a href="mailto:sandraberna2006@gmail.com">ESCRÍBEME →</a>',
+      },
+      en: {
+        menu_about: "ABOUT",
+        menu_exp: "EXPERIENCE",
+        menu_projects: "PROJECTS",
+        menu_skills: "SKILLS",
+        menu_contact: "CONTACT",
+        hero_sub: "WEB DEVELOPMENT — ARTIFICIAL INTELLIGENCE",
+        hero_scroll: "SCROLL ↓",
+        about_label: "001 / ABOUT ME",
+        about_text: 'I study <span class="hl">Web Application Development</span> and build logic with Java while self-studying <span class="hl2">Artificial Intelligence</span> and Machine Learning. I believe in solid code over pretty code.',
+        about_base_label: "Base",
+        about_base: "Albatera, Alicante — Driver's license B",
+        about_availability_label: "Availability",
+        about_availability: "Internship / first job",
+        about_ai_label: "AI Training",
+        about_ai: "Stanford · DeepLearning.AI · Google · IBM",
+        about_lang_label: "Languages",
+        about_lang: "Spanish (native) · English (B2) · Valencian (C1)",
+        tools_label: "TOOLS",
+        exp_label: "002 / PATH",
+        exp_exp_sub: "▸ Experience",
+        exp_ntt_date: "APR—MAY 2025",
+        exp_ntt_role: "Development intern",
+        exp_ntt_desc: "Java development and support on real projects. Version control with Git, teamwork under Scrum, technical documentation and testing.",
+        exp_edu_sub: "▸ Education",
+        exp_ucam_date: "CURRENT",
+        exp_ucam_role: "CFGS Web Application Development",
+        exp_ucam_desc: "Hands-on training in frontend, backend and databases: Java, PHP/Node, MySQL and Git.",
+        projects_label: "003 / PROJECTS",
+        project1_idx: "01 — JAVA / OOP",
+        project1_title: "HEROES<br>OF THE KINGDOM",
+        project1_desc: "Turn-based combat game with inheritance and polymorphism, potion system and enemy management. Ideal for practicing and preparing Java exams.",
+        project1_link: "VIEW CODE →",
+        project2_idx: "02 — JAVA / OOP",
+        project2_title: "CHESS<br>GAME",
+        project2_desc: "Full chess game with text interface, legal moves, turns and victory control. Practice of logic, data structures and OOP.",
+        project2_link: "VIEW CODE →",
+        skills_label: "004 / SKILLS",
+        contact_label: "005 / CONTACT",
+        contact_title: 'LET\'S TALK?<br><a href="mailto:sandraberna2006@gmail.com">WRITE ME →</a>',
+      }
+    };
+
+    let currentLang = 'es';
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key] !== undefined) {
+          if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+            el.value = translations[lang][key];
+          } else {
+            el.innerHTML = translations[lang][key];
+          }
+        }
       });
-      document.querySelectorAll('a, button, .pstack span').forEach(el => {
-        el.addEventListener('mouseenter', () => cursor.classList.add('big'));
-        el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+      document.getElementById('langEs').classList.toggle('active', lang === 'es');
+      document.getElementById('langEn').classList.toggle('active', lang === 'en');
+    }
+
+    document.getElementById('langEs').addEventListener('click', () => setLanguage('es'));
+    document.getElementById('langEn').addEventListener('click', () => setLanguage('en'));
+
+    // ============================================================
+    //  CURSOR PERSONALIZADO (escritorio y móvil táctil)
+    // ============================================================
+    const cursorEl = document.getElementById('cursor');
+    const trailEl = document.getElementById('cursor-trail');
+
+    // En escritorio: mover con ratón
+    if (window.matchMedia('(hover: hover)').matches) {
+      document.addEventListener('mousemove', e => {
+        cursorEl.style.left = e.clientX + 'px';
+        cursorEl.style.top = e.clientY + 'px';
+        trailEl.style.left = e.clientX + 'px';
+        trailEl.style.top = e.clientY + 'px';
+      });
+      document.querySelectorAll('a, button, .tool-item, .pstack span').forEach(el => {
+        el.addEventListener('mouseenter', () => cursorEl.classList.add('big'));
+        el.addEventListener('mouseleave', () => cursorEl.classList.remove('big'));
+      });
+    } else {
+      // En móvil: mostrar un cursor táctil al tocar
+      let touchCursor = document.createElement('div');
+      touchCursor.style.cssText = `
+        position: fixed;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: radial-gradient(circle, var(--cyan) 10%, transparent 80%);
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 60px rgba(0,245,255,0.3);
+        opacity: 0;
+        transition: opacity 0.3s;
+        border: 1px solid rgba(255,255,255,0.1);
+      `;
+      document.body.appendChild(touchCursor);
+
+      document.addEventListener('touchstart', (e) => {
+        const t = e.touches[0];
+        touchCursor.style.left = t.clientX + 'px';
+        touchCursor.style.top = t.clientY + 'px';
+        touchCursor.style.opacity = 1;
+      });
+      document.addEventListener('touchmove', (e) => {
+        const t = e.touches[0];
+        touchCursor.style.left = t.clientX + 'px';
+        touchCursor.style.top = t.clientY + 'px';
+      });
+      document.addEventListener('touchend', () => {
+        touchCursor.style.opacity = 0;
       });
     }
 
@@ -747,7 +1032,6 @@
     document.getElementById('menuClose').addEventListener('click', () => menuOverlay.classList.remove('open'));
     menuOverlay.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
       menuOverlay.classList.remove('open');
-      // Scroll suave al destino
       const target = document.querySelector(a.getAttribute('href'));
       if (target) target.scrollIntoView({ behavior: 'smooth' });
     }));
@@ -763,11 +1047,10 @@
     scrollBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
     // ============================================================
-    //  GSAP + SCROLLTRIGGER (con triggers optimizados)
+    //  GSAP + SCROLLTRIGGER
     // ============================================================
     gsap.registerPlugin(ScrollTrigger);
 
-    // Hero
     gsap.from('.hero-title', { opacity: 0, y: 90, duration: 2.0, ease: 'power4.out', delay: 0.2 });
     gsap.from('.hero-sub, .hero-scroll', {
       opacity: 0,
@@ -777,7 +1060,6 @@
       ease: 'power2.out'
     });
 
-    // About
     gsap.to('.about p', {
       opacity: 1,
       y: 0,
@@ -792,8 +1074,13 @@
       ease: 'power2.out',
       scrollTrigger: { trigger: '.about-meta', start: 'top 88%', toggleActions: 'play none none none' }
     });
-
-    // Experience
+    gsap.to('.tools-grid', {
+      opacity: 1,
+      y: 0,
+      duration: 1.2,
+      ease: 'power2.out',
+      scrollTrigger: { trigger: '.tools-grid', start: 'top 85%', toggleActions: 'play none none none' }
+    });
     gsap.utils.toArray('.exp-subtitle').forEach(el => {
       gsap.to(el, {
         opacity: 1,
@@ -813,9 +1100,8 @@
       });
     });
 
-    // Horizontal projects — con pin y scrub
     const track = document.getElementById('hTrack');
-    let hScroll = gsap.to(track, {
+    gsap.to(track, {
       x: () => -(track.scrollWidth - window.innerWidth),
       ease: 'none',
       scrollTrigger: {
@@ -829,7 +1115,6 @@
       }
     });
 
-    // En móvil, mejorar el touch para el scroll horizontal
     if ('ontouchstart' in window) {
       let startX = 0, startY = 0;
       const hWrap = document.querySelector('.h-wrap');
@@ -846,7 +1131,6 @@
       }, { passive: false });
     }
 
-    // Marquee skills
     const r1 = document.getElementById('mqRow1');
     const r2 = document.getElementById('mqRow2');
     gsap.set(r1, { xPercent: 0 });
@@ -865,7 +1149,6 @@
       }
     });
 
-    // Contact
     gsap.to('.contact h2', {
       opacity: 1,
       y: 0,
@@ -882,7 +1165,7 @@
     });
 
     // ============================================================
-    //  THREE.JS — ESCENA 3D OPTIMIZADA
+    //  THREE.JS — ESCENA 3D PRINCIPAL
     // ============================================================
     const canvas = document.getElementById('webgl');
     const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
@@ -896,7 +1179,6 @@
     camera.position.set(0, 1.5, 14);
     camera.lookAt(0, 0, 0);
 
-    // Luces
     const ambient = new THREE.AmbientLight(0x222255, 1.2);
     scene.add(ambient);
     const lightCyan = new THREE.PointLight(0x00f5ff, 50, 70);
@@ -912,7 +1194,6 @@
     rim.position.set(0, 12, -12);
     scene.add(rim);
 
-    // Objeto principal
     const geo1 = new THREE.TorusKnotGeometry(2.4, 0.75, 180, 24);
     const mat1 = new THREE.MeshStandardMaterial({
       color: 0x080825,
@@ -1000,7 +1281,6 @@
     const mesh1 = new THREE.Mesh(geo1, mat1);
     scene.add(mesh1);
 
-    // Segundo objeto (esfera wireframe)
     const geo2 = new THREE.SphereGeometry(0.9, 32, 32);
     const mat2 = new THREE.MeshBasicMaterial({
       color: 0xffd700,
@@ -1012,7 +1292,6 @@
     mesh2.position.set(3.2, 1.8, 0);
     scene.add(mesh2);
 
-    // Anillo exterior
     const ringGeo = new THREE.TorusKnotGeometry(2.6, 0.9, 160, 20);
     const ringMat = new THREE.MeshBasicMaterial({
       color: 0x00f5ff,
@@ -1023,11 +1302,10 @@
     const ringMesh = new THREE.Mesh(ringGeo, ringMat);
     scene.add(ringMesh);
 
-    // Partículas (reducidas en móvil)
     const isMobile = window.innerWidth < 768;
-    const pCount1 = isMobile ? 800 : 3000;
-    const pCount2 = isMobile ? 500 : 1800;
-    const pCount3 = isMobile ? 300 : 1000;
+    const pCount1 = isMobile ? 600 : 2500;
+    const pCount2 = isMobile ? 400 : 1500;
+    const pCount3 = isMobile ? 200 : 800;
 
     const createParticles = (count, color, size, spread, opacity = 0.4) => {
       const g = new THREE.BufferGeometry();
@@ -1043,7 +1321,7 @@
       g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
       const m = new THREE.PointsMaterial({
         color,
-        size: isMobile ? size * 0.6 : size,
+        size: isMobile ? size * 0.5 : size,
         transparent: true,
         opacity,
         blending: THREE.AdditiveBlending,
@@ -1056,7 +1334,6 @@
     scene.add(createParticles(pCount2, 0xff00e6, 0.06, 50, 0.4));
     scene.add(createParticles(pCount3, 0xffd700, 0.04, 40, 0.3));
 
-    // Mouse tracking (solo escritorio)
     let targetRotY = 0, targetRotX = 0;
     if (window.matchMedia('(hover: hover)').matches) {
       window.addEventListener('mousemove', (e) => {
@@ -1067,7 +1344,6 @@
       });
     }
 
-    // Scroll camera
     ScrollTrigger.create({
       trigger: document.body,
       start: 'top top',
@@ -1084,7 +1360,6 @@
       }
     });
 
-    // Animación loop
     const clock = new THREE.Clock();
 
     function animate() {
@@ -1113,7 +1388,209 @@
     }
     animate();
 
-    // Resize
+    // ============================================================
+    //  ROBOT 3D INTERACTIVO (arrastrable por toda la pantalla)
+    // ============================================================
+    const robotContainer = document.getElementById('robotContainer');
+    const robotCanvas = document.getElementById('robotCanvas');
+    const robotRenderer = new THREE.WebGLRenderer({ canvas: robotCanvas, alpha: true, antialias: true });
+    robotRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    robotRenderer.setSize(robotContainer.clientWidth, robotContainer.clientHeight);
+    robotRenderer.setClearColor(0x000000, 0);
+
+    const robotScene = new THREE.Scene();
+    const robotCamera = new THREE.PerspectiveCamera(45, robotContainer.clientWidth / robotContainer.clientHeight, 0.1, 100);
+    robotCamera.position.set(0, 0, 5);
+    robotCamera.lookAt(0, 0, 0);
+
+    const rAmbient = new THREE.AmbientLight(0x404060, 0.8);
+    robotScene.add(rAmbient);
+    const rLight = new THREE.DirectionalLight(0x00f5ff, 1.2);
+    rLight.position.set(2, 3, 4);
+    robotScene.add(rLight);
+    const rLight2 = new THREE.DirectionalLight(0xff00e6, 0.8);
+    rLight2.position.set(-3, -2, 4);
+    robotScene.add(rLight2);
+
+    const robotGroup = new THREE.Group();
+
+    // Cuerpo
+    const bodyGeo = new THREE.BoxGeometry(1.2, 1.4, 0.8);
+    const bodyMat = new THREE.MeshStandardMaterial({ color: 0x222244, metalness: 0.8, roughness: 0.3, emissive: 0x111133, emissiveIntensity: 0.2 });
+    const body = new THREE.Mesh(bodyGeo, bodyMat);
+    body.position.y = 0.1;
+    robotGroup.add(body);
+
+    // Cabeza
+    const headGeo = new THREE.BoxGeometry(0.8, 0.8, 0.8);
+    const headMat = new THREE.MeshStandardMaterial({ color: 0x334466, metalness: 0.7, roughness: 0.2, emissive: 0x00f5ff, emissiveIntensity: 0.1 });
+    const head = new THREE.Mesh(headGeo, headMat);
+    head.position.y = 1.0;
+    robotGroup.add(head);
+
+    // Ojos
+    const eyeMat = new THREE.MeshStandardMaterial({ color: 0x00f5ff, emissive: 0x00f5ff, emissiveIntensity: 0.5 });
+    const eyeGeo = new THREE.SphereGeometry(0.12, 8, 8);
+    const eyeL = new THREE.Mesh(eyeGeo, eyeMat);
+    eyeL.position.set(-0.2, 1.1, 0.45);
+    robotGroup.add(eyeL);
+    const eyeR = new THREE.Mesh(eyeGeo, eyeMat);
+    eyeR.position.set(0.2, 1.1, 0.45);
+    robotGroup.add(eyeR);
+
+    // Antenas
+    const antMat = new THREE.MeshStandardMaterial({ color: 0xffd700, emissive: 0xffd700, emissiveIntensity: 0.2 });
+    const antGeo = new THREE.CylinderGeometry(0.02, 0.02, 0.4);
+    const ant1 = new THREE.Mesh(antGeo, antMat);
+    ant1.position.set(-0.2, 1.5, 0);
+    ant1.rotation.x = 0.3;
+    robotGroup.add(ant1);
+    const ant2 = new THREE.Mesh(antGeo, antMat);
+    ant2.position.set(0.2, 1.5, 0);
+    ant2.rotation.x = -0.3;
+    robotGroup.add(ant2);
+    const ballGeo = new THREE.SphereGeometry(0.06, 6, 6);
+    const ballMat = new THREE.MeshStandardMaterial({ color: 0xffd700, emissive: 0xffd700, emissiveIntensity: 0.3 });
+    const ball1 = new THREE.Mesh(ballGeo, ballMat);
+    ball1.position.set(-0.2, 1.7, 0.05);
+    robotGroup.add(ball1);
+    const ball2 = new THREE.Mesh(ballGeo, ballMat);
+    ball2.position.set(0.2, 1.7, -0.05);
+    robotGroup.add(ball2);
+
+    // Brazos
+    const armMat = new THREE.MeshStandardMaterial({ color: 0x223355, metalness: 0.7, roughness: 0.3 });
+    const armGeo = new THREE.BoxGeometry(0.2, 0.8, 0.2);
+    const armL = new THREE.Mesh(armGeo, armMat);
+    armL.position.set(-0.8, 0.4, 0);
+    robotGroup.add(armL);
+    const armR = new THREE.Mesh(armGeo, armMat);
+    armR.position.set(0.8, 0.4, 0);
+    robotGroup.add(armR);
+
+    // Manos
+    const handMat = new THREE.MeshStandardMaterial({ color: 0x00f5ff, emissive: 0x00f5ff, emissiveIntensity: 0.1 });
+    const handGeo = new THREE.SphereGeometry(0.12, 6, 6);
+    const handL = new THREE.Mesh(handGeo, handMat);
+    handL.position.set(-0.8, 0.0, 0);
+    robotGroup.add(handL);
+    const handR = new THREE.Mesh(handGeo, handMat);
+    handR.position.set(0.8, 0.0, 0);
+    robotGroup.add(handR);
+
+    robotGroup.scale.set(0.7, 0.7, 0.7);
+    robotScene.add(robotGroup);
+
+    // Arrastre del robot por toda la pantalla
+    let isDraggingRobot = false;
+    let robotOffsetX = 0, robotOffsetY = 0;
+    let robotTargetX = robotContainer.offsetLeft || (window.innerWidth/2 - 80);
+    let robotTargetY = robotContainer.offsetTop || (window.innerHeight/2 - 80);
+
+    // Inicializar posición centrada
+    robotTargetX = window.innerWidth/2 - robotContainer.offsetWidth/2;
+    robotTargetY = window.innerHeight/2 - robotContainer.offsetHeight/2;
+    robotContainer.style.left = robotTargetX + 'px';
+    robotContainer.style.top = robotTargetY + 'px';
+
+    function startDrag(clientX, clientY) {
+      isDraggingRobot = true;
+      const rect = robotContainer.getBoundingClientRect();
+      robotOffsetX = clientX - rect.left;
+      robotOffsetY = clientY - rect.top;
+      robotContainer.style.cursor = 'grabbing';
+      robotContainer.style.transform = 'scale(1.05)';
+    }
+
+    function moveDrag(clientX, clientY) {
+      if (!isDraggingRobot) return;
+      let newX = clientX - robotOffsetX;
+      let newY = clientY - robotOffsetY;
+      // Limitar al viewport
+      newX = Math.max(0, Math.min(window.innerWidth - robotContainer.offsetWidth, newX));
+      newY = Math.max(0, Math.min(window.innerHeight - robotContainer.offsetHeight, newY));
+      robotTargetX = newX;
+      robotTargetY = newY;
+      robotContainer.style.left = newX + 'px';
+      robotContainer.style.top = newY + 'px';
+    }
+
+    function endDrag() {
+      isDraggingRobot = false;
+      robotContainer.style.cursor = 'grab';
+      robotContainer.style.transform = 'scale(1)';
+    }
+
+    // Eventos ratón
+    robotContainer.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      startDrag(e.clientX, e.clientY);
+    });
+    window.addEventListener('mousemove', (e) => {
+      if (isDraggingRobot) moveDrag(e.clientX, e.clientY);
+    });
+    window.addEventListener('mouseup', endDrag);
+
+    // Eventos táctiles
+    robotContainer.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      startDrag(touch.clientX, touch.clientY);
+    }, { passive: false });
+    window.addEventListener('touchmove', (e) => {
+      if (isDraggingRobot && e.touches.length > 0) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        moveDrag(touch.clientX, touch.clientY);
+      }
+    }, { passive: false });
+    window.addEventListener('touchend', endDrag);
+
+    // Animación del robot
+    function animateRobot() {
+      requestAnimationFrame(animateRobot);
+      const t = clock.getElapsedTime();
+
+      // Movimiento suave hacia el objetivo (ya está en posición directa)
+      // Pero añadimos un pequeño balanceo
+      robotGroup.rotation.y = Math.sin(t * 0.5) * 0.1;
+      robotGroup.rotation.x = Math.sin(t * 0.3) * 0.05;
+
+      // Parpadeo de ojos
+      const blink = Math.sin(t * 2) > 0.95 ? 0.1 : 1;
+      eyeL.scale.y = blink;
+      eyeR.scale.y = blink;
+
+      robotRenderer.render(robotScene, robotCamera);
+    }
+    animateRobot();
+
+    function resizeRobot() {
+      const w = robotContainer.clientWidth;
+      const h = robotContainer.clientHeight;
+      if (w > 0 && h > 0) {
+        robotRenderer.setSize(w, h);
+        robotCamera.aspect = w / h;
+        robotCamera.updateProjectionMatrix();
+      }
+    }
+    window.addEventListener('resize', () => {
+      resizeRobot();
+      // Asegurar que el robot no se salga de la pantalla
+      if (robotTargetX + robotContainer.offsetWidth > window.innerWidth) {
+        robotTargetX = window.innerWidth - robotContainer.offsetWidth;
+        robotContainer.style.left = robotTargetX + 'px';
+      }
+      if (robotTargetY + robotContainer.offsetHeight > window.innerHeight) {
+        robotTargetY = window.innerHeight - robotContainer.offsetHeight;
+        robotContainer.style.top = robotTargetY + 'px';
+      }
+    });
+    setTimeout(resizeRobot, 100);
+
+    // ============================================================
+    //  RESIZE GENERAL
+    // ============================================================
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
@@ -1121,10 +1598,15 @@
       ScrollTrigger.refresh();
     });
 
-    // Forzar refresh tras carga
     window.addEventListener('load', () => {
       setTimeout(() => ScrollTrigger.refresh(), 300);
+      resizeRobot();
     });
+
+    // ============================================================
+    //  INICIALIZAR IDIOMA
+    // ============================================================
+    setLanguage('es');
   </script>
 </body>
 </html>
