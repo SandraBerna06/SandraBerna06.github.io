@@ -718,7 +718,7 @@
       .tools .pin-label { top: 20px; left: 5vw; }
       .tools-grid { margin-top: 40px; gap: 10px; }
 
-      /* Chatbot en móvil: más pequeño y mejor posicionado */
+      /* Chatbot en móvil */
       #chatbot-container { bottom: 16px; right: 16px; }
       #chatbot-toggle { width: 52px; height: 52px; font-size: 24px; }
       #chatbot-window {
@@ -730,10 +730,7 @@
         border-radius: 16px;
       }
       #chatbot-messages .bot,
-      #chatbot-messages .user {
-        font-size: 12px;
-        padding: 6px 12px;
-      }
+      #chatbot-messages .user { font-size: 12px; padding: 6px 12px; }
       #chatbot-input { font-size: 12px; padding: 8px 12px; }
       #chatbot-send { font-size: 12px; padding: 0 14px; }
       #chatbot-header { font-size: 12px; padding: 12px 16px; }
@@ -1701,11 +1698,11 @@
     setTimeout(resizeRobot, 100);
 
     // ============================================================
-    //  CHATBOT — Sandra AI (Frontend) CORREGIDO
-    //  ★★★ URL CORRECTA CON /api/chat ★★★
+    //  CHATBOT — Sandra AI (Frontend) CON URL CORREGIDA
+    //  Ahora usa la URL pública de Render
     // ============================================================
     (function() {
-      // ★ CAMBIA ESTA URL POR LA DE TU BACKEND EN RENDER ★
+      // ★ URL CORRECTA DE RENDER ★
       const API_URL = 'https://chatbot-server-rx8o.onrender.com/api/chat';
 
       const toggleBtn = document.getElementById('chatbot-toggle');
@@ -1740,29 +1737,34 @@
         const typingEl = addTypingIndicator();
 
         try {
+          console.log('📤 Enviando mensaje a:', API_URL);
           const response = await fetch(API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message })
           });
 
+          console.log('📥 Estado de respuesta:', response.status);
+
           if (!response.ok) {
-            // Intentar leer el mensaje de error del servidor
-            let errorText = 'Error en el servidor';
+            let errorMsg = `Error ${response.status}`;
             try {
               const errorData = await response.json();
-              if (errorData.error) errorText = errorData.error;
+              if (errorData.error) errorMsg = errorData.error;
             } catch (_) {}
-            throw new Error(errorText);
+            throw new Error(errorMsg);
           }
 
           const data = await response.json();
+          console.log('✅ Respuesta del servidor:', data);
+
           removeTypingIndicator(typingEl);
           addMessage('bot', data.reply || 'No pude procesar tu pregunta.');
         } catch (error) {
-          console.error('Error en el chatbot:', error);
+          console.error('❌ Error en el chatbot:', error);
           removeTypingIndicator(typingEl);
-          addMessage('bot', `⚠️ ${error.message || 'Ocurrió un error. Inténtalo de nuevo más tarde.'}`);
+          const errorMsg = `⚠️ ${error.message || 'Ocurrió un error. Inténtalo de nuevo.'}`;
+          addMessage('bot', errorMsg + '  🔄 [Reintentar]', true);
         } finally {
           inputField.disabled = false;
           sendBtn.disabled = false;
@@ -1770,10 +1772,26 @@
         }
       }
 
-      function addMessage(role, text) {
+      function addMessage(role, text, hasRetry = false) {
         const div = document.createElement('div');
         div.className = role;
-        div.textContent = text;
+        div.innerHTML = text;
+
+        if (hasRetry) {
+          const retryLink = div.querySelector('[Reintentar]');
+          if (retryLink) {
+            retryLink.style.cursor = 'pointer';
+            retryLink.style.textDecoration = 'underline';
+            retryLink.addEventListener('click', () => {
+              const lastUserMsg = messagesDiv.querySelector('.user:last-child');
+              if (lastUserMsg) {
+                inputField.value = lastUserMsg.textContent;
+                sendMessage();
+              }
+            });
+          }
+        }
+
         messagesDiv.appendChild(div);
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
       }
@@ -1799,7 +1817,6 @@
         }
       });
 
-      // Mensaje de bienvenida
       setTimeout(() => {
         addMessage('bot', '👋 ¡Hola! Soy Sandra AI. Pregúntame sobre mi trayectoria profesional.');
       }, 500);
