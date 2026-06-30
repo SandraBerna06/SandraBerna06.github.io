@@ -3,41 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sandra Berná — Premium Portfolio</title>
+  <title>Sandra Berná — Software & AI Engineer</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
     /* ==========================================================
-       1. VARIABLES Y DISEÑO BASE (ESTILO APPLE DARK MODE)
+       1. DISEÑO BASE: APPLE LIGHT MODE
     ========================================================== */
     :root {
-      --bg: #000000;
-      --text: #f5f5f7;
-      --subtext: #86868b;
+      --bg-color: #f5f5f7;
+      --surface: #ffffff;
+      --text-main: #1d1d1f;
+      --text-muted: #86868b;
+      --accent: #0071e3;
       --font-main: 'Inter', sans-serif;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
     body { 
-      background-color: var(--bg); 
-      color: var(--text); 
+      background-color: var(--bg-color); 
+      color: var(--text-main); 
       font-family: var(--font-main); 
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
     /* Contenedor del 3D fijado al fondo */
-    #canvas-container {
+    #webgl-container {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
       z-index: 0;
-      pointer-events: none; /* Permite hacer click a través del canvas */
+      pointer-events: none;
     }
 
     main {
@@ -46,269 +47,73 @@
     }
 
     /* ==========================================================
-       2. SECCIONES Y TIPOGRAFÍA
+       2. COMPONENTES Y CRISTAL (GLASSMORPHISM)
     ========================================================== */
     .section {
       position: relative;
       width: 100%;
-      padding: 0 10vw;
-    }
-
-    /* Hero Section - Primer Impacto */
-    .hero {
-      height: 100vh;
+      min-height: 100vh;
+      padding: 10vh 10vw;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: center;
-      text-align: center;
     }
 
-    .hero-subtitle {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--subtext);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 1rem;
-      opacity: 0; /* Para animación de entrada */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 24px;
+      padding: 3rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.05);
     }
 
-    .hero-title {
-      font-size: clamp(4rem, 10vw, 12rem);
+    /* ==========================================================
+       3. TIPOGRAFÍA Y ESTRUCTURA
+    ========================================================== */
+    .title-xl {
+      font-size: clamp(3rem, 8vw, 8rem);
       font-weight: 700;
-      line-height: 0.9;
       letter-spacing: -0.04em;
-      margin-bottom: 1.5rem;
-      /* Gradiente de texto premium */
-      background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      opacity: 0; /* Para animación de entrada */
+      line-height: 1;
+      margin-bottom: 1rem;
     }
 
-    .hero-desc {
-      font-size: clamp(1.2rem, 2vw, 1.8rem);
-      font-weight: 300;
-      color: var(--subtext);
-      max-width: 600px;
-      opacity: 0; /* Para animación de entrada */
-    }
-
-    /* Feature Section - Scroll Interactivo */
-    .feature-section {
-      height: 250vh; /* Altura extra para hacer scroll mientras el 3D rota */
-      display: flex;
-      align-items: flex-start;
-      padding-top: 30vh;
-    }
-
-    .feature-text-container {
-      max-width: 500px;
-      margin-left: auto; /* Empuja el texto a la derecha */
-    }
-
-    .feature-headline {
-      font-size: clamp(2.5rem, 5vw, 4.5rem);
+    .title-lg {
+      font-size: clamp(2rem, 4vw, 4rem);
       font-weight: 600;
-      line-height: 1.1;
       letter-spacing: -0.02em;
       margin-bottom: 2rem;
     }
 
-    .feature-headline span {
-      color: var(--subtext);
-    }
-
-    .feature-paragraph {
-      font-size: 1.2rem;
-      color: var(--subtext);
-      line-height: 1.6;
+    .subtitle {
+      font-size: clamp(1.2rem, 2vw, 1.8rem);
       font-weight: 400;
-      margin-bottom: 3rem;
+      color: var(--text-muted);
+      max-width: 600px;
     }
 
-    .button-primary {
-      display: inline-block;
-      padding: 18px 36px;
-      background-color: var(--text);
-      color: var(--bg);
-      text-decoration: none;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 1rem;
-      transition: transform 0.3s ease, background-color 0.3s ease;
+    /* Alineaciones para cruzar con el 3D */
+    .align-left { align-items: flex-start; text-align: left; }
+    .align-right { align-items: flex-end; text-align: right; }
+    .align-center { align-items: center; text-align: center; }
+
+    /* Tarjetas de Experiencia y Educación */
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      width: 100%;
+      max-width: 600px;
     }
 
-    .button-primary:hover {
-      transform: scale(1.05);
-      background-color: #d1d1d6;
+    .item-card {
+      margin-bottom: 1.5rem;
     }
-
-    footer {
-      padding: 4rem 10vw;
-      text-align: center;
-      color: var(--subtext);
-      font-size: 0.9rem;
-      border-top: 1px solid rgba(255,255,255,0.1);
-    }
-  </style>
-</head>
-<body>
-
-  <div id="canvas-container"></div>
-
-  <main>
-    <section class="section hero">
-      <div class="hero-subtitle gs-reveal">Creative Developer</div>
-      <h1 class="hero-title gs-reveal">Sandra<br>Berná.</h1>
-      <p class="hero-desc gs-reveal">Diseñando experiencias digitales donde la ingeniería de software se encuentra con la estética pura.</p>
-    </section>
-
-    <section class="section feature-section">
-      <div class="feature-text-container gs-scroll-reveal">
-        <h2 class="feature-headline">No es solo código. <span>Es arquitectura esculpida con precisión.</span></h2>
-        <p class="feature-paragraph">Especializada en Java, Redes Neuronales y entornos 3D. Cada línea de código está optimizada para ofrecer un rendimiento impecable y una experiencia visual inmersiva, sin distracciones.</p>
-        <a href="#" class="button-primary">Explorar Proyectos</a>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <p>Diseñado con precisión. © 2026 Sandra Berná.</p>
-  </footer>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
-
-  <script>
-    /* ==========================================================
-       1. LENIS - SCROLL SUAVE (EFECTO MANTEQUILLA)
-    ========================================================== */
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true
-    });
-
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => { lenis.raf(time * 1000) });
-    gsap.ticker.lagSmoothing(0);
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    /* ==========================================================
-       2. THREE.JS - OBJETO 3D ESTILO APPLE (MATERIAL FÍSICO)
-    ========================================================== */
-    const container = document.getElementById('canvas-container');
-    const scene = new THREE.Scene();
     
-    // Cámara y Renderizador
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera.position.z = 10;
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    container.appendChild(renderer.domElement);
-
-    // Luces de Estudio (Para crear reflejos premium)
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
-    scene.add(ambientLight);
-
-    const mainLight = new THREE.DirectionalLight(0xffffff, 1.5);
-    mainLight.position.set(5, 10, 7);
-    scene.add(mainLight);
-
-    const fillLight = new THREE.DirectionalLight(0x88bbff, 0.8);
-    fillLight.position.set(-5, 0, -5);
-    scene.add(fillLight);
-
-    // Creación de un Anillo Escultural Elegante (TorusKnot)
-    // El material 'MeshPhysicalMaterial' calcula reflejos reales y "clearcoat" (barniz)
-    const geometry = new THREE.TorusKnotGeometry(2.5, 0.6, 200, 32);
-    const material = new THREE.MeshPhysicalMaterial({
-      color: 0x111111,          // Color base casi negro
-      metalness: 1.0,           // 100% Metálico
-      roughness: 0.15,          // Muy pulido
-      clearcoat: 1.0,           // Capa de cristal/barniz
-      clearcoatRoughness: 0.1,
-    });
-    
-    const premiumObject = new THREE.Mesh(geometry, material);
-    scene.add(premiumObject);
-
-    // Posición inicial (Centro de la pantalla en la sección Hero)
-    premiumObject.position.set(0, -1, 0);
-
-    // Animación Idle (Rotación lenta y constante)
-    const clock = new THREE.Clock();
-    function animate() {
-      const time = clock.getElapsedTime();
-      // Solo le damos un ligero movimiento de flotación si el usuario no hace scroll
-      premiumObject.rotation.y += 0.002;
-      premiumObject.rotation.z += 0.001;
-      
-      renderer.render(scene, camera);
-      requestAnimationFrame(animate);
+    .item-card:last-child {
+      margin-bottom: 0;
     }
-    animate();
 
-    // Responsive
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-
-    /* ==========================================================
-       3. GSAP - ANIMACIONES VINCULADAS AL SCROLL
-    ========================================================== */
-    
-    // Animación de Entrada (Fade in del Hero)
-    gsap.fromTo(".gs-reveal", 
-      { y: 50, opacity: 0 },
-      { y: 0, opacity: 1, duration: 1.2, stagger: 0.2, ease: "power3.out", delay: 0.5 }
-    );
-
-    // Animación del texto de la segunda sección al hacer scroll
-    gsap.fromTo(".gs-scroll-reveal",
-      { y: 100, opacity: 0 },
-      {
-        y: 0, opacity: 1, duration: 1, ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".feature-section",
-          start: "top 60%", // Empieza cuando la sección llega al 60% de la pantalla
-          toggleActions: "play none none reverse"
-        }
-      }
-    );
-
-    // CORE DE APPLE: Mover y rotar el objeto 3D con el scroll de la rueda
-    // Mientras bajas, el objeto gira violentamente y se mueve hacia la izquierda
-    let tl3D = gsap.timeline({
-      scrollTrigger: {
-        trigger: ".feature-section",
-        start: "top bottom", // Empieza cuando la sección asoma por abajo
-        end: "bottom bottom", // Termina cuando llegas al final
-        scrub: 1 // Efecto suavizado (tarda 1 segundo en "alcanzar" el ratón)
-      }
-    });
-
-    tl3D.to(premiumObject.position, {
-      x: -4, // Se mueve a la izquierda para dejar espacio al texto
-      y: 0,
-      z: -2, // Se aleja ligeramente
-      ease: "power1.inOut"
-    }, 0)
-    .to(premiumObject.rotation, {
-      x: Math.PI * 2, // Gira 360 grados en X
-      y: Math.PI * 1.5, // Gira en Y
-      ease: "power1.inOut"
-    }, 0);
-
-  </script>
-</body>
-</html>
+    .item-year
