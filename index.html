@@ -730,7 +730,10 @@
         border-radius: 16px;
       }
       #chatbot-messages .bot,
-      #chatbot-messages .user { font-size: 12px; padding: 6px 12px; }
+      #chatbot-messages .user {
+        font-size: 12px;
+        padding: 6px 12px;
+      }
       #chatbot-input { font-size: 12px; padding: 8px 12px; }
       #chatbot-send { font-size: 12px; padding: 0 14px; }
       #chatbot-header { font-size: 12px; padding: 12px 16px; }
@@ -1698,11 +1701,10 @@
     setTimeout(resizeRobot, 100);
 
     // ============================================================
-    //  CHATBOT — Sandra AI (Frontend) CON URL CORREGIDA
-    //  Ahora usa la URL pública de Render
+    //  CHATBOT — Sandra AI (Frontend) CON URL CORRECTA
     // ============================================================
     (function() {
-      // ★ URL CORRECTA DE RENDER ★
+      // ★★★ URL CORRECTA DE TU BACKEND EN RENDER ★★★
       const API_URL = 'https://chatbot-server-rx8o.onrender.com/api/chat';
 
       const toggleBtn = document.getElementById('chatbot-toggle');
@@ -1737,26 +1739,29 @@
         const typingEl = addTypingIndicator();
 
         try {
-          console.log('📤 Enviando mensaje a:', API_URL);
+          console.log('📡 Enviando a:', API_URL);
+          console.log('💬 Mensaje:', message);
+
           const response = await fetch(API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message })
           });
 
-          console.log('📥 Estado de respuesta:', response.status);
+          console.log('📊 Estado:', response.status);
 
           if (!response.ok) {
             let errorMsg = `Error ${response.status}`;
             try {
               const errorData = await response.json();
               if (errorData.error) errorMsg = errorData.error;
+              if (errorData.details) errorMsg += `: ${errorData.details}`;
             } catch (_) {}
             throw new Error(errorMsg);
           }
 
           const data = await response.json();
-          console.log('✅ Respuesta del servidor:', data);
+          console.log('✅ Respuesta:', data);
 
           removeTypingIndicator(typingEl);
           addMessage('bot', data.reply || 'No pude procesar tu pregunta.');
