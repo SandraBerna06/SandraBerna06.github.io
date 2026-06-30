@@ -1,119 +1,569 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sandra Berná — Software & AI Engineer</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  
-  <style>
-    /* ==========================================================
-       1. DISEÑO BASE: APPLE LIGHT MODE
-    ========================================================== */
-    :root {
-      --bg-color: #f5f5f7;
-      --surface: #ffffff;
-      --text-main: #1d1d1f;
-      --text-muted: #86868b;
-      --accent: #0071e3;
-      --font-main: 'Inter', sans-serif;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SANDRA BERNÁ — DEV / IA</title>
+<meta name="description" content="Sandra Berná Zaplana — Desarrolladora Web e Inteligencia Artificial." />
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    
-    body { 
-      background-color: var(--bg-color); 
-      color: var(--text-main); 
-      font-family: var(--font-main); 
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-    }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&display=swap" rel="stylesheet">
 
-    /* Contenedor del 3D fijado al fondo */
-    #webgl-container {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      z-index: 0;
-      pointer-events: none;
-    }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-    main {
-      position: relative;
-      z-index: 1;
-    }
+<style>
+  :root{
+    --bg:#070708;
+    --ink:#f3f3f0;
+    --cyan:#5ef7ff;
+    --magenta:#ff3df0;
+    --dim:#6a6a72;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{background:var(--bg); color:var(--ink); height:100%;}
+  body{font-family:'JetBrains Mono', monospace; overflow-x:hidden; cursor:none;}
+  ::selection{background:var(--magenta); color:#000;}
+  .disp{font-family:'Clash Display', sans-serif; font-weight:700; letter-spacing:-0.03em;}
 
-    /* ==========================================================
-       2. COMPONENTES Y CRISTAL (GLASSMORPHISM)
-    ========================================================== */
-    .section {
-      position: relative;
-      width: 100%;
-      min-height: 100vh;
-      padding: 10vh 10vw;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
+  #cursor{
+    position:fixed; top:0; left:0; width:16px; height:16px; border-radius:50%;
+    background:var(--cyan); mix-blend-mode:difference; pointer-events:none; z-index:9999;
+    transform:translate(-50%,-50%); transition:width .25s, height .25s;
+  }
+  #cursor.big{width:64px; height:64px; background:var(--magenta);}
+  @media(hover:none){#cursor{display:none;} body{cursor:auto;}}
 
-    .glass-panel {
-      background: rgba(255, 255, 255, 0.6);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      border-radius: 24px;
-      padding: 3rem;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.05);
-    }
+  #webgl{position:fixed; inset:0; z-index:1;}
 
-    /* ==========================================================
-       3. TIPOGRAFÍA Y ESTRUCTURA
-    ========================================================== */
-    .title-xl {
-      font-size: clamp(3rem, 8vw, 8rem);
-      font-weight: 700;
-      letter-spacing: -0.04em;
-      line-height: 1;
-      margin-bottom: 1rem;
-    }
+  .scrim{position:fixed; inset:0; z-index:2; pointer-events:none; mix-blend-mode:normal;}
 
-    .title-lg {
-      font-size: clamp(2rem, 4vw, 4rem);
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      margin-bottom: 2rem;
-    }
+  /* ============ NAV ============ */
+  .topbar{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:34px 5vw; mix-blend-mode:difference;
+  }
+  .topbar .mark{font-size:14px; letter-spacing:.1em;}
+  .menu-btn{
+    background:none; border:1px solid var(--ink); color:var(--ink);
+    font-family:'JetBrains Mono'; font-size:13px; letter-spacing:.1em;
+    padding:12px 22px; cursor:none; position:relative; z-index:51;
+  }
 
-    .subtitle {
-      font-size: clamp(1.2rem, 2vw, 1.8rem);
-      font-weight: 400;
-      color: var(--text-muted);
-      max-width: 600px;
-    }
+  .menu-overlay{
+    position:fixed; inset:0; z-index:60; background:var(--ink); color:#070708;
+    clip-path:circle(0% at 92% 6%);
+    transition:clip-path .9s cubic-bezier(.7,0,.2,1);
+    display:flex; flex-direction:column; justify-content:center; padding:5vw 8vw;
+  }
+  .menu-overlay.open{clip-path:circle(150% at 92% 6%);}
+  .menu-overlay a{
+    display:block; font-family:'Clash Display'; font-weight:700;
+    font-size:clamp(40px,9vw,110px); line-height:1; color:#070708;
+    text-decoration:none; margin:6px 0; mix-blend-mode:normal;
+    transition:transform .4s, opacity .4s;
+  }
+  .menu-overlay a:hover{transform:translateX(28px); opacity:.5;}
+  .menu-close{
+    position:absolute; top:34px; right:5vw; background:none; border:none;
+    font-family:'JetBrains Mono'; font-size:13px; letter-spacing:.1em; color:#070708; cursor:none;
+  }
+  .menu-foot{margin-top:60px; display:flex; gap:34px; font-size:13px;}
+  .menu-foot a{color:#070708; text-decoration:underline;}
 
-    /* Alineaciones para cruzar con el 3D */
-    .align-left { align-items: flex-start; text-align: left; }
-    .align-right { align-items: flex-end; text-align: right; }
-    .align-center { align-items: center; text-align: center; }
+  /* ============ HERO ============ */
+  .hero{
+    position:relative; height:100vh; z-index:5; pointer-events:none;
+    display:flex; flex-direction:column; justify-content:center; align-items:center;
+  }
+  .hero-title{
+    font-family:'Clash Display'; font-weight:700;
+    font-size:clamp(58px, 15vw, 240px); line-height:0.82; text-align:center;
+    letter-spacing:-0.04em; mix-blend-mode:difference;
+  }
+  .hero-title .line2{
+    -webkit-text-stroke:1.5px var(--ink); color:transparent;
+  }
+  .hero-sub{
+    margin-top:26px; font-size:13px; letter-spacing:.25em; color:var(--dim);
+    text-transform:uppercase;
+  }
+  .hero-scroll{
+    position:absolute; bottom:46px; left:5vw; font-size:12px; letter-spacing:.2em; color:var(--dim);
+    writing-mode:vertical-rl;
+  }
+  .hero-coord{
+    position:absolute; bottom:46px; right:5vw; font-size:12px; letter-spacing:.1em; color:var(--dim);
+    text-align:right;
+  }
 
-    /* Tarjetas de Experiencia y Educación */
-    .grid-container {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      width: 100%;
-      max-width: 600px;
-    }
+  /* ============ SECTION GENERIC ============ */
+  section{position:relative; z-index:5;}
+  .pin-label{
+    position:absolute; top:48px; left:5vw; font-size:13px; letter-spacing:.25em; color:var(--dim);
+    text-transform:uppercase; z-index:6;
+  }
 
-    .item-card {
-      margin-bottom: 1.5rem;
-    }
-    
-    .item-card:last-child {
-      margin-bottom: 0;
-    }
+  /* ============ ABOUT ============ */
+  .about{min-height:140vh; padding:22vh 8vw 18vh; max-width:1100px;}
+  .about p{
+    font-family:'Clash Display'; font-weight:600; font-size:clamp(26px,4.4vw,56px);
+    line-height:1.18; letter-spacing:-0.02em; filter:blur(10px); opacity:0;
+  }
+  .about .hl{color:var(--cyan);}
+  .about .hl2{color:var(--magenta);}
+  .about-meta{margin-top:60px; display:flex; gap:60px; flex-wrap:wrap; font-size:13px; color:var(--dim);}
+  .about-meta strong{display:block; color:var(--ink); font-size:15px; margin-bottom:6px; font-family:'Clash Display'; font-weight:600;}
 
-    .item-year
+  /* ============ EXPERIENCE ============ */
+  .exp{min-height:90vh; padding:18vh 8vw; display:flex; flex-direction:column; gap:10px;}
+  .exp-row{
+    display:flex; align-items:baseline; gap:30px; border-top:1px solid rgba(255,255,255,0.12);
+    padding:28px 0; opacity:0; transform:translateY(40px);
+  }
+  .exp-row .y{font-size:13px; color:var(--cyan); width:140px; flex-shrink:0; letter-spacing:.1em;}
+  .exp-row h3{font-family:'Clash Display'; font-weight:700; font-size:clamp(22px,3vw,40px);}
+  .exp-row .org{color:var(--dim); font-size:14px; margin-top:6px;}
+  .exp-row .desc{color:var(--dim); font-size:13.5px; margin-top:10px; max-width:560px; line-height:1.7;}
+
+  /* ============ PROJECTS - HORIZONTAL ============ */
+  .h-wrap{height:100vh; overflow:hidden; position:relative;}
+  .h-track{
+    height:100%; width:300vw; display:flex;
+  }
+  .h-panel{
+    width:100vw; height:100%; flex-shrink:0; display:flex; flex-direction:column; justify-content:center;
+    padding:0 8vw; position:relative;
+  }
+  .h-panel .pidx{font-size:13px; color:var(--cyan); letter-spacing:.2em; margin-bottom:18px;}
+  .h-panel h2{
+    font-family:'Clash Display'; font-weight:700; font-size:clamp(54px,11vw,170px);
+    line-height:0.86; letter-spacing:-0.03em; mix-blend-mode:difference;
+  }
+  .h-panel .ptag{font-size:14px; color:var(--dim); margin-top:24px; max-width:540px; line-height:1.7;}
+  .h-panel .pstack{margin-top:26px; display:flex; gap:14px; flex-wrap:wrap;}
+  .h-panel .pstack span{font-size:12px; border:1px solid var(--dim); padding:6px 14px; color:var(--dim);}
+  .h-panel a.plink{
+    margin-top:34px; display:inline-block; font-size:14px; letter-spacing:.1em;
+    text-decoration:underline; color:var(--ink); pointer-events:all;
+  }
+  .h-panel.intro h2{font-size:clamp(60px,13vw,190px);}
+
+  /* ============ MARQUEE SKILLS ============ */
+  .marquee-wrap{
+    height:60vh; display:flex; flex-direction:column; justify-content:center; overflow:hidden;
+    position:relative;
+  }
+  .marquee-wrap .pin-label{position:absolute;}
+  .mq-row{display:flex; white-space:nowrap; will-change:transform;}
+  .mq-row span{
+    font-family:'Clash Display'; font-weight:700; font-size:clamp(50px,9vw,140px);
+    padding:0 40px; color:transparent; -webkit-text-stroke:1px var(--ink);
+  }
+  .mq-row span.fill{ color:var(--ink); -webkit-text-stroke:0;}
+  .mq-row.r2 span{ color:var(--ink); -webkit-text-stroke:0;}
+  .mq-row.r2 span.fill{color:transparent; -webkit-text-stroke:1px var(--magenta);}
+
+  /* ============ CONTACT ============ */
+  .contact{
+    min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:flex-start;
+    padding:0 8vw;
+  }
+  .contact .pin-label{position:absolute;}
+  .contact h2{
+    font-family:'Clash Display'; font-weight:700; font-size:clamp(48px,9vw,150px);
+    line-height:0.88; letter-spacing:-0.03em;
+  }
+  .contact h2 a{color:var(--ink); text-decoration:none; border-bottom:2px solid transparent; transition:border-color .3s, color .3s;}
+  .contact h2 a:hover{color:var(--cyan); border-color:var(--cyan);}
+  .contact-links{margin-top:50px; display:flex; gap:40px; font-size:14px;}
+  .contact-links a{color:var(--dim); text-decoration:none; letter-spacing:.05em;}
+  .contact-links a:hover{color:var(--ink);}
+
+  footer{
+    padding:40px 8vw 50px; display:flex; justify-content:space-between; font-size:12px; color:var(--dim);
+    letter-spacing:.08em; position:relative; z-index:5;
+  }
+
+  @media(max-width:760px){
+    .exp-row{flex-direction:column; gap:8px;}
+    .exp-row .y{width:auto;}
+    .about{padding:18vh 6vw 14vh;}
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<canvas id="webgl"></canvas>
+
+<header class="topbar">
+  <div class="mark disp">S.B.</div>
+  <button class="menu-btn" id="menuOpen">MENÚ ＋</button>
+</header>
+
+<div class="menu-overlay" id="menuOverlay">
+  <button class="menu-close" id="menuClose">CERRAR ✕</button>
+  <a href="#about">SOBRE MÍ</a>
+  <a href="#exp">EXPERIENCIA</a>
+  <a href="#proyectos">PROYECTOS</a>
+  <a href="#skills">SKILLS</a>
+  <a href="#contacto">CONTACTO</a>
+  <div class="menu-foot">
+    <a href="mailto:sandraberna2006@gmail.com">EMAIL</a>
+    <a href="https://www.linkedin.com/in/sandra-bern%C3%A1-zaplana/" target="_blank">LINKEDIN</a>
+    <a href="https://github.com/SandraBerna06" target="_blank">GITHUB</a>
+  </div>
+</div>
+
+<section class="hero">
+  <h1 class="hero-title">
+    SANDRA<br>
+    <span class="line2">BERNÁ</span>
+  </h1>
+  <div class="hero-sub">DESARROLLO WEB — INTELIGENCIA ARTIFICIAL</div>
+  <div class="hero-scroll">SCROLL ↓</div>
+  <div class="hero-coord">ALBATERA, ES<br>38.16°N / 0.86°W</div>
+</section>
+
+<section class="about" id="about">
+  <div class="pin-label">001 / SOBRE MÍ</div>
+  <p>
+    Estudio <span class="hl">Desarrollo de Aplicaciones Web</span> y construyo lógica con Java
+    mientras me formo, por mi cuenta, en <span class="hl2">Inteligencia Artificial</span> y
+    Machine Learning. Creo en el código sólido antes que en el código bonito.
+  </p>
+  <div class="about-meta">
+    <div><strong>Base</strong>Albatera, Alicante — Permiso B</div>
+    <div><strong>Disponibilidad</strong>Prácticas / primer empleo</div>
+    <div><strong>Formación IA</strong>Stanford · DeepLearning.AI · Google · IBM</div>
+  </div>
+</section>
+
+<section class="exp" id="exp">
+  <div class="pin-label">002 / EXPERIENCIA</div>
+  <div class="exp-row">
+    <div class="y">ABR—MAY 2025</div>
+    <div>
+      <h3 class="disp">NTT DATA</h3>
+      <div class="org">Becaria de desarrollo</div>
+      <div class="desc">Desarrollo con Java y soporte en proyectos reales. Control de versiones con Git, trabajo en equipo bajo metodología Scrum, documentación técnica y pruebas.</div>
+    </div>
+  </div>
+  <div class="exp-row">
+    <div class="y">EN CURSO</div>
+    <div>
+      <h3 class="disp">UCAM</h3>
+      <div class="org">CFGS Desarrollo de Aplicaciones Web</div>
+      <div class="desc">Formación práctica en frontend, backend y bases de datos: Java, PHP/Node, MySQL y Git.</div>
+    </div>
+  </div>
+</section>
+
+<section id="proyectos">
+  <div class="pin-label">003 / PROYECTOS</div>
+  <div class="h-wrap">
+    <div class="h-track" id="hTrack">
+      <div class="h-panel intro">
+        <h2>PROYECTOS<br>SELECCIONADOS</h2>
+      </div>
+      <div class="h-panel">
+        <div class="pidx">01 — JAVA / POO</div>
+        <h2>HÉROES<br>DEL REINO</h2>
+        <p class="ptag">Juego de combate por turnos con herencia y polimorfismo, sistema de pociones y gestión de enemigos. Pensado para practicar y preparar exámenes en Java.</p>
+        <div class="pstack"><span>JAVA</span><span>POO</span><span>ARRAYS</span></div>
+        <a class="plink" href="https://github.com/SandraBerna06/Heroes.git" target="_blank">VER CÓDIGO →</a>
+      </div>
+      <div class="h-panel">
+        <div class="pidx">02 — JAVA / POO</div>
+        <h2>JUEGO DE<br>AJEDREZ</h2>
+        <p class="ptag">Ajedrez completo con interfaz de texto, movimientos legales, turnos y control de victoria. Práctica de lógica, estructuras de datos y POO.</p>
+        <div class="pstack"><span>JAVA</span><span>POO</span><span>ARRAYS</span></div>
+        <a class="plink" href="https://github.com/manberper/ProyectoAjedrez.git" target="_blank">VER CÓDIGO →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="marquee-wrap" id="skills">
+  <div class="pin-label">004 / SKILLS</div>
+  <div class="mq-row r1" id="mqRow1">
+    <span class="fill">JAVA</span><span>AWS</span><span class="fill">MACHINE LEARNING</span><span>SQL</span><span class="fill">GIT</span><span>HTML/CSS</span>
+    <span class="fill">JAVA</span><span>AWS</span><span class="fill">MACHINE LEARNING</span><span>SQL</span><span class="fill">GIT</span><span>HTML/CSS</span>
+  </div>
+  <div class="mq-row r2" id="mqRow2">
+    <span>MARIADB</span><span class="fill">MYSQL</span><span>SCRUM</span><span class="fill">GITHUB</span><span>PYTHON</span>
+    <span>MARIADB</span><span class="fill">MYSQL</span><span>SCRUM</span><span class="fill">GITHUB</span><span>PYTHON</span>
+  </div>
+</section>
+
+<section class="contact" id="contacto">
+  <div class="pin-label">005 / CONTACTO</div>
+  <h2>¿HABLAMOS?<br><a href="mailto:sandraberna2006@gmail.com">ESCRÍBEME →</a></h2>
+  <div class="contact-links">
+    <a href="mailto:sandraberna2006@gmail.com">EMAIL</a>
+    <a href="https://www.linkedin.com/in/sandra-bern%C3%A1-zaplana/" target="_blank">LINKEDIN</a>
+    <a href="https://github.com/SandraBerna06" target="_blank">GITHUB</a>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 SANDRA BERNÁ ZAPLANA</span>
+  <span>THREE.JS / GSAP / WEBGL</span>
+</footer>
+
+<script>
+/* ============ CURSOR ============ */
+const cursor = document.getElementById('cursor');
+window.addEventListener('mousemove', e=>{
+  cursor.style.left=e.clientX+'px'; cursor.style.top=e.clientY+'px';
+});
+document.querySelectorAll('a, button').forEach(el=>{
+  el.addEventListener('mouseenter', ()=>cursor.classList.add('big'));
+  el.addEventListener('mouseleave', ()=>cursor.classList.remove('big'));
+});
+
+/* ============ FULLSCREEN MENU ============ */
+const menuOverlay = document.getElementById('menuOverlay');
+document.getElementById('menuOpen').addEventListener('click', ()=>menuOverlay.classList.add('open'));
+document.getElementById('menuClose').addEventListener('click', ()=>menuOverlay.classList.remove('open'));
+menuOverlay.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>menuOverlay.classList.remove('open')));
+
+/* ============ GSAP SCROLL SETUP ============ */
+gsap.registerPlugin(ScrollTrigger);
+
+gsap.from('.hero-title', {opacity:0, y:60, duration:1.4, ease:'power4.out', delay:0.2});
+gsap.from('.hero-sub, .hero-scroll, .hero-coord', {opacity:0, duration:1.2, delay:0.8, stagger:0.1});
+
+gsap.to('.about p', {
+  filter:'blur(0px)', opacity:1, duration:1.2, ease:'power2.out',
+  scrollTrigger:{ trigger:'.about', start:'top 70%', end:'top 20%', scrub:1 }
+});
+gsap.to('.about-meta', {
+  opacity:1, y:0, duration:1, ease:'power2.out',
+  scrollTrigger:{ trigger:'.about-meta', start:'top 90%' }
+});
+gsap.set('.about-meta', {opacity:0, y:30});
+
+gsap.utils.toArray('.exp-row').forEach((row,i)=>{
+  gsap.to(row, {
+    opacity:1, y:0, duration:0.9, ease:'power3.out',
+    scrollTrigger:{ trigger:row, start:'top 88%' }
+  });
+});
+
+/* horizontal scroll projects */
+const track = document.getElementById('hTrack');
+const hWrap = document.querySelector('.h-wrap');
+let hScroll = gsap.to(track, {
+  x: () => -(track.scrollWidth - window.innerWidth),
+  ease:'none',
+  scrollTrigger:{
+    trigger:'.h-wrap', start:'top top', end:()=>'+='+(track.scrollWidth - window.innerWidth),
+    scrub:0.6, pin:true, anticipatePin:1, invalidateOnRefresh:true
+  }
+});
+
+/* marquee skills - continuous + scroll-linked speed */
+const r1 = document.getElementById('mqRow1');
+const r2 = document.getElementById('mqRow2');
+gsap.set(r1, {xPercent:0});
+gsap.set(r2, {xPercent:-50});
+let mqTween1 = gsap.to(r1, {xPercent:-50, duration:26, ease:'none', repeat:-1});
+let mqTween2 = gsap.to(r2, {xPercent:0, duration:32, ease:'none', repeat:-1});
+
+ScrollTrigger.create({
+  trigger:'.marquee-wrap', start:'top bottom', end:'bottom top',
+  onUpdate: self=>{
+    const v = 1 + Math.abs(self.getVelocity())/1500;
+    mqTween1.timeScale(Math.min(v,5));
+    mqTween2.timeScale(Math.min(v,5));
+  }
+});
+
+/* contact reveal */
+gsap.from('.contact h2, .contact-links', {
+  opacity:0, y:50, duration:1, stagger:0.15, ease:'power3.out',
+  scrollTrigger:{ trigger:'.contact', start:'top 75%' }
+});
+
+/* ============ THREE.JS — SOLID DEFORMING GEOMETRY ============ */
+const canvas = document.getElementById('webgl');
+const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+camera.position.set(0, 0, 9);
+
+// Lights — neon cyan / magenta
+const ambient = new THREE.AmbientLight(0x111122, 1.2);
+scene.add(ambient);
+
+const lightCyan = new THREE.PointLight(0x5ef7ff, 14, 30);
+lightCyan.position.set(-5, 3, 5);
+scene.add(lightCyan);
+
+const lightMagenta = new THREE.PointLight(0xff3df0, 14, 30);
+lightMagenta.position.set(5, -3, 4);
+scene.add(lightMagenta);
+
+const rim = new THREE.PointLight(0xffffff, 3, 30);
+rim.position.set(0, 6, -6);
+scene.add(rim);
+
+// custom vertex displacement shader on top of standard material via onBeforeCompile
+const geometry = new THREE.IcosahedronGeometry(2.6, 24);
+
+const material = new THREE.MeshStandardMaterial({
+  color: 0x0d0d12,
+  metalness: 0.92,
+  roughness: 0.18,
+  flatShading: false
+});
+
+let uTime = { value: 0 };
+material.onBeforeCompile = (shader) => {
+  shader.uniforms.uTime = uTime;
+  shader.vertexShader = `
+    uniform float uTime;
+    varying float vDisp;
+
+    vec3 mod289(vec3 x){return x - floor(x*(1.0/289.0))*289.0;}
+    vec4 mod289(vec4 x){return x - floor(x*(1.0/289.0))*289.0;}
+    vec4 permute(vec4 x){return mod289(((x*34.0)+1.0)*x);}
+    vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
+    float snoise(vec3 v){
+      const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+      const vec4 D = vec4(0.0,0.5,1.0,2.0);
+      vec3 i = floor(v + dot(v, C.yyy));
+      vec3 x0 = v - i + dot(i, C.xxx);
+      vec3 g = step(x0.yzx, x0.xyz);
+      vec3 l = 1.0 - g;
+      vec3 i1 = min(g.xyz, l.zxy);
+      vec3 i2 = max(g.xyz, l.zxy);
+      vec3 x1 = x0 - i1 + C.xxx;
+      vec3 x2 = x0 - i2 + C.yyy;
+      vec3 x3 = x0 - D.yyy;
+      i = mod289(i);
+      vec4 p = permute(permute(permute(
+                i.z + vec4(0.0, i1.z, i2.z, 1.0))
+              + i.y + vec4(0.0, i1.y, i2.y, 1.0))
+              + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+      float n_ = 0.142857142857;
+      vec3 ns = n_ * D.wyz - D.xzx;
+      vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+      vec4 x_ = floor(j * ns.z);
+      vec4 y_ = floor(j - 7.0 * x_);
+      vec4 x = x_ *ns.x + ns.yyyy;
+      vec4 y = y_ *ns.x + ns.yyyy;
+      vec4 h = 1.0 - abs(x) - abs(y);
+      vec4 b0 = vec4(x.xy, y.xy);
+      vec4 b1 = vec4(x.zw, y.zw);
+      vec4 s0 = floor(b0)*2.0 + 1.0;
+      vec4 s1 = floor(b1)*2.0 + 1.0;
+      vec4 sh = -step(h, vec4(0.0));
+      vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;
+      vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
+      vec3 p0 = vec3(a0.xy, h.x);
+      vec3 p1 = vec3(a0.zw, h.y);
+      vec3 p2 = vec3(a1.xy, h.z);
+      vec3 p3 = vec3(a1.zw, h.w);
+      vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));
+      p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+      vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+      m = m * m;
+      return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
+    }
+  ` + shader.vertexShader;
+
+  shader.vertexShader = shader.vertexShader.replace(
+    '#include <begin_vertex>',
+    `
+    float n = snoise(position * 0.55 + uTime * 0.18);
+    vDisp = n;
+    vec3 transformed = position + normal * n * 0.45;
+    `
+  );
+
+  shader.fragmentShader = `varying float vDisp;\n` + shader.fragmentShader;
+  shader.fragmentShader = shader.fragmentShader.replace(
+    '#include <emissivemap_fragment>',
+    `
+    #include <emissivemap_fragment>
+    vec3 glow = mix(vec3(0.36,0.96,1.0), vec3(1.0,0.24,0.94), clamp(vDisp*1.6+0.5,0.0,1.0));
+    totalEmissiveRadiance += glow * pow(clamp(vDisp,0.0,1.0), 1.4) * 0.55;
+    `
+  );
+
+  material.userData.shader = shader;
+};
+
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
+
+// wireframe twin for extra structure
+const wireGeo = new THREE.IcosahedronGeometry(2.62, 1);
+const wireMat = new THREE.MeshBasicMaterial({color:0x5ef7ff, wireframe:true, transparent:true, opacity:0.08});
+const wireMesh = new THREE.Mesh(wireGeo, wireMat);
+scene.add(wireMesh);
+
+/* mouse interaction — aggressive */
+let targetRotX = 0, targetRotY = 0;
+let mouseNX = 0, mouseNY = 0;
+window.addEventListener('mousemove', (e)=>{
+  mouseNX = (e.clientX / window.innerWidth) * 2 - 1;
+  mouseNY = (e.clientY / window.innerHeight) * 2 - 1;
+  targetRotY = mouseNX * 1.1;
+  targetRotX = mouseNY * 0.8;
+});
+
+/* scroll camera movement */
+ScrollTrigger.create({
+  trigger: document.body, start:'top top', end:'bottom bottom', scrub:0.5,
+  onUpdate: self=>{
+    const p = self.progress;
+    camera.position.z = 9 - p * 5.5;
+    camera.position.y = -p * 2.4;
+    mesh.position.x = Math.sin(p*Math.PI) * 1.4;
+    wireMesh.position.x = mesh.position.x;
+  }
+});
+
+const clock = new THREE.Clock();
+function animate(){
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+  uTime.value = t;
+
+  mesh.rotation.y += 0.0022;
+  mesh.rotation.x += 0.0008;
+  wireMesh.rotation.copy(mesh.rotation);
+
+  mesh.rotation.y += (targetRotY - 0) * 0.012;
+  mesh.rotation.x += (targetRotX - 0) * 0.012;
+
+  lightCyan.position.x = Math.sin(t*0.6) * 6;
+  lightCyan.position.y = Math.cos(t*0.5) * 4;
+  lightMagenta.position.x = Math.cos(t*0.45) * 6;
+  lightMagenta.position.y = Math.sin(t*0.55) * 4;
+
+  renderer.render(scene, camera);
+}
+animate();
+
+window.addEventListener('resize', ()=>{
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  ScrollTrigger.refresh();
+});
+</script>
+
+</body>
+</html>
