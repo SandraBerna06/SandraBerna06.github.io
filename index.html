@@ -1,596 +1,348 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sandra Berná Zaplana — Creative Dev & AI Specialist</title>
-<meta name="description" content="Portfolio conceptual de vanguardia de Sandra Berná. Especialista en Java e Inteligencia Artificial.">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
-<link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600&display=swap" rel="stylesheet">
-
-<style>
-  :root {
-    --bg: #000000;
-    --text: #ffffff;
-    --text-muted: #55555e;
-    --cyan: #00f0ff;
-    --magenta: #ff007f;
-    --glass: rgba(2, 2, 4, 0.35);
-    --glass-border: rgba(255, 255, 255, 0.04);
-    --sans: 'Plus Jakarta Sans', sans-serif;
-    --display: 'Clash Display', sans-serif;
-    --mono: 'Space Mono', monospace;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { background: var(--bg); color: var(--text); font-family: var(--sans); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sandra Berná Zaplana — Creative Dev & AI Specialist</title>
+  <meta name="description" content="Portfolio de arte digital y desarrollo conceptual de Sandra Berná. Especialista en Java e Inteligencia Artificial.">
   
-  ::selection { background: var(--cyan); color: #000; }
-
-  /* Cursor Líquido con Inercia Física */
-  #quantum-cursor {
-    position: fixed; top: 0; left: 0; width: 6px; height: 6px;
-    background: #fff; border-radius: 50%; pointer-events: none; z-index: 10000;
-    transform: translate(-50%, -50%); transition: transform 0.1s ease;
-  }
-  #quantum-cursor-ring {
-    position: fixed; top: 0; left: 0; width: 38px; height: 38px;
-    border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 50%;
-    pointer-events: none; z-index: 9999; transform: translate(-50%, -50%);
-    transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1), height 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s, background 0.3s;
-  }
-  .hovered #quantum-cursor { transform: translate(-50%, -50%) scale(0.3); background: var(--magenta); }
-  .hovered #quantum-cursor-ring { width: 65px; height: 65px; border-color: var(--magenta); background: rgba(255, 0, 127, 0.02); }
-
-  @media (max-width: 960px) { #quantum-cursor, #quantum-cursor-ring { display: none; } body { cursor: default; } }
-  @media (hover: hover) { body, a, button, .interactive { cursor: none; } }
-
-  /* Lienzo WebGL Absoluto */
-  #webgl-canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 1; pointer-events: none; }
-
-  /* Líneas de Guía Cinéticas de Fondo */
-  .grid-overlay { position: fixed; inset: 0; z-index: 2; pointer-events: none; display: grid; grid-template-columns: repeat(4, 1fr); padding: 0 6vw; }
-  .grid-column { border-right: 1px solid rgba(255, 255, 255, 0.015); height: 100%; }
-  .grid-column:last-child { border-right: none; }
-
-  /* Contenedores */
-  main { position: relative; z-index: 3; width: 100%; }
-  .container { max-width: 1400px; margin: 0 auto; padding: 0 6vw; }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600&display=swap" rel="stylesheet">
   
-  /* Bloques de Refracción de Cristal */
-  .glass-sculpt {
-    background: var(--glass);
-    backdrop-filter: blur(32px) saturate(190%);
-    -webkit-backdrop-filter: blur(32px) saturate(190%);
-    border: 1px solid var(--glass-border);
-    border-radius: 28px;
-    padding: 70px 60px;
-    box-shadow: 0 40px 120px rgba(0,0,0,0.9);
-  }
+  <style>
+    :root {
+      --bg: #020204;
+      --text: #f9f9fb;
+      --text-muted: #62626a;
+      --cyan: #00f0ff;
+      --magenta: #ff007f;
+      --purple: #7000ff;
+      --glass: rgba(3, 3, 6, 0.45);
+      --glass-border: rgba(255, 255, 255, 0.05);
+      --sans: 'Plus Jakarta Sans', sans-serif;
+      --display: 'Clash Display', sans-serif;
+      --mono: 'Space Mono', monospace;
+    }
 
-  /* Header Editorial */
-  header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 45px 6vw; display: flex; justify-content: space-between; align-items: center; mix-blend-mode: difference; }
-  .brand-code { font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 400; }
-  .brand-code span { color: var(--cyan); }
-  header nav ul { list-style: none; display: flex; gap: 45px; }
-  header nav a { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(255,255,255,0.4); transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-  header nav a:hover { color: var(--text); }
-  @media (max-width: 860px) { header nav { display: none; } }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { background: var(--bg); color: var(--text); font-family: var(--sans); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    ::selection { background: var(--cyan); color: #000; }
 
-  /* Secciones */
-  section { position: relative; padding: 25vh 0; min-height: 100vh; display: flex; align-items: center; }
-  
-  .section-tag { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.3em; color: var(--cyan); margin-bottom: 35px; display: flex; align-items: center; gap: 15px; }
-  .section-tag::before { content: ''; width: 35px; height: 1px; background: var(--cyan); }
+    /* Custom Cursor Magnético */
+    #art-cursor { position: fixed; top: 0; left: 0; width: 6px; height: 6px; background: #fff; border-radius: 50%; pointer-events: none; z-index: 10000; transform: translate(-50%, -50%); transition: background 0.3s; }
+    #art-cursor-ring { position: fixed; top: 0; left: 0; width: 36px; height: 36px; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s; }
+    
+    .hovered #art-cursor { background: transparent; }
+    .hovered #art-cursor-ring { width: 60px; height: 60px; border-color: var(--magenta); background: rgba(255, 0, 127, 0.1); backdrop-filter: blur(2px); }
+    
+    @media (max-width: 960px) { #art-cursor, #art-cursor-ring { display: none; } }
+    @media (hover: hover) { body, a, button, .interactive { cursor: none; } }
 
-  /* Hero */
-  #hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
-  .hero-telemetry { font-family: var(--mono); font-size: 11px; color: var(--text-muted); margin-bottom: 40px; letter-spacing: 0.08em; display: flex; align-items: center; gap: 12px; }
-  .hero-telemetry .status-node { width: 5px; height: 5px; background: var(--cyan); border-radius: 50%; box-shadow: 0 0 14px var(--cyan); }
-  
-  .hero-title { font-family: var(--display); font-size: clamp(50px, 9vw, 130px); font-weight: 200; line-height: 0.88; letter-spacing: -0.04em; }
-  .hero-title .iridescent { font-weight: 300; background: linear-gradient(90deg, #00ffff, #9b51e0, #ff007f, #00ffff); background-size: 300% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-style: italic; animation: textShine 6s linear infinite; }
-  @keyframes textShine { to { background-position: 300% center; } }
-  .hero-sub { margin-top: 45px; max-width: 620px; font-size: clamp(17px, 2vw, 21px); color: var(--text-muted); line-height: 1.65; font-weight: 300; }
-  .hero-sub strong { color: var(--text); font-weight: 400; }
-  
-  /* Sobre Mí */
-  .about-layout { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 80px; }
-  .about-statement h2 { font-family: var(--display); font-size: clamp(28px, 3.8vw, 46px); font-weight: 200; line-height: 1.2; margin-bottom: 30px; letter-spacing: -0.02em; }
-  .about-statement p { font-size: 17px; color: var(--text-muted); line-height: 1.9; font-weight: 300; }
-  
-  .editorial-spec { display: flex; flex-direction: column; border-top: 1px solid var(--glass-border); }
-  .spec-row { padding: 26px 0; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: start; gap: 30px; }
-  .spec-row .spec-key { font-family: var(--mono); color: var(--text-muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; padding-top: 2px; }
-  .spec-row .spec-val { text-align: right; font-size: 14px; color: var(--text); font-weight: 300; line-height: 1.5; }
-  @media (max-width: 960px) { .about-layout { grid-template-columns: 1fr; gap: 50px; } }
+    /* WebGL Canvas */
+    #webgl-artwork { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 1; pointer-events: none; }
+    .noise-overlay { position: fixed; inset: 0; z-index: 2; pointer-events: none; opacity: 0.03; background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E'); }
 
-  /* Experiencia */
-  .timeline-flow { display: flex; flex-direction: column; margin-top: 40px; }
-  .timeline-node { display: grid; grid-template-columns: 240px 1fr; gap: 60px; padding: 50px 0; border-top: 1px solid var(--glass-border); }
-  .timeline-node:last-child { border-bottom: 1px solid var(--glass-border); }
-  .node-time { font-family: var(--mono); font-size: 11px; color: var(--cyan); letter-spacing: 0.08em; }
-  .node-content h3 { font-family: var(--display); font-size: 30px; font-weight: 400; margin-bottom: 12px; letter-spacing: -0.01em; }
-  .node-content h3 span { font-size: 14px; color: var(--text-muted); font-family: var(--sans); font-weight: 300; margin-left: 15px; }
-  .node-content p { color: var(--text-muted); font-size: 16px; line-height: 1.85; font-weight: 300; max-width: 680px; }
-  .node-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 25px; }
-  .node-badges span { font-family: var(--mono); font-size: 10px; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.01); padding: 5px 14px; border-radius: 30px; color: rgba(255,255,255,0.5); }
-  @media (max-width: 860px) { .timeline-node { grid-template-columns: 1fr; gap: 20px; } }
+    /* Layout General */
+    main { position: relative; z-index: 3; width: 100%; }
+    .container { max-width: 1300px; margin: 0 auto; padding: 0 6vw; }
+    
+    .sculpture-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 24px; padding: 60px; backdrop-filter: blur(12px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
 
-  /* Galería Horizontal de Proyectos Exclusiva */
-  .gallery-pin-container { position: relative; width: 100%; overflow: hidden; background: #000; }
-  .gallery-track { display: flex; width: 300vw; height: 100vh; will-change: transform; }
-  .gallery-cell { width: 100vw; height: 100vh; display: flex; align-items: center; padding: 0 8vw; position: relative; }
-  .gallery-cell.intro-cell h2 { font-family: var(--display); font-size: clamp(48px, 8vw, 110px); font-weight: 200; line-height: 1.0; letter-spacing: -0.04em; }
-  .gallery-cell.intro-cell h2 span { color: var(--magenta); font-style: italic; font-weight: 300; }
-  
-  .art-card { max-width: 720px; width: 100%; }
-  .art-index { font-family: var(--mono); font-size: 12px; color: var(--cyan); margin-bottom: 20px; letter-spacing: 0.1em; }
-  .art-title { font-family: var(--display); font-size: clamp(38px, 5.5vw, 70px); font-weight: 400; margin-bottom: 25px; letter-spacing: -0.02em; }
-  .art-desc { color: var(--text-muted); font-size: 17px; line-height: 1.8; margin-bottom: 35px; font-weight: 300; }
-  .art-tags { display: flex; gap: 12px; margin-bottom: 40px; font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
-  .art-tags span { border-right: 1px solid var(--glass-border); padding-right: 12px; }
-  .art-tags span:last-child { border-right: none; }
-  .art-btn { font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; color: var(--text); border-bottom: 1px solid var(--text); padding-bottom: 6px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-  .art-btn:hover { color: var(--cyan); border-color: var(--cyan); padding-left: 10px; }
+    /* Header */
+    header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 40px 6vw; display: flex; justify-content: space-between; align-items: center; mix-blend-mode: difference; }
+    .header-brand { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; }
+    .header-brand span { color: var(--cyan); }
+    
+    /* Hero */
+    #hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; }
+    .hero-meta { font-family: var(--mono); font-size: 11px; color: var(--cyan); margin-bottom: 30px; letter-spacing: 0.1em; text-transform: uppercase; }
+    
+    .hero-title { font-family: var(--display); font-size: clamp(50px, 9vw, 130px); font-weight: 200; line-height: 0.9; letter-spacing: -0.03em; }
+    .hero-title .hologram { font-weight: 400; background: linear-gradient(90deg, var(--cyan), var(--magenta)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-style: italic; }
+    
+    .hero-sub { margin-top: 40px; max-width: 550px; font-size: clamp(16px, 1.8vw, 20px); color: var(--text-muted); line-height: 1.6; font-weight: 300; }
+    
+    /* Reveal Animations Premium */
+    .clip-reveal { clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%); transform: translateY(20px); }
+    .fade-up { opacity: 0; transform: translateY(30px); }
 
-  /* Skills Marquee */
-  #marquee-sculpture { min-height: auto; padding: 120px 0; overflow: hidden; position: relative; }
-  .marquee-viewport { display: flex; white-space: nowrap; overflow: hidden; }
-  .marquee-runner { display: flex; animation: runEngine 30s linear infinite; }
-  .marquee-viewport h3 { font-family: var(--display); font-size: clamp(60px, 9vw, 135px); font-weight: 400; padding: 0 45px; letter-spacing: -0.03em; }
-  .marquee-viewport h3.stroke { color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.1); }
-  @keyframes runEngine { 0% { transform: translateX(0%); } 100% { transform: translateX(-50%); } }
+    /* Secciones (About, Timeline) - Simplificadas para foco visual */
+    section { padding: 15vh 0; min-height: 100vh; display: flex; align-items: center; }
+    .concept-tag { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.25em; color: var(--cyan); margin-bottom: 30px; display: flex; align-items: center; gap: 15px; }
+    .concept-tag::before { content: ''; width: 40px; height: 1px; background: var(--cyan); }
 
-  /* Contacto */
-  #contact-portal { min-height: 100vh; display: flex; align-items: center; }
-  .portal-headline { font-family: var(--display); font-size: clamp(40px, 6.5vw, 90px); font-weight: 200; line-height: 1.05; max-width: 980px; margin-bottom: 60px; letter-spacing: -0.03em; }
-  .portal-headline span { font-style: italic; font-weight: 300; background: linear-gradient(90deg, var(--cyan), var(--magenta)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .portal-links { display: flex; gap: 50px; flex-wrap: wrap; }
-  .portal-links a { font-family: var(--mono); font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 8px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-  .portal-links a:hover { color: var(--cyan); border-color: var(--cyan); transform: translateY(-4px); }
+    .about-text { font-family: var(--display); font-size: clamp(24px, 4vw, 42px); font-weight: 200; line-height: 1.2; }
+    
+    /* Gallery / Showcase */
+    .art-gallery { position: relative; width: 100%; overflow: hidden; }
+    .gallery-track { display: flex; width: 300vw; height: 100vh; will-change: transform; align-items: center; }
+    .gallery-cell { width: 100vw; padding: 0 8vw; perspective: 1000px; }
+    
+    .art-meta-box { max-width: 600px; transition: transform 0.5s ease-out; }
+    .art-title { font-family: var(--display); font-size: clamp(40px, 6vw, 80px); font-weight: 300; margin-bottom: 20px; }
+    .art-desc { color: var(--text-muted); line-height: 1.8; margin-bottom: 30px; }
+    
+    .art-action-link { font-family: var(--mono); font-size: 11px; text-transform: uppercase; text-decoration: none; color: var(--text); border-bottom: 1px solid var(--text); padding-bottom: 4px; transition: color 0.3s, border-color 0.3s; }
+    .art-action-link:hover { color: var(--magenta); border-color: var(--magenta); }
 
-  /* Footer */
-  footer { border-top: 1px solid var(--glass-border); padding: 50px 6vw; display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.1em; position: relative; z-index: 4; background: #000; text-transform: uppercase; }
-
-  /* Animación tipográfica avanzada */
-  .char-mask { overflow: hidden; display: inline-block; vertical-align: bottom; }
-  .char-element { display: inline-block; transform: translateY(100%); will-change: transform; }
-  .fade-in-sculpt { opacity: 0; transform: translateY(35px); will-change: transform, opacity; }
-</style>
+    /* Footer */
+    footer { padding: 40px 6vw; font-family: var(--mono); font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; text-align: center; border-top: 1px solid var(--glass-border); }
+  </style>
 </head>
 <body>
 
-<div id="quantum-cursor"></div>
-<div id="quantum-cursor-ring"></div>
+<div id="art-cursor"></div>
+<div id="art-cursor-ring"></div>
+<div class="noise-overlay"></div>
 
-<canvas id="webgl-canvas"></canvas>
-
-<div class="grid-overlay">
-  <div class="grid-column"></div>
-  <div class="grid-column"></div>
-  <div class="grid-column"></div>
-  <div class="grid-column"></div>
-</div>
+<canvas id="webgl-artwork"></canvas>
 
 <header>
-  <div class="brand-code">S.Berná<span>//</span>Quantum.Core</div>
-  <nav>
-    <ul>
-      <li><a href="#hero" class="interactive">Index</a></li>
-      <li><a href="#about" class="interactive">About</a></li>
-      <li><a href="#experience" class="interactive">Timeline</a></li>
-      <li><a href="#projects" class="interactive">Showcase</a></li>
-      <li><a href="#contact-portal" class="interactive">Contact</a></li>
-    </ul>
-  </nav>
+  <div class="header-brand">S.Berná<span>//</span>26</div>
 </header>
 
 <main>
   <section id="hero" class="container">
-    <div class="hero-telemetry"><span class="status-node"></span> Telemetry: Albatera, Alicante — ES</div>
-    <h1 class="hero-title js-split">Sandra Berná<br><span class="iridescent">Zaplana.</span></h1>
-    <p class="hero-sub fade-in-sculpt">
-      <strong>Creative Developer &amp; AI Specialist</strong> — Moldeando software conceptual de alta precisión algorítmica mediante lógica abstracta y arquitecturas de aprendizaje profundo.
-    </p>
+    <div class="hero-meta fade-up">System Online // Initialization</div>
+    <h1 class="hero-title">
+      <div class="clip-reveal">Sandra Berná</div>
+      <div class="clip-reveal hologram">Creative Dev.</div>
+    </h1>
+    <p class="hero-sub fade-up">Algoritmos de Inteligencia Artificial entrelazados con la arquitectura inquebrantable de Java. Diseñando el nexo entre lógica y arte.</p>
   </section>
 
   <section id="about" class="container">
-    <div class="glass-sculpt fade-in-sculpt" style="width: 100%;">
-      <div class="section-tag">01 // Core Matrix</div>
-      <div class="about-layout">
-        <div class="about-statement">
-          <h2>La pureza matemática del código limpio.<br>La evolución cognitiva de la Inteligencia Artificial.</h2>
-          <p>Desarrollo soluciones de software robustas con un enfoque prioritario en Java, ejecutando en paralelo análisis y formación especializada sobre Machine Learning y redes neuronales. Entiendo la ingeniería creativa como la fusión absoluta entre arquitecturas backend estables y modelos predictivos avanzados.</p>
-        </div>
-        <div class="editorial-spec">
-          <div class="spec-row"><span class="spec-key">Status</span><span class="spec-val">Disponibilidad Inmediata / Prácticas o Primer Empleo</span></div>
-          <div class="spec-row"><span class="spec-key">AI Frameworks</span><span class="spec-val">Stanford · DeepLearning.AI · Google Cloud · IBM Watson</span></div>
-          <div class="spec-row"><span class="spec-key">Linguistics</span><span class="spec-val">Español (Nativo) · Valenciano (C1) · Inglés (B2-C1 en curso)</span></div>
-          <div class="spec-row"><span class="spec-key">Mobility</span><span class="spec-val">Permiso de conducción B / Vehículo propio</span></div>
-        </div>
-      </div>
+    <div class="sculpture-card fade-up" style="width: 100%;">
+      <div class="concept-tag">01 // The Architecture</div>
+      <h2 class="about-text">Entiendo el código no como simples instrucciones, sino como una estructura viva. Mi enfoque une la robustez del backend con modelos de Deep Learning que desafían los límites estáticos.</h2>
     </div>
   </section>
 
-  <section id="experience" class="container">
-    <div class="glass-sculpt fade-in-sculpt" style="width: 100%;">
-      <div class="section-tag">02 // Linear Timeline</div>
-      <div class="timeline-flow">
-        <div class="timeline-node">
-          <div class="node-time">// 2025. Q2</div>
-          <div class="node-content">
-            <h3>NTT DATA <span>Associate Software Intern</span></h3>
-            <p>Soporte y desarrollo de software real basado en la plataforma Java. Gestión transaccional de datos relacionales, control de versiones absoluto bajo el ecosistema Git y flujo operativo síncronizado bajo metodología Scrum.</p>
-            <div class="node-badges"><span>Java Enterprise</span><span>Git Core</span><span>Scrum Sprint</span><span>SQL Optimization</span><span>Functional Testing</span></div>
-          </div>
-        </div>
-        <div class="timeline-node">
-          <div class="node-time">// In Progress</div>
-          <div class="node-content">
-            <h3>UCAM <span>CFGS Desarrollo de Aplicaciones Web</span></h3>
-            <p>Especialización curricular avanzada en ingeniería de software full-stack: desarrollo lógico matricial de backend, patrones de arquitectura de bases de datos distribuidas y microservicios.</p>
-            <div class="node-badges"><span>Java Core</span><span>PHP Scripting</span><span>Node.js Async</span><span>MySQL Relational</span><span>MariaDB Engine</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div id="projects" class="gallery-pin-container">
+  <div id="projects" class="art-gallery">
     <div class="gallery-track">
-      <div class="gallery-cell intro-cell">
-        <h2>Selected<br>Artifacts <span>Showcase</span></h2>
+      <div class="gallery-cell">
+        <h2 class="hero-title"><span class="hologram">Artifacts</span><br>Showcase</h2>
       </div>
       <div class="gallery-cell">
-        <div class="glass-sculpt art-card">
-          <div class="art-index">System _01 // OOP Simulator</div>
-          <h3 class="art-title">Héroes del Reino</h3>
-          <p class="art-desc">Un simulador computacional de combate por turnos determinista estructurado bajo principios de abstracción estricta, herencia polimórfica de entidades y control de estados dinámicos en Java.</p>
-          <div class="art-tags"><span>Java Core</span><span>OOP Design</span><span>Data Matrices</span></div>
-          <a href="https://github.com/SandraBerna06/Heroes.git" target="_blank" rel="noopener" class="art-btn interactive">Inspect Source Code →</a>
+        <div class="sculpture-card art-meta-box">
+          <div class="concept-tag">Project // 01</div>
+          <h3 class="art-title">Java Combat Engine</h3>
+          <p class="art-desc">Arquitectura orientada a objetos pura. Matrices, herencia y polimorfismo calculados en tiempo real para simulación determinista.</p>
+          <a href="#" class="art-action-link interactive">Inspect Core →</a>
         </div>
       </div>
       <div class="gallery-cell">
-        <div class="glass-sculpt art-card">
-          <div class="art-index">System _02 // Matrix Logic</div>
-          <h3 class="art-title">Juego de Ajedrez</h3>
-          <p class="art-desc">Motor analítico completo para el procesamiento de partidas de ajedrez por consola. Validación algorítmica de movimientos legales vectoriales y detección de estados de victoria en tiempo real.</p>
-          <div class="art-tags"><span>Java Logic</span><span>Matrix Math</span><span>State Engines</span></div>
-          <a href="https://github.com/manberper/ProyectoAjedrez.git" target="_blank" rel="noopener" class="art-btn interactive">Inspect Source Code →</a>
+        <div class="sculpture-card art-meta-box">
+          <div class="concept-tag">Project // 02</div>
+          <h3 class="art-title">Logic Chess Matrix</h3>
+          <p class="art-desc">Motor bidimensional basado en transformaciones lineales para validación estricta de movimientos algorítmicos.</p>
+          <a href="#" class="art-action-link interactive">Inspect Core →</a>
         </div>
       </div>
     </div>
   </div>
 
-  <section id="marquee-sculpture">
-    <div class="marquee-viewport">
-      <div class="marquee-runner">
-        <h3>JAVA CORE</h3><h3 class="stroke">DEEP LEARNING</h3><h3>AWS CLOUD</h3><h3 class="stroke">NEURAL NETWORKS</h3><h3>GIT ARCH</h3><h3 class="stroke">MYSQL</h3>
-        <h3>JAVA CORE</h3><h3 class="stroke">DEEP LEARNING</h3><h3>AWS CLOUD</h3><h3 class="stroke">NEURAL NETWORKS</h3><h3>GIT ARCH</h3><h3 class="stroke">MYSQL</h3>
-      </div>
-    </div>
-  </section>
-
-  <section id="contact-portal" class="container">
-    <div class="glass-sculpt fade-in-sculpt" style="width: 100%;">
-      <div class="section-tag">03 // Quantum Connection</div>
-      <h2 class="portal-headline">Evolucionemos los límites del desarrollo inteligente, <span>juntas.</span></h2>
-      <div class="portal-links">
-        <a href="mailto:sandraberna2006@gmail.com" class="interactive">sandraberna2006@gmail.com</a>
-        <a href="https://www.linkedin.com/in/sandra-bern%C3%A1-zaplana/" target="_blank" rel="noopener" class="interactive">LinkedIn Network ↗</a>
-        <a href="https://github.com/SandraBerna06" target="_blank" rel="noopener" class="interactive">GitHub Repositories ↗</a>
-      </div>
-    </div>
-  </section>
 </main>
 
-<footer>
-  <span>Designed by Sandra Berná © 2026</span>
-  <span>WebGL Procedural Noise Material &amp; GSAP Kinetic Engine</span>
-</footer>
+<footer>Sandra Berná © 2026 // Neural WebGL Core</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
 
 <script>
-/* =====================================================
-   LENIS SMOOTH SCROLL PERFECTO
-===================================================== */
-const lenis = new Lenis({
-  duration: 1.3,
-  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-  smoothWheel: true
-});
-function rafLoop(time) {
-  lenis.raf(time);
-  requestAnimationFrame(rafLoop);
-}
-requestAnimationFrame(rafLoop);
+/* ==========================================
+   LENIS & CURSOR
+========================================== */
+const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+requestAnimationFrame(raf);
 
 gsap.registerPlugin(ScrollTrigger);
 lenis.on('scroll', ScrollTrigger.update);
 gsap.ticker.add((time) => { lenis.raf(time * 1000); });
-gsap.ticker.lagSmoothing(0);
 
-/* =====================================================
-   CUSTOM CURSOR INERCIAL CON HOVERS
-===================================================== */
-const cRing = document.getElementById('quantum-cursor-ring');
-const cDot = document.getElementById('quantum-cursor');
+const cursorRing = document.getElementById('art-cursor-ring');
+const cursorDot = document.getElementById('art-cursor');
 let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
 let ringX = mouseX, ringY = mouseY;
 
-window.addEventListener('mousemove', (e) => { 
-  mouseX = e.clientX; mouseY = e.clientY; 
-  cDot.style.left = mouseX + 'px'; cDot.style.top = mouseY + 'px';
+window.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX; mouseY = e.clientY;
+  cursorDot.style.left = mouseX + 'px'; cursorDot.style.top = mouseY + 'px';
 });
 
-function loopCursor() {
-  ringX += (mouseX - ringX) * 0.12; ringY += (mouseY - ringY) * 0.12;
-  cRing.style.left = ringX + 'px'; cRing.style.top = ringY + 'px';
-  requestAnimationFrame(loopCursor);
+function renderCursor() {
+  ringX += (mouseX - ringX) * 0.15; ringY += (mouseY - ringY) * 0.15;
+  cursorRing.style.left = ringX + 'px'; cursorRing.style.top = ringY + 'px';
+  requestAnimationFrame(renderCursor);
 }
-loopCursor();
+renderCursor();
 
-document.querySelectorAll('.interactive, a, button').forEach(el => {
+document.querySelectorAll('.interactive, a').forEach(el => {
   el.addEventListener('mouseenter', () => document.body.classList.add('hovered'));
   el.addEventListener('mouseleave', () => document.body.classList.remove('hovered'));
 });
 
-/* =====================================================
-   GSAP REVEALS (TEXT SPLITTING POR PALABRAS)
-===================================================== */
-const splitTarget = document.querySelector('.js-split');
-if(splitTarget) {
-  const words = splitTarget.innerHTML.split('<br>');
-  let newHTML = '';
-  words.forEach((line, lineIdx) => {
-    const wordArr = line.split(' ');
-    wordArr.forEach(word => {
-      if(word.includes('class="iridescent"')) {
-        newHTML += `<span class="char-mask"><span class="char-element iridescent">Zaplana.</span></span> `;
-      } else {
-        newHTML += `<span class="char-mask"><span class="char-element">${word}</span></span> `;
-      }
-    });
-    if(lineIdx === 0) newHTML += '<br>';
-  });
-  splitTarget.innerHTML = newHTML;
-}
-
-gsap.to('.char-element', {
-  y: '0%', duration: 1.5, ease: 'power4.out', stagger: 0.08, delay: 0.2
+/* ==========================================
+   GSAP ANIMATIONS
+========================================== */
+gsap.to('.clip-reveal', { clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', y: 0, duration: 1.5, ease: 'power4.out', stagger: 0.2, delay: 0.5 });
+gsap.utils.toArray('.fade-up').forEach(el => {
+  gsap.to(el, { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%' } });
 });
 
-gsap.utils.toArray('.fade-in-sculpt').forEach(panel => {
-  gsap.to(panel, {
-    opacity: 1, y: 0, duration: 1.3, ease: 'power3.out',
-    scrollTrigger: { trigger: panel, start: 'top 85%', toggleActions: 'play none none reverse' }
-  });
-});
-
-// Mecánica Horizontal del Showcase de Proyectos
+// Gallery Scroll Horizontal
 const track = document.querySelector('.gallery-track');
 gsap.to(track, {
   x: () => -(track.scrollWidth - window.innerWidth),
   ease: 'none',
-  scrollTrigger: {
-    trigger: '.gallery-pin-container', pin: true, scrub: 1, start: 'top top',
-    end: () => '+=' + (track.scrollWidth - window.innerWidth), invalidateOnRefresh: true
-  }
+  scrollTrigger: { trigger: '.art-gallery', pin: true, scrub: 1, start: 'top top', end: () => '+=' + (track.scrollWidth - window.innerWidth) }
 });
 
-/* =====================================================
-   THREE.JS — MOTOR DE SHADERS PROCEDURAL GLSL (IRIDISCENCIA CUÁNTICA)
-===================================================== */
+/* ==========================================
+   THREE.JS: NEURAL SWARM CON BLOOM
+========================================== */
+const canvas = document.getElementById('webgl-artwork');
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 100);
-camera.position.set(0, 0, 9);
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.z = 12;
 
-const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('webgl-canvas'), alpha: true, antialias: true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.3;
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-// Luces Bioluminiscentes de Contraposición Cromática
-const cyanLight = new THREE.PointLight(0x00f0ff, 25, 30);
-scene.add(cyanLight);
+// Post-Processing (BLOOM - Brillo de Neón)
+const renderScene = new THREE.RenderPass(scene, camera);
+const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.8, 0.4, 0.1);
+bloomPass.tintColor = new THREE.Color(0x00f0ff);
+const composer = new THREE.EffectComposer(renderer);
+composer.addPass(renderScene);
+composer.addPass(bloomPass);
 
-const magentaLight = new THREE.PointLight(0xff007f, 25, 30);
-scene.add(magentaLight);
+// Geometría del Enjambre Neuronal
+const particlesCount = 3000;
+const posArray = new Float32Array(particlesCount * 3);
+const randomPosArray = new Float32Array(particlesCount * 3);
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
-scene.add(ambientLight);
+for(let i = 0; i < particlesCount * 3; i+=3) {
+  // Forma ordenada (Cubo/Cilindro)
+  posArray[i] = (Math.random() - 0.5) * 10;
+  posArray[i+1] = (Math.random() - 0.5) * 10;
+  posArray[i+2] = (Math.random() - 0.5) * 10;
 
-// Malla Esférica de Alta Densidad Geométrica
-const geometry = new THREE.IcosahedronGeometry(2.1, 64);
+  // Forma caótica (Esfera expansiva)
+  const r = 15 * Math.random();
+  const theta = Math.random() * Math.PI * 2;
+  const phi = Math.acos((Math.random() * 2) - 1);
+  randomPosArray[i] = r * Math.sin(phi) * Math.cos(theta);
+  randomPosArray[i+1] = r * Math.sin(phi) * Math.sin(theta);
+  randomPosArray[i+2] = r * Math.cos(phi);
+}
 
-// Material de Cristal Físico Avanzado con Transmisión y Refracción Realista
-const material = new THREE.MeshPhysicalMaterial({
-  color: 0x020205,
-  metalness: 0.05,
-  roughness: 0.05,
-  transparent: true,
-  transmission: 0.98,
-  ior: 1.55,
-  thickness: 3.5,
-  clearcoat: 1.0,
-  clearcoatRoughness: 0.01,
-  side: THREE.DoubleSide
-});
+const geometry = new THREE.BufferGeometry();
+geometry.setAttribute('position', new THREE.BufferAttribute(randomPosArray, 3));
+geometry.setAttribute('targetPosition', new THREE.BufferAttribute(posArray, 3));
 
-let runtimeUniforms = { uTime: { value: 0 }, uScrollProgress: { value: 0 } };
-
-material.onBeforeCompile = (shader) => {
-  shader.uniforms.uTime = runtimeUniforms.uTime;
-  shader.uniforms.uScrollProgress = runtimeUniforms.uScrollProgress;
-  
-  // Algoritmo Simplex Noise 3D Inyectado por Hardware (GPU)
-  shader.vertexShader = `
+// Material de Partículas Personalizado
+const material = new THREE.ShaderMaterial({
+  uniforms: {
+    uTime: { value: 0 },
+    uScroll: { value: 0 },
+    uColor1: { value: new THREE.Color(0x00f0ff) }, // Cyan
+    uColor2: { value: new THREE.Color(0xff007f) }  // Magenta
+  },
+  vertexShader: `
     uniform float uTime;
-    uniform float uScrollProgress;
-    varying vec3 vNorm;
+    uniform float uScroll;
+    attribute vec3 targetPosition;
     varying vec3 vPos;
     
-    vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
-    vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
-    float snoise(vec3 v){
-      const vec2 C = vec2(1.0/6.0, 1.0/3.0);
-      const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
-      vec3 i  = floor(v + dot(v, C.yyy));
-      vec3 x0 = v - i + dot(i, C.xxx);
-      vec3 g = step(x0.yzx, x0.xyz);
-      vec3 l = 1.0 - g;
-      vec3 i1 = min(g.xyz, l.zxy);
-      vec3 i2 = max(g.xyz, l.zxy);
-      vec3 x1 = x0 - i1 + C.xxx;
-      vec3 x2 = x0 - i2 + C.yyy;
-      vec3 x3 = x0 - D.yyy;
-      i = mod(i, 289.0);
-      vec4 p = permute(permute(permute(
-                 i.z + vec4(0.0, i1.z, i2.z, 1.0))
-               + i.y + vec4(0.0, i1.y, i2.y, 1.0))
-               + i.x + vec4(0.0, i1.x, i2.x, 1.0));
-      float n_ = 0.142857142857;
-      vec3 ns = n_ * D.wyz - D.xzx;
-      vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
-      vec4 x_ = floor(j * ns.z);
-      vec4 y_ = floor(j - 7.0 * x_);
-      vec4 x = x_ *ns.x + ns.yyyy;
-      vec4 y = y_ *ns.x + ns.yyyy;
-      vec4 h = 1.0 - abs(x) - abs(y);
-      vec4 b0 = vec4(x.xy, y.xy);
-      vec4 b1 = vec4(x.zw, y.zw);
-      vec4 s0 = floor(b0)*2.0 + 1.0;
-      vec4 s1 = floor(b1)*2.0 + 1.0;
-      vec4 sh = -step(h, vec4(0.0));
-      vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;
-      vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
-      vec3 p0 = vec3(a0.xy, h.x);
-      vec3 p1 = vec3(a0.zw, h.y);
-      vec3 p2 = vec3(a1.xy, h.z);
-      vec3 p3 = vec3(a1.zw, h.w);
-      vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
-      p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
-      vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
-      m = m * m;
-      return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
+    void main() {
+      vPos = position;
+      // Interpolación entre el Caos (AI) y el Orden (Java) basado en el Scroll
+      vec3 currentPos = mix(position, targetPosition, uScroll);
+      
+      // Movimiento orgánico constante
+      currentPos.x += sin(uTime + currentPos.z) * 0.5;
+      currentPos.y += cos(uTime + currentPos.x) * 0.5;
+      
+      vec4 mvPosition = modelViewMatrix * vec4(currentPos, 1.0);
+      gl_PointSize = (12.0 / -mvPosition.z);
+      gl_Position = projectionMatrix * mvPosition;
     }
-  ` + shader.vertexShader;
-
-  shader.vertexShader = shader.vertexShader.replace(
-    '#include <begin_vertex>',
-    `
-    // Deformador líquido inteligente controlado por el tiempo y el scroll
-    float noise = snoise(position * (0.6 + uScrollProgress * 0.4) + uTime * 0.32);
-    vec3 transformed = position + normal * noise * (0.45 + uScrollProgress * 0.3);
-    vNorm = normal;
-    vPos = transformed;
-    `
-  );
-  
-  // Inyección de un efecto fresnel holográfico personalizado en el fragmento
-  shader.fragmentShader = `
-    varying vec3 vNorm;
+  `,
+  fragmentShader: `
+    uniform vec3 uColor1;
+    uniform vec3 uColor2;
     varying vec3 vPos;
-  ` + shader.fragmentShader;
-  
-  shader.fragmentShader = shader.fragmentShader.replace(
-    '#include <dithering_fragment>',
-    `
-    #include <dithering_fragment>
-    // Cálculo espectral para simular reflejos iridiscentes cuánticos de lujo
-    vec3 viewDir = normalize(cameraPosition - vPos);
-    float fresnel = pow(1.0 - max(dot(vNorm, viewDir), 0.0), 2.5);
-    vec3 spectralGlow = mix(vec3(0.0, 0.94, 1.0), vec3(1.0, 0.0, 0.5), fresnel);
-    gl_FragColor.rgb += spectralGlow * fresnel * 0.45;
-    `
-  );
-};
+    
+    void main() {
+      // Degradado basado en la posición
+      float mixValue = (vPos.y + 5.0) / 10.0;
+      vec3 finalColor = mix(uColor2, uColor1, mixValue);
+      
+      // Forma circular suave
+      float distanceToCenter = distance(gl_PointCoord, vec2(0.5));
+      float alpha = 0.05 / distanceToCenter - 0.1;
+      
+      gl_FragColor = vec4(finalColor, alpha);
+    }
+  `,
+  transparent: true,
+  depthWrite: false,
+  blending: THREE.AdditiveBlending // Efecto Holográfico
+});
 
-const mesh = new THREE.Mesh(geometry, material);
-scene.add(mesh);
+const particlesMesh = new THREE.Points(geometry, material);
+scene.add(particlesMesh);
 
-// Sistema de partículas cuánticas secundarias flotantes
-const pGeometry = new THREE.BufferGeometry();
-const pCount = 500;
-const pCoords = new Float32Array(pCount * 3);
-for(let i=0; i<pCount; i++) {
-  const u = Math.random(); const v = Math.random();
-  const theta = u * 2.0 * Math.PI; const phi = Math.acos(2.0 * v - 1.0);
-  const r = 3.3 + Math.random() * 0.8;
-  pCoords[i*3] = r * Math.sin(phi) * Math.cos(theta);
-  pCoords[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
-  pCoords[i*3+2] = r * Math.cos(phi);
-}
-pGeometry.setAttribute('position', new THREE.BufferAttribute(pCoords, 3));
-const pMaterial = new THREE.PointsMaterial({ color: 0x00f0ff, size: 0.02, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending });
-const particles = new THREE.Points(pGeometry, pMaterial);
-scene.add(particles);
-
-/* Telemetría de Scroll de Alta Sensibilidad */
-let sProgress = 0;
+// Conexión del Scroll al Shader
+let scrollProgress = 0;
 ScrollTrigger.create({
-  trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: true,
-  onUpdate: (self) => { sProgress = self.progress; runtimeUniforms.uScrollProgress.value = sProgress; }
+  trigger: document.body,
+  start: 'top top',
+  end: 'bottom bottom',
+  scrub: true,
+  onUpdate: (self) => { scrollProgress = self.progress; }
 });
 
-/* Telemetría del Ratón Amortiguada (Parallax) */
-let rawX = 0, rawY = 0;
-let lerpX = 0, lerpY = 0;
-window.addEventListener('mousemove', (e) => {
-  rawX = (e.clientX / window.innerWidth - 0.5) * 2.0;
-  rawY = (e.clientY / window.innerHeight - 0.5) * -2.0;
-});
-
-/* Loop de Animación Maestro */
 const clock = new THREE.Clock();
-function frameTick() {
-  const t = clock.getElapsedTime();
-  runtimeUniforms.uTime.value = t;
+function animate() {
+  const elapsedTime = clock.getElapsedTime();
+  material.uniforms.uTime.value = elapsedTime;
+  
+  // Suavizar el scroll progresivo
+  material.uniforms.uScroll.value += (scrollProgress - material.uniforms.uScroll.value) * 0.05;
 
-  // Rotaciones sutiles continuas de las mallas
-  mesh.rotation.y = t * 0.1;
-  mesh.rotation.x = t * 0.04;
-  particles.rotation.y = -t * 0.03;
+  particlesMesh.rotation.y = elapsedTime * 0.05;
+  particlesMesh.rotation.x = elapsedTime * 0.02;
 
-  // Dinámica orbital de las fuentes de luz de neón
-  cyanLight.position.x = Math.sin(t * 1.3) * 5;
-  cyanLight.position.y = Math.cos(t * 0.8) * 4;
-  cyanLight.position.z = Math.sin(t * 0.5) * 3;
+  // Movimiento de cámara sutil con ratón
+  camera.position.x += ((mouseX / window.innerWidth - 0.5) * 2 - camera.position.x) * 0.02;
+  camera.position.y += (-(mouseY / window.innerHeight - 0.5) * 2 - camera.position.y) * 0.02;
+  camera.lookAt(scene.position);
 
-  magentaLight.position.x = Math.cos(t * 0.9) * 5;
-  magentaLight.position.y = Math.sin(t * 1.5) * 4;
-  magentaLight.position.z = Math.cos(t * 0.7) * 3;
-
-  // Factor de amortiguación lineal (Lerp) para el ratón
-  lerpX += (rawX - lerpX) * 0.06;
-  lerpY += (rawY - lerpY) * 0.06;
-
-  // CINEMÁTICA TRIDIMENSIONAL DE CÁMARA LIGADA AL SCROLL
-  // La cámara ejecuta un viaje parabólico envolvente mientras bajas por la web
-  camera.position.z = 9.0 - (sProgress * 4.0) + (lerpX * 0.25);
-  camera.position.x = Math.sin(sProgress * Math.PI * 1.3) * 2.5 + lerpX;
-  camera.position.y = -(sProgress * 2.5) + lerpY;
-  camera.lookAt(0, -(sProgress * 1.1), 0);
-
-  renderer.render(scene, camera);
-  requestAnimationFrame(frameTick);
+  composer.render();
+  requestAnimationFrame(animate);
 }
-frameTick();
+animate();
 
-/* Responsive */
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
+  composer.setSize(window.innerWidth, window.innerHeight);
 });
 </script>
 </body>
