@@ -404,7 +404,7 @@
     }
     .h-track {
       height: 100%;
-      width: 200vw;
+      width: 400vw; /* 4 paneles */
       display: flex;
       will-change: transform;
       touch-action: pan-y;
@@ -698,24 +698,42 @@
     </div>
   </section>
 
-  <!-- PROJECTS -->
+  <!-- PROJECTS (4 paneles) -->
   <section id="proyectos">
     <div class="h-wrap">
       <div class="h-track" id="hTrack">
+        <!-- Panel 1: Videojuego de Cartas -->
         <div class="h-panel">
           <div class="pin-label project-label" data-i18n="projects_label">003 / PROYECTOS</div>
-          <div class="pidx" data-i18n="project1_idx">01 — JAVA / POO</div>
-          <h2 data-i18n="project1_title">HÉROES<br>DEL REINO</h2>
-          <p class="ptag" data-i18n="project1_desc">Juego de combate por turnos con herencia y polimorfismo, sistema de pociones y gestión de enemigos. Ideal para practicar y preparar exámenes en Java.</p>
-          <div class="pstack"><span>JAVA</span><span>POO</span><span>ARRAYS</span></div>
-          <a class="plink" href="https://github.com/SandraBerna06/Heroes.git" target="_blank" data-i18n="project1_link">VER CÓDIGO →</a>
+          <div class="pidx" data-i18n="project1_idx">01 — JAVA / SWING / JDBC</div>
+          <h2 data-i18n="project1_title">VIDEOJUEGO<br>DE CARTAS</h2>
+          <p class="ptag" data-i18n="project1_desc">Aplicación de escritorio con interfaz Swing que gestiona un juego de cartas coleccionables. Permite administrar jugadores, visualizar catálogo de cartas con filtros avanzados y simular batallas asíncronas entre jugadores. Incluye conexión a MySQL y música de fondo.</p>
+          <div class="pstack"><span>JAVA</span><span>SWING</span><span>JDBC</span><span>MYSQL</span></div>
+          <a class="plink" href="https://github.com/SandraBerna06/Videojuego-Cartas.git" target="_blank" data-i18n="project1_link">VER CÓDIGO →</a>
         </div>
+        <!-- Panel 2: Gestión de Biblioteca -->
         <div class="h-panel">
-          <div class="pidx" data-i18n="project2_idx">02 — JAVA / POO</div>
-          <h2 data-i18n="project2_title">JUEGO DE<br>AJEDREZ</h2>
-          <p class="ptag" data-i18n="project2_desc">Ajedrez completo con interfaz de texto, movimientos legales, turnos y control de victoria. Práctica de lógica, estructuras de datos y POO.</p>
+          <div class="pidx" data-i18n="project2_idx">02 — JAVA / JDBC / MySQL</div>
+          <h2 data-i18n="project2_title">GESTIÓN DE<br>BIBLIOTECA</h2>
+          <p class="ptag" data-i18n="project2_desc">Aplicación de consola en Java para gestionar el inventario de una biblioteca utilizando MySQL y JDBC. Operaciones CRUD completas sobre libros, con validación de entrada y menú interactivo.</p>
+          <div class="pstack"><span>JAVA</span><span>JDBC</span><span>MYSQL</span><span>CONSOLA</span></div>
+          <a class="plink" href="https://github.com/SandraBerna06/Ejercicio_libro.git" target="_blank" data-i18n="project2_link">VER CÓDIGO →</a>
+        </div>
+        <!-- Panel 3: Héroes del Reino -->
+        <div class="h-panel">
+          <div class="pidx" data-i18n="project3_idx">03 — JAVA / POO</div>
+          <h2 data-i18n="project3_title">HÉROES<br>DEL REINO</h2>
+          <p class="ptag" data-i18n="project3_desc">Juego de combate por turnos con herencia y polimorfismo, sistema de pociones y gestión de enemigos. Ideal para practicar y preparar exámenes en Java.</p>
           <div class="pstack"><span>JAVA</span><span>POO</span><span>ARRAYS</span></div>
-          <a class="plink" href="https://github.com/manberper/ProyectoAjedrez.git" target="_blank" data-i18n="project2_link">VER CÓDIGO →</a>
+          <a class="plink" href="https://github.com/SandraBerna06/Heroes.git" target="_blank" data-i18n="project3_link">VER CÓDIGO →</a>
+        </div>
+        <!-- Panel 4: Juego de Ajedrez -->
+        <div class="h-panel">
+          <div class="pidx" data-i18n="project4_idx">04 — JAVA / POO</div>
+          <h2 data-i18n="project4_title">JUEGO DE<br>AJEDREZ</h2>
+          <p class="ptag" data-i18n="project4_desc">Ajedrez completo con interfaz de texto, movimientos legales, turnos y control de victoria. Práctica de lógica, estructuras de datos y POO.</p>
+          <div class="pstack"><span>JAVA</span><span>POO</span><span>ARRAYS</span></div>
+          <a class="plink" href="https://github.com/manberper/ProyectoAjedrez.git" target="_blank" data-i18n="project4_link">VER CÓDIGO →</a>
         </div>
       </div>
     </div>
@@ -756,26 +774,135 @@
 
   <script>
     // ============================================================
-    //  TRADUCCIONES
+    //  TRADUCCIONES COMPLETAS (ES/EN)
     // ============================================================
     const translations = {
-      es: { /* ... */ },
-      en: { /* ... */ }
+      es: {
+        menu_about: "SOBRE MÍ",
+        menu_exp: "EXPERIENCIA",
+        menu_projects: "PROYECTOS",
+        menu_skills: "SKILLS",
+        menu_contact: "CONTACTO",
+        hero_sub: "DESARROLLO WEB — INTELIGENCIA ARTIFICIAL",
+        hero_scroll: "SCROLL ↓",
+        about_label: "001 / SOBRE MÍ",
+        about_text: 'Estudio <span class="hl">Desarrollo de Aplicaciones Web</span> y construyo lógica con Java mientras me formo, por mi cuenta, en <span class="hl2">Inteligencia Artificial</span> y Machine Learning. Creo en el código sólido antes que en el código bonito.',
+        about_base_label: "Base",
+        about_base: "Albatera, Alicante — Permiso B",
+        about_availability_label: "Disponibilidad",
+        about_availability: "Prácticas / primer empleo",
+        about_ai_label: "Formación IA",
+        about_ai: "Stanford · DeepLearning.AI · Google · IBM",
+        about_lang_label: "Idiomas",
+        about_lang: "Español (nativo) · Inglés (B2) · Valenciano (C1)",
+        tools_label: "HERRAMIENTAS",
+        exp_label: "002 / TRAYECTORIA",
+        exp_exp_sub: "▸ Experiencia",
+        exp_ntt_date: "ABR—MAY 2025",
+        exp_ntt_role: "Becaria de desarrollo",
+        exp_ntt_desc: "Desarrollo con Java y soporte en proyectos reales. Control de versiones con Git, trabajo en equipo bajo metodología Scrum, documentación técnica y pruebas.",
+        exp_edu_sub: "▸ Formación",
+        exp_ucam_date: "EN CURSO",
+        exp_ucam_role: "CFGS Desarrollo de Aplicaciones Web",
+        exp_ucam_desc: "Formación práctica en frontend, backend y bases de datos: Java, PHP/Node, MySQL y Git.",
+        projects_label: "003 / PROYECTOS",
+        // Proyecto 1: Videojuego de Cartas
+        project1_idx: "01 — JAVA / SWING / JDBC",
+        project1_title: "VIDEOJUEGO<br>DE CARTAS",
+        project1_desc: "Aplicación de escritorio con interfaz Swing que gestiona un juego de cartas coleccionables. Permite administrar jugadores, visualizar catálogo de cartas con filtros avanzados y simular batallas asíncronas entre jugadores. Incluye conexión a MySQL y música de fondo.",
+        project1_link: "VER CÓDIGO →",
+        // Proyecto 2: Gestión de Biblioteca
+        project2_idx: "02 — JAVA / JDBC / MySQL",
+        project2_title: "GESTIÓN DE<br>BIBLIOTECA",
+        project2_desc: "Aplicación de consola en Java para gestionar el inventario de una biblioteca utilizando MySQL y JDBC. Operaciones CRUD completas sobre libros, con validación de entrada y menú interactivo.",
+        project2_link: "VER CÓDIGO →",
+        // Proyecto 3: Héroes del Reino
+        project3_idx: "03 — JAVA / POO",
+        project3_title: "HÉROES<br>DEL REINO",
+        project3_desc: "Juego de combate por turnos con herencia y polimorfismo, sistema de pociones y gestión de enemigos. Ideal para practicar y preparar exámenes en Java.",
+        project3_link: "VER CÓDIGO →",
+        // Proyecto 4: Juego de Ajedrez
+        project4_idx: "04 — JAVA / POO",
+        project4_title: "JUEGO DE<br>AJEDREZ",
+        project4_desc: "Ajedrez completo con interfaz de texto, movimientos legales, turnos y control de victoria. Práctica de lógica, estructuras de datos y POO.",
+        project4_link: "VER CÓDIGO →",
+        skills_label: "004 / SKILLS",
+        contact_label: "005 / CONTACTO",
+        contact_title: '¿HABLAMOS?<br><a href="mailto:sandraberna2006@gmail.com">ESCRÍBEME →</a>',
+      },
+      en: {
+        menu_about: "ABOUT",
+        menu_exp: "EXPERIENCE",
+        menu_projects: "PROJECTS",
+        menu_skills: "SKILLS",
+        menu_contact: "CONTACT",
+        hero_sub: "WEB DEVELOPMENT — ARTIFICIAL INTELLIGENCE",
+        hero_scroll: "SCROLL ↓",
+        about_label: "001 / ABOUT ME",
+        about_text: 'I study <span class="hl">Web Application Development</span> and build logic with Java while self-studying <span class="hl2">Artificial Intelligence</span> and Machine Learning. I believe in solid code over pretty code.',
+        about_base_label: "Base",
+        about_base: "Albatera, Alicante — Driver's license B",
+        about_availability_label: "Availability",
+        about_availability: "Internship / first job",
+        about_ai_label: "AI Training",
+        about_ai: "Stanford · DeepLearning.AI · Google · IBM",
+        about_lang_label: "Languages",
+        about_lang: "Spanish (native) · English (B2) · Valencian (C1)",
+        tools_label: "TOOLS",
+        exp_label: "002 / PATH",
+        exp_exp_sub: "▸ Experience",
+        exp_ntt_date: "APR—MAY 2025",
+        exp_ntt_role: "Development intern",
+        exp_ntt_desc: "Java development and support on real projects. Version control with Git, teamwork under Scrum, technical documentation and testing.",
+        exp_edu_sub: "▸ Education",
+        exp_ucam_date: "CURRENT",
+        exp_ucam_role: "CFGS Web Application Development",
+        exp_ucam_desc: "Hands-on training in frontend, backend and databases: Java, PHP/Node, MySQL and Git.",
+        projects_label: "003 / PROJECTS",
+        // Project 1: Card Game
+        project1_idx: "01 — JAVA / SWING / JDBC",
+        project1_title: "CARD<br>GAME",
+        project1_desc: "Desktop application with Swing interface that manages a collectible card game. Allows managing players, viewing card catalog with advanced filters and simulating asynchronous battles between players. Includes MySQL connection and background music.",
+        project1_link: "VIEW CODE →",
+        // Project 2: Library Management
+        project2_idx: "02 — JAVA / JDBC / MySQL",
+        project2_title: "LIBRARY<br>MANAGEMENT",
+        project2_desc: "Console application in Java to manage a library inventory using MySQL and JDBC. Complete CRUD operations on books, with input validation and interactive menu.",
+        project2_link: "VIEW CODE →",
+        // Project 3: Heroes of the Kingdom
+        project3_idx: "03 — JAVA / OOP",
+        project3_title: "HEROES<br>OF THE KINGDOM",
+        project3_desc: "Turn-based combat game with inheritance and polymorphism, potion system and enemy management. Ideal for practicing and preparing Java exams.",
+        project3_link: "VIEW CODE →",
+        // Project 4: Chess Game
+        project4_idx: "04 — JAVA / OOP",
+        project4_title: "CHESS<br>GAME",
+        project4_desc: "Full chess game with text interface, legal moves, turns and victory control. Practice of logic, data structures and OOP.",
+        project4_link: "VIEW CODE →",
+        skills_label: "004 / SKILLS",
+        contact_label: "005 / CONTACT",
+        contact_title: 'LET\'S TALK?<br><a href="mailto:sandraberna2006@gmail.com">WRITE ME →</a>',
+      }
     };
-    // (Se omiten por brevedad, pero están completas en el código final)
 
     let currentLang = 'es';
+
     function setLanguage(lang) {
       currentLang = lang;
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (translations[lang] && translations[lang][key] !== undefined) {
-          el.innerHTML = translations[lang][key];
+          if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+            el.value = translations[lang][key];
+          } else {
+            el.innerHTML = translations[lang][key];
+          }
         }
       });
       document.getElementById('langEs').classList.toggle('active', lang === 'es');
       document.getElementById('langEn').classList.toggle('active', lang === 'en');
     }
+
     document.getElementById('langEs').addEventListener('click', () => setLanguage('es'));
     document.getElementById('langEn').addEventListener('click', () => setLanguage('en'));
 
@@ -873,6 +1000,7 @@
       });
     });
 
+    // Scroll horizontal con 4 paneles (400vw)
     const track = document.getElementById('hTrack');
     gsap.to(track, {
       x: () => -(track.scrollWidth - window.innerWidth),
@@ -888,7 +1016,7 @@
       }
     });
 
-    // Mejorar touch en el scroll horizontal (solo prevenir cuando es claramente horizontal)
+    // Mejorar touch horizontal (solo cuando es claramente horizontal)
     if ('ontouchstart' in window) {
       let startX = 0, startY = 0;
       const hWrap = document.querySelector('.h-wrap');
@@ -1282,7 +1410,7 @@
     }
     physicsLoop();
 
-    // --- Arrastre optimizado para no bloquear scroll ---
+    // --- Arrastre optimizado ---
     function startDrag(clientX, clientY) {
       isDragging = true;
       dragPrevX = clientX;
@@ -1334,7 +1462,7 @@
     });
     window.addEventListener('mouseup', endDrag);
 
-    // Táctil: solo arrastramos si el movimiento es claramente horizontal
+    // Táctil: solo arrastrar si el movimiento es claramente horizontal
     let touchStartX = 0, touchStartY = 0;
     let isTouchDrag = false;
 
@@ -1343,7 +1471,6 @@
       touchStartX = touch.clientX;
       touchStartY = touch.clientY;
       isTouchDrag = false;
-      // No iniciamos arrastre aquí, esperamos al move para decidir
     }, { passive: true });
 
     window.addEventListener('touchmove', (e) => {
@@ -1358,7 +1485,7 @@
         return; // scroll vertical libre
       }
 
-      // Si el movimiento es horizontal o ya estamos arrastrando
+      // Si es horizontal o ya estamos arrastrando
       if (isHorizontal && Math.abs(dx) > 15) {
         e.preventDefault();
         if (!isTouchDrag) {
