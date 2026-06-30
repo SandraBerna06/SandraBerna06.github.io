@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sandra Berná Zaplana — Creative Dev & AI Specialist</title>
-<meta name="description" content="Portfolio de arte digital y desarrollo conceptual de Sandra Berná. Especialista en Java e Inteligencia Artificial.">
+<meta name="description" content="Portfolio conceptual de vanguardia de Sandra Berná. Especialista en Java e Inteligencia Artificial.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,14 +13,13 @@
 
 <style>
   :root {
-    --bg: #020204;
-    --text: #f9f9fb;
-    --text-muted: #62626a;
+    --bg: #000000;
+    --text: #ffffff;
+    --text-muted: #55555e;
     --cyan: #00f0ff;
     --magenta: #ff007f;
-    --purple: #7000ff;
-    --glass: rgba(3, 3, 6, 0.45);
-    --glass-border: rgba(255, 255, 255, 0.05);
+    --glass: rgba(2, 2, 4, 0.35);
+    --glass-border: rgba(255, 255, 255, 0.04);
     --sans: 'Plus Jakarta Sans', sans-serif;
     --display: 'Clash Display', sans-serif;
     --mono: 'Space Mono', monospace;
@@ -29,265 +28,261 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { background: var(--bg); color: var(--text); font-family: var(--sans); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
   
-  /* Reset de selección de texto artística */
-  ::selection { background: var(--magenta); color: #000; }
+  ::selection { background: var(--cyan); color: #000; }
 
-  /* Custom Líquido Cursor */
-  #art-cursor {
-    position: fixed; top: 0; left: 0; width: 8px; height: 8px;
+  /* Cursor Líquido con Inercia Física */
+  #quantum-cursor {
+    position: fixed; top: 0; left: 0; width: 6px; height: 6px;
     background: #fff; border-radius: 50%; pointer-events: none; z-index: 10000;
     transform: translate(-50%, -50%); transition: transform 0.1s ease;
   }
-  #art-cursor-ring {
-    position: fixed; top: 0; left: 0; width: 40px; height: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50%;
+  #quantum-cursor-ring {
+    position: fixed; top: 0; left: 0; width: 38px; height: 38px;
+    border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 50%;
     pointer-events: none; z-index: 9999; transform: translate(-50%, -50%);
-    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), height 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s;
+    transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1), height 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s, background 0.3s;
   }
-  .hovered #art-cursor { transform: translate(-50%, -50%) scale(0.5); background: var(--cyan); }
-  .hovered #art-cursor-ring { width: 70px; height: 70px; border-color: var(--cyan); background: rgba(0, 240, 255, 0.03); }
+  .hovered #quantum-cursor { transform: translate(-50%, -50%) scale(0.3); background: var(--magenta); }
+  .hovered #quantum-cursor-ring { width: 65px; height: 65px; border-color: var(--magenta); background: rgba(255, 0, 127, 0.02); }
 
-  @media (max-width: 960px) { #art-cursor, #art-cursor-ring { display: none; } body { cursor: default; } }
+  @media (max-width: 960px) { #quantum-cursor, #quantum-cursor-ring { display: none; } body { cursor: default; } }
   @media (hover: hover) { body, a, button, .interactive { cursor: none; } }
 
-  /* Canvas WebGL Maestro fixed de fondo absoluto */
-  #webgl-artwork { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 1; pointer-events: none; }
+  /* Lienzo WebGL Absoluto */
+  #webgl-canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 1; pointer-events: none; }
 
-  /* Grid editorial estático de fondo (Líneas de diseño sutiles) */
-  .editorial-grid { position: fixed; inset: 0; z-index: 2; pointer-events: none; display: grid; grid-template-columns: repeat(4, 1fr); padding: 0 6vw; }
-  .grid-line { border-right: 1px solid rgba(255, 255, 255, 0.02); height: 100%; }
-  .grid-line:last-child { border-right: none; }
+  /* Líneas de Guía Cinéticas de Fondo */
+  .grid-overlay { position: fixed; inset: 0; z-index: 2; pointer-events: none; display: grid; grid-template-columns: repeat(4, 1fr); padding: 0 6vw; }
+  .grid-column { border-right: 1px solid rgba(255, 255, 255, 0.015); height: 100%; }
+  .grid-column:last-child { border-right: none; }
 
-  /* Contenedores Principales */
+  /* Contenedores */
   main { position: relative; z-index: 3; width: 100%; }
-  .container { max-width: 1300px; margin: 0 auto; padding: 0 6vw; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 0 6vw; }
   
-  /* Contenedores de Texto Tipo Escultura de Cristal */
-  .sculpture-card {
+  /* Bloques de Refracción de Cristal */
+  .glass-sculpt {
     background: var(--glass);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    backdrop-filter: blur(32px) saturate(190%);
+    -webkit-backdrop-filter: blur(32px) saturate(190%);
     border: 1px solid var(--glass-border);
-    border-radius: 24px;
-    padding: 60px;
-    box-shadow: 0 30px 100px rgba(0,0,0,0.8);
+    border-radius: 28px;
+    padding: 70px 60px;
+    box-shadow: 0 40px 120px rgba(0,0,0,0.9);
   }
 
-  /* Estructura del Header Editorial */
-  header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 40px 6vw; display: flex; justify-content: space-between; align-items: center; mix-blend-mode: difference; }
-  .header-brand { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; font-weight: 400; text-transform: uppercase; }
-  .header-brand span { color: var(--magenta); }
-  header nav ul { list-style: none; display: flex; gap: 40px; }
-  header nav a { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(255,255,255,0.5); transition: color 0.4s; }
+  /* Header Editorial */
+  header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 45px 6vw; display: flex; justify-content: space-between; align-items: center; mix-blend-mode: difference; }
+  .brand-code { font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 400; }
+  .brand-code span { color: var(--cyan); }
+  header nav ul { list-style: none; display: flex; gap: 45px; }
+  header nav a { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(255,255,255,0.4); transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
   header nav a:hover { color: var(--text); }
   @media (max-width: 860px) { header nav { display: none; } }
 
-  /* Secciones conceptuales */
-  section { position: relative; padding: 20vh 0; min-height: 100vh; display: flex; align-items: center; }
+  /* Secciones */
+  section { position: relative; padding: 25vh 0; min-height: 100vh; display: flex; align-items: center; }
   
-  .concept-tag { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.25em; color: var(--magenta); margin-bottom: 30px; display: flex; align-items: center; gap: 15px; }
-  .concept-tag::before { content: ''; width: 30px; height: 1px; background: var(--magenta); }
+  .section-tag { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.3em; color: var(--cyan); margin-bottom: 35px; display: flex; align-items: center; gap: 15px; }
+  .section-tag::before { content: ''; width: 35px; height: 1px; background: var(--cyan); }
 
-  /* Hero Conceptual */
-  #hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; }
-  .hero-meta { font-family: var(--mono); font-size: 11px; color: var(--text-muted); margin-bottom: 35px; letter-spacing: 0.05em; display: flex; align-items: center; gap: 12px; }
-  .hero-meta .pulse-node { width: 5px; height: 5px; background: var(--cyan); border-radius: 50%; box-shadow: 0 0 12px var(--cyan); animation: pulseGlow 2.5s infinite; }
-  @keyframes pulseGlow { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; transform: scale(1.3); } }
+  /* Hero */
+  #hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+  .hero-telemetry { font-family: var(--mono); font-size: 11px; color: var(--text-muted); margin-bottom: 40px; letter-spacing: 0.08em; display: flex; align-items: center; gap: 12px; }
+  .hero-telemetry .status-node { width: 5px; height: 5px; background: var(--cyan); border-radius: 50%; box-shadow: 0 0 14px var(--cyan); }
   
-  .hero-title { font-family: var(--display); font-size: clamp(54px, 9.5vw, 135px); font-weight: 200; line-height: 0.9; letter-spacing: -0.04em; }
-  .hero-title .hologram { font-weight: 300; background: linear-gradient(90deg, var(--cyan), var(--purple), var(--magenta)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-style: italic; position: relative; }
-  .hero-sub { margin-top: 45px; max-width: 600px; font-size: clamp(17px, 2vw, 22px); color: var(--text-muted); line-height: 1.6; font-weight: 300; }
+  .hero-title { font-family: var(--display); font-size: clamp(50px, 9vw, 130px); font-weight: 200; line-height: 0.88; letter-spacing: -0.04em; }
+  .hero-title .iridescent { font-weight: 300; background: linear-gradient(90deg, #00ffff, #9b51e0, #ff007f, #00ffff); background-size: 300% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-style: italic; animation: textShine 6s linear infinite; }
+  @keyframes textShine { to { background-position: 300% center; } }
+  .hero-sub { margin-top: 45px; max-width: 620px; font-size: clamp(17px, 2vw, 21px); color: var(--text-muted); line-height: 1.65; font-weight: 300; }
   .hero-sub strong { color: var(--text); font-weight: 400; }
   
   /* Sobre Mí */
-  .about-layout { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 80px; }
-  .about-statement h2 { font-family: var(--display); font-size: clamp(28px, 4vw, 48px); font-weight: 200; line-height: 1.15; margin-bottom: 30px; letter-spacing: -0.02em; }
-  .about-statement p { font-size: 17px; color: var(--text-muted); line-height: 1.85; font-weight: 300; }
+  .about-layout { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 80px; }
+  .about-statement h2 { font-family: var(--display); font-size: clamp(28px, 3.8vw, 46px); font-weight: 200; line-height: 1.2; margin-bottom: 30px; letter-spacing: -0.02em; }
+  .about-statement p { font-size: 17px; color: var(--text-muted); line-height: 1.9; font-weight: 300; }
   
-  .editorial-table { display: flex; flex-direction: column; border-top: 1px solid var(--glass-border); }
-  .table-row { padding: 24px 0; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: start; gap: 30px; }
-  .table-row .key { font-family: var(--mono); color: var(--text-muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; padding-top: 3px; }
-  .table-row .val { text-align: right; font-size: 14px; color: var(--text); font-weight: 300; line-height: 1.5; }
+  .editorial-spec { display: flex; flex-direction: column; border-top: 1px solid var(--glass-border); }
+  .spec-row { padding: 26px 0; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: start; gap: 30px; }
+  .spec-row .spec-key { font-family: var(--mono); color: var(--text-muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; padding-top: 2px; }
+  .spec-row .spec-val { text-align: right; font-size: 14px; color: var(--text); font-weight: 300; line-height: 1.5; }
   @media (max-width: 960px) { .about-layout { grid-template-columns: 1fr; gap: 50px; } }
 
   /* Experiencia */
-  .timeline-flow { display: flex; flex-direction: column; margin-top: 50px; }
+  .timeline-flow { display: flex; flex-direction: column; margin-top: 40px; }
   .timeline-node { display: grid; grid-template-columns: 240px 1fr; gap: 60px; padding: 50px 0; border-top: 1px solid var(--glass-border); }
   .timeline-node:last-child { border-bottom: 1px solid var(--glass-border); }
-  .node-time { font-family: var(--mono); font-size: 11px; color: var(--cyan); letter-spacing: 0.05em; }
-  .node-content h3 { font-family: var(--display); font-size: 28px; font-weight: 400; margin-bottom: 10px; letter-spacing: -0.01em; }
+  .node-time { font-family: var(--mono); font-size: 11px; color: var(--cyan); letter-spacing: 0.08em; }
+  .node-content h3 { font-family: var(--display); font-size: 30px; font-weight: 400; margin-bottom: 12px; letter-spacing: -0.01em; }
   .node-content h3 span { font-size: 14px; color: var(--text-muted); font-family: var(--sans); font-weight: 300; margin-left: 15px; }
-  .node-content p { color: var(--text-muted); font-size: 16px; line-height: 1.8; font-weight: 300; max-width: 650px; }
+  .node-content p { color: var(--text-muted); font-size: 16px; line-height: 1.85; font-weight: 300; max-width: 680px; }
   .node-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 25px; }
-  .node-badges span { font-family: var(--mono); font-size: 10px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.01); padding: 5px 14px; border-radius: 30px; color: rgba(255,255,255,0.6); }
+  .node-badges span { font-family: var(--mono); font-size: 10px; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.01); padding: 5px 14px; border-radius: 30px; color: rgba(255,255,255,0.5); }
   @media (max-width: 860px) { .timeline-node { grid-template-columns: 1fr; gap: 20px; } }
 
-  /* Escenografía de Proyectos (Scroll Horizontal Puro) */
-  .art-gallery { position: relative; width: 100%; overflow: hidden; background: #000; }
+  /* Galería Horizontal de Proyectos Exclusiva */
+  .gallery-pin-container { position: relative; width: 100%; overflow: hidden; background: #000; }
   .gallery-track { display: flex; width: 300vw; height: 100vh; will-change: transform; }
   .gallery-cell { width: 100vw; height: 100vh; display: flex; align-items: center; padding: 0 8vw; position: relative; }
-  .gallery-cell.curator-title h2 { font-family: var(--display); font-size: clamp(48px, 8vw, 115px); font-weight: 200; line-height: 1.0; letter-spacing: -0.04em; }
-  .gallery-cell.curator-title h2 span { color: var(--cyan); font-style: italic; font-weight: 300; }
+  .gallery-cell.intro-cell h2 { font-family: var(--display); font-size: clamp(48px, 8vw, 110px); font-weight: 200; line-height: 1.0; letter-spacing: -0.04em; }
+  .gallery-cell.intro-cell h2 span { color: var(--magenta); font-style: italic; font-weight: 300; }
   
-  .art-meta-box { max-width: 700px; }
-  .art-index { font-family: var(--mono); font-size: 12px; color: var(--magenta); margin-bottom: 20px; letter-spacing: 0.1em; }
-  .art-title { font-family: var(--display); font-size: clamp(38px, 5.5vw, 74px); font-weight: 400; margin-bottom: 25px; letter-spacing: -0.02em; }
-  .art-desc { color: var(--text-muted); font-size: 17px; line-height: 1.75; margin-bottom: 35px; font-weight: 300; }
+  .art-card { max-width: 720px; width: 100%; }
+  .art-index { font-family: var(--mono); font-size: 12px; color: var(--cyan); margin-bottom: 20px; letter-spacing: 0.1em; }
+  .art-title { font-family: var(--display); font-size: clamp(38px, 5.5vw, 70px); font-weight: 400; margin-bottom: 25px; letter-spacing: -0.02em; }
+  .art-desc { color: var(--text-muted); font-size: 17px; line-height: 1.8; margin-bottom: 35px; font-weight: 300; }
   .art-tags { display: flex; gap: 12px; margin-bottom: 40px; font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
   .art-tags span { border-right: 1px solid var(--glass-border); padding-right: 12px; }
   .art-tags span:last-child { border-right: none; }
-  .art-action-link { font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; color: var(--text); border-bottom: 1px solid var(--text); padding-bottom: 6px; transition: all 0.4s; }
-  .art-action-link:hover { color: var(--cyan); border-color: var(--cyan); padding-left: 8px; }
+  .art-btn { font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; color: var(--text); border-bottom: 1px solid var(--text); padding-bottom: 6px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+  .art-btn:hover { color: var(--cyan); border-color: var(--cyan); padding-left: 10px; }
 
-  /* Skills: Escultura Tipográfica Dinámica (Marquee) */
-  #typography-sculpture { min-height: auto; padding: 140px 0; overflow: hidden; position: relative; }
-  .sculpture-marquee { display: flex; white-space: nowrap; overflow: hidden; }
-  .marquee-engine { display: flex; animation: continuousRun 28s linear infinite; }
-  .sculpture-marquee h3 { font-family: var(--display); font-size: clamp(60px, 9vw, 140px); font-weight: 400; padding: 0 40px; letter-spacing: -0.03em; }
-  .sculpture-marquee h3.stroke { color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.12); }
-  @keyframes continuousRun { 0% { transform: translateX(0%); } 100% { transform: translateX(-50%); } }
+  /* Skills Marquee */
+  #marquee-sculpture { min-height: auto; padding: 120px 0; overflow: hidden; position: relative; }
+  .marquee-viewport { display: flex; white-space: nowrap; overflow: hidden; }
+  .marquee-runner { display: flex; animation: runEngine 30s linear infinite; }
+  .marquee-viewport h3 { font-family: var(--display); font-size: clamp(60px, 9vw, 135px); font-weight: 400; padding: 0 45px; letter-spacing: -0.03em; }
+  .marquee-viewport h3.stroke { color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.1); }
+  @keyframes runEngine { 0% { transform: translateX(0%); } 100% { transform: translateX(-50%); } }
 
-  /* Contacto Final */
-  #canvas-portal { min-height: 100vh; display: flex; align-items: center; }
-  .portal-headline { font-family: var(--display); font-size: clamp(40px, 7vw, 96px); font-weight: 200; line-height: 1.05; max-width: 950px; margin-bottom: 60px; letter-spacing: -0.03em; }
+  /* Contacto */
+  #contact-portal { min-height: 100vh; display: flex; align-items: center; }
+  .portal-headline { font-family: var(--display); font-size: clamp(40px, 6.5vw, 90px); font-weight: 200; line-height: 1.05; max-width: 980px; margin-bottom: 60px; letter-spacing: -0.03em; }
   .portal-headline span { font-style: italic; font-weight: 300; background: linear-gradient(90deg, var(--cyan), var(--magenta)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   .portal-links { display: flex; gap: 50px; flex-wrap: wrap; }
-  .portal-links a { font-family: var(--mono); font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 8px; transition: all 0.4s; }
-  .portal-links a:hover { color: var(--magenta); border-color: var(--magenta); transform: translateY(-4px); }
+  .portal-links a { font-family: var(--mono); font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 8px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+  .portal-links a:hover { color: var(--cyan); border-color: var(--cyan); transform: translateY(-4px); }
 
-  /* Estética del Footer */
+  /* Footer */
   footer { border-top: 1px solid var(--glass-border); padding: 50px 6vw; display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.1em; position: relative; z-index: 4; background: #000; text-transform: uppercase; }
 
-  /* Clases de Control de Animación de Entrada (GSAP) */
-  .line-mask { overflow: hidden; }
-  .line-reveal { display: inline-block; transform: translateY(115%); }
-  .fade-up-sculpt { opacity: 0; transform: translateY(40px); }
+  /* Animación tipográfica avanzada */
+  .char-mask { overflow: hidden; display: inline-block; vertical-align: bottom; }
+  .char-element { display: inline-block; transform: translateY(100%); will-change: transform; }
+  .fade-in-sculpt { opacity: 0; transform: translateY(35px); will-change: transform, opacity; }
 </style>
 </head>
 <body>
 
-<div id="art-cursor"></div>
-<div id="art-cursor-ring"></div>
+<div id="quantum-cursor"></div>
+<div id="quantum-cursor-ring"></div>
 
-<canvas id="webgl-artwork"></canvas>
+<canvas id="webgl-canvas"></canvas>
 
-<div class="editorial-grid">
-  <div class="grid-line"></div>
-  <div class="grid-line"></div>
-  <div class="grid-line"></div>
-  <div class="grid-line"></div>
+<div class="grid-overlay">
+  <div class="grid-column"></div>
+  <div class="grid-column"></div>
+  <div class="grid-column"></div>
+  <div class="grid-column"></div>
 </div>
 
 <header>
-  <div class="header-brand">S.Berná<span>//</span>Quantum.26</div>
+  <div class="brand-code">S.Berná<span>//</span>Quantum.Core</div>
   <nav>
     <ul>
       <li><a href="#hero" class="interactive">Index</a></li>
       <li><a href="#about" class="interactive">About</a></li>
       <li><a href="#experience" class="interactive">Timeline</a></li>
       <li><a href="#projects" class="interactive">Showcase</a></li>
-      <li><a href="#canvas-portal" class="interactive">Contact</a></li>
+      <li><a href="#contact-portal" class="interactive">Contact</a></li>
     </ul>
   </nav>
 </header>
 
 <main>
   <section id="hero" class="container">
-    <div class="hero-meta"><span class="pulse-node"></span> Node: Albatera, Alicante — ESP</div>
-    <h1 class="hero-title line-mask">
-      <span class="line-reveal">Sandra Berná</span><br>
-      <span class="line-reveal hologram">Zaplana.</span>
-    </h1>
-    <p class="hero-sub fade-up-sculpt">
-      <strong>Creative Developer &amp; AI Specialist</strong> — Moldeando software conceptual de alta precisión algorítmica mediante lógica abstracta y arquitecturas de redes neuronales.
+    <div class="hero-telemetry"><span class="status-node"></span> Telemetry: Albatera, Alicante — ES</div>
+    <h1 class="hero-title js-split">Sandra Berná<br><span class="iridescent">Zaplana.</span></h1>
+    <p class="hero-sub fade-in-sculpt">
+      <strong>Creative Developer &amp; AI Specialist</strong> — Moldeando software conceptual de alta precisión algorítmica mediante lógica abstracta y arquitecturas de aprendizaje profundo.
     </p>
   </section>
 
   <section id="about" class="container">
-    <div class="sculpture-card fade-up-sculpt" style="width: 100%;">
-      <div class="concept-tag">01 // Core Philosophy</div>
+    <div class="glass-sculpt fade-in-sculpt" style="width: 100%;">
+      <div class="section-tag">01 // Core Matrix</div>
       <div class="about-layout">
         <div class="about-statement">
           <h2>La pureza matemática del código limpio.<br>La evolución cognitiva de la Inteligencia Artificial.</h2>
-          <p>Desarrollo soluciones lógicas avanzadas con un enfoque especial en Java, mientras ejecuto investigaciones conceptuales autónomas sobre Machine Learning y Deep Learning. Entiendo que los sistemas del mañana exigen una convergencia absoluta entre la ingeniería de software ortodoxa y los modelos de computación cognitiva.</p>
+          <p>Desarrollo soluciones de software robustas con un enfoque prioritario en Java, ejecutando en paralelo análisis y formación especializada sobre Machine Learning y redes neuronales. Entiendo la ingeniería creativa como la fusión absoluta entre arquitecturas backend estables y modelos predictivos avanzados.</p>
         </div>
-        <div class="editorial-table">
-          <div class="table-row"><span class="key">Status</span><span class="val">Disponibilidad total / Prácticas o Primer Empleo</span></div>
-          <div class="table-row"><span class="key">AI Frameworks</span><span class="val">Stanford · DeepLearning.AI · Google Cloud · IBM Engine</span></div>
-          <div class="table-row"><span class="key">Linguistics</span><span class="val">Español (Nativo) · Valenciano (C1) · Inglés (B2-C1 Academic)</span></div>
-          <div class="table-row"><span class="key">Mobility</span><span class="val">Permiso de conducción B / Disponibilidad geográfica</span></div>
+        <div class="editorial-spec">
+          <div class="spec-row"><span class="spec-key">Status</span><span class="spec-val">Disponibilidad Inmediata / Prácticas o Primer Empleo</span></div>
+          <div class="spec-row"><span class="spec-key">AI Frameworks</span><span class="spec-val">Stanford · DeepLearning.AI · Google Cloud · IBM Watson</span></div>
+          <div class="spec-row"><span class="spec-key">Linguistics</span><span class="spec-val">Español (Nativo) · Valenciano (C1) · Inglés (B2-C1 en curso)</span></div>
+          <div class="spec-row"><span class="spec-key">Mobility</span><span class="spec-val">Permiso de conducción B / Vehículo propio</span></div>
         </div>
       </div>
     </div>
   </section>
 
   <section id="experience" class="container">
-    <div class="sculpture-card fade-up-sculpt" style="width: 100%;">
-      <div class="concept-tag">02 // Structural Timeline</div>
+    <div class="glass-sculpt fade-in-sculpt" style="width: 100%;">
+      <div class="section-tag">02 // Linear Timeline</div>
       <div class="timeline-flow">
         <div class="timeline-node">
           <div class="node-time">// 2025. Q2</div>
           <div class="node-content">
             <h3>NTT DATA <span>Associate Software Intern</span></h3>
-            <p>Inmersión crítica en ecosistemas empresariales de producción real utilizando Java y bases de datos relacionales integradas. Control de versiones bajo metodologías ágiles continuas (Scrum), soporte funcional y desarrollo de suites de pruebas analíticas.</p>
-            <div class="node-badges"><span>Java Core</span><span>Git Ecosystem</span><span>Scrum Sprint</span><span>SQL Logic</span><span>Functional Testing</span></div>
+            <p>Soporte y desarrollo de software real basado en la plataforma Java. Gestión transaccional de datos relacionales, control de versiones absoluto bajo el ecosistema Git y flujo operativo síncronizado bajo metodología Scrum.</p>
+            <div class="node-badges"><span>Java Enterprise</span><span>Git Core</span><span>Scrum Sprint</span><span>SQL Optimization</span><span>Functional Testing</span></div>
           </div>
         </div>
         <div class="timeline-node">
           <div class="node-time">// In Progress</div>
           <div class="node-content">
             <h3>UCAM <span>CFGS Desarrollo de Aplicaciones Web</span></h3>
-            <p>Especialización técnica avanzada centrada en ingeniería web full-stack, algoritmos matriciales de backend, gestión transaccional relacional y entornos distribuidos.</p>
-            <div class="node-badges"><span>Java Enterprise</span><span>PHP Matrix</span><span>Node.js Async</span><span>MySQL Relational</span><span>MariaDB Architecture</span></div>
+            <p>Especialización curricular avanzada en ingeniería de software full-stack: desarrollo lógico matricial de backend, patrones de arquitectura de bases de datos distribuidas y microservicios.</p>
+            <div class="node-badges"><span>Java Core</span><span>PHP Scripting</span><span>Node.js Async</span><span>MySQL Relational</span><span>MariaDB Engine</span></div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <div id="projects" class="art-gallery">
+  <div id="projects" class="gallery-pin-container">
     <div class="gallery-track">
-      <div class="gallery-cell curator-title">
+      <div class="gallery-cell intro-cell">
         <h2>Selected<br>Artifacts <span>Showcase</span></h2>
       </div>
       <div class="gallery-cell">
-        <div class="sculpture-card art-meta-box">
-          <div class="art-index">Artifact _01 // Java POO Engine</div>
+        <div class="glass-sculpt art-card">
+          <div class="art-index">System _01 // OOP Simulator</div>
           <h3 class="art-title">Héroes del Reino</h3>
-          <p class="art-desc">Un simulador computacional de combate determinista estructurado bajo principios puros de programación orientada a objetos, herencia matricial y polimorfismo dinámico de entidades.</p>
-          <div class="art-tags"><span>Java Core</span><span>OOP Architecture</span><span>Data Structures</span></div>
-          <a href="https://github.com/SandraBerna06/Heroes.git" target="_blank" rel="noopener" class="art-action-link interactive">Inspect Repository →</a>
+          <p class="art-desc">Un simulador computacional de combate por turnos determinista estructurado bajo principios de abstracción estricta, herencia polimórfica de entidades y control de estados dinámicos en Java.</p>
+          <div class="art-tags"><span>Java Core</span><span>OOP Design</span><span>Data Matrices</span></div>
+          <a href="https://github.com/SandraBerna06/Heroes.git" target="_blank" rel="noopener" class="art-btn interactive">Inspect Source Code →</a>
         </div>
       </div>
       <div class="gallery-cell">
-        <div class="sculpture-card art-meta-box">
-          <div class="art-index">Artifact _02 // Algorithmic System</div>
+        <div class="glass-sculpt art-card">
+          <div class="art-index">System _02 // Matrix Logic</div>
           <h3 class="art-title">Juego de Ajedrez</h3>
-          <p class="art-desc">Motor analítico bidimensional para el control lógico estricto de un tablero de ajedrez. Validación computacional de movimientos basados en transformaciones lineales de matrices.</p>
-          <div class="art-tags"><span>Java Core</span><span>Matrix Math</span><span>State Validation</span></div>
-          <a href="https://github.com/manberper/ProyectoAjedrez.git" target="_blank" rel="noopener" class="art-action-link interactive">Inspect Repository →</a>
+          <p class="art-desc">Motor analítico completo para el procesamiento de partidas de ajedrez por consola. Validación algorítmica de movimientos legales vectoriales y detección de estados de victoria en tiempo real.</p>
+          <div class="art-tags"><span>Java Logic</span><span>Matrix Math</span><span>State Engines</span></div>
+          <a href="https://github.com/manberper/ProyectoAjedrez.git" target="_blank" rel="noopener" class="art-btn interactive">Inspect Source Code →</a>
         </div>
       </div>
     </div>
   </div>
 
-  <section id="typography-sculpture">
-    <div class="sculpture-marquee">
-      <div class="marquee-engine">
-        <h3>JAVA</h3><h3 class="stroke">DEEP LEARNING</h3><h3>AWS CLOUD</h3><h3 class="stroke">NEURAL NETWORKS</h3><h3>GIT &amp; ARCH</h3><h3 class="stroke">PYTHON算法</h3>
-        <h3>JAVA</h3><h3 class="stroke">DEEP LEARNING</h3><h3>AWS CLOUD</h3><h3 class="stroke">NEURAL NETWORKS</h3><h3>GIT &amp; ARCH</h3><h3 class="stroke">PYTHON算法</h3>
+  <section id="marquee-sculpture">
+    <div class="marquee-viewport">
+      <div class="marquee-runner">
+        <h3>JAVA CORE</h3><h3 class="stroke">DEEP LEARNING</h3><h3>AWS CLOUD</h3><h3 class="stroke">NEURAL NETWORKS</h3><h3>GIT ARCH</h3><h3 class="stroke">MYSQL</h3>
+        <h3>JAVA CORE</h3><h3 class="stroke">DEEP LEARNING</h3><h3>AWS CLOUD</h3><h3 class="stroke">NEURAL NETWORKS</h3><h3>GIT ARCH</h3><h3 class="stroke">MYSQL</h3>
       </div>
     </div>
   </section>
 
-  <section id="canvas-portal" class="container">
-    <div class="sculpture-card fade-up-sculpt" style="width: 100%;">
-      <div class="concept-tag">03 // Quantum Telemetry</div>
-      <h2 class="portal-headline">Evolucionemos los límites de la arquitectura digital, <span>juntas.</span></h2>
+  <section id="contact-portal" class="container">
+    <div class="glass-sculpt fade-in-sculpt" style="width: 100%;">
+      <div class="section-tag">03 // Quantum Connection</div>
+      <h2 class="portal-headline">Evolucionemos los límites del desarrollo inteligente, <span>juntas.</span></h2>
       <div class="portal-links">
         <a href="mailto:sandraberna2006@gmail.com" class="interactive">sandraberna2006@gmail.com</a>
         <a href="https://www.linkedin.com/in/sandra-bern%C3%A1-zaplana/" target="_blank" rel="noopener" class="interactive">LinkedIn Network ↗</a>
-        <a href="https://github.com/SandraBerna06" target="_blank" rel="noopener" class="interactive">GitHub Repos ↗</a>
+        <a href="https://github.com/SandraBerna06" target="_blank" rel="noopener" class="interactive">GitHub Repositories ↗</a>
       </div>
     </div>
   </section>
@@ -295,7 +290,7 @@
 
 <footer>
   <span>Designed by Sandra Berná © 2026</span>
-  <span>WebGL Procedural Architecture // GSAP &amp; Lenis Integration</span>
+  <span>WebGL Procedural Noise Material &amp; GSAP Kinetic Engine</span>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -305,18 +300,18 @@
 
 <script>
 /* =====================================================
-   LENIS SMOOTH SCROLL (FLUIDEZ ABSOLUTA)
+   LENIS SMOOTH SCROLL PERFECTO
 ===================================================== */
 const lenis = new Lenis({
-  duration: 1.4,
+  duration: 1.3,
   easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
   smoothWheel: true
 });
-function rafUpdate(time) {
+function rafLoop(time) {
   lenis.raf(time);
-  requestAnimationFrame(rafUpdate);
+  requestAnimationFrame(rafLoop);
 }
-requestAnimationFrame(rafUpdate);
+requestAnimationFrame(rafLoop);
 
 gsap.registerPlugin(ScrollTrigger);
 lenis.on('scroll', ScrollTrigger.update);
@@ -324,27 +319,24 @@ gsap.ticker.add((time) => { lenis.raf(time * 1000); });
 gsap.ticker.lagSmoothing(0);
 
 /* =====================================================
-   CUSTOM INTERACTIVE ART CURSOR
+   CUSTOM CURSOR INERCIAL CON HOVERS
 ===================================================== */
-const cursorRing = document.getElementById('art-cursor-ring');
-const cursorDot = document.getElementById('art-cursor');
-let mousePositionX = window.innerWidth / 2, mousePositionY = window.innerHeight / 2;
-let smoothRingX = mousePositionX, smoothRingY = mousePositionY;
+const cRing = document.getElementById('quantum-cursor-ring');
+const cDot = document.getElementById('quantum-cursor');
+let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+let ringX = mouseX, ringY = mouseY;
 
 window.addEventListener('mousemove', (e) => { 
-  mousePositionX = e.clientX; mousePositionY = e.clientY; 
-  cursorDot.style.left = mousePositionX + 'px';
-  cursorDot.style.top = mousePositionY + 'px';
+  mouseX = e.clientX; mouseY = e.clientY; 
+  cDot.style.left = mouseX + 'px'; cDot.style.top = mouseY + 'px';
 });
 
-function drawCursor() {
-  smoothRingX += (mousePositionX - smoothRingX) * 0.12;
-  smoothRingY += (mousePositionY - smoothRingY) * 0.12;
-  cursorRing.style.left = smoothRingX + 'px';
-  cursorRing.style.top = smoothRingY + 'px';
-  requestAnimationFrame(drawCursor);
+function loopCursor() {
+  ringX += (mouseX - ringX) * 0.12; ringY += (mouseY - ringY) * 0.12;
+  cRing.style.left = ringX + 'px'; cRing.style.top = ringY + 'px';
+  requestAnimationFrame(loopCursor);
 }
-drawCursor();
+loopCursor();
 
 document.querySelectorAll('.interactive, a, button').forEach(el => {
   el.addEventListener('mouseenter', () => document.body.classList.add('hovered'));
@@ -352,88 +344,100 @@ document.querySelectorAll('.interactive, a, button').forEach(el => {
 });
 
 /* =====================================================
-   GSAP INTERFACE REVEALS & HORIZONTAL TIMELINE
+   GSAP REVEALS (TEXT SPLITTING POR PALABRAS)
 ===================================================== */
-// Tipografía Inicial Máscara
-gsap.to('.line-reveal', {
-  y: '0%', duration: 1.6, ease: 'power4.out', stagger: 0.15, delay: 0.2
+const splitTarget = document.querySelector('.js-split');
+if(splitTarget) {
+  const words = splitTarget.innerHTML.split('<br>');
+  let newHTML = '';
+  words.forEach((line, lineIdx) => {
+    const wordArr = line.split(' ');
+    wordArr.forEach(word => {
+      if(word.includes('class="iridescent"')) {
+        newHTML += `<span class="char-mask"><span class="char-element iridescent">Zaplana.</span></span> `;
+      } else {
+        newHTML += `<span class="char-mask"><span class="char-element">${word}</span></span> `;
+      }
+    });
+    if(lineIdx === 0) newHTML += '<br>';
+  });
+  splitTarget.innerHTML = newHTML;
+}
+
+gsap.to('.char-element', {
+  y: '0%', duration: 1.5, ease: 'power4.out', stagger: 0.08, delay: 0.2
 });
 
-// Revelación de Paneles Escultóricos
-gsap.utils.toArray('.fade-up-sculpt').forEach(panel => {
+gsap.utils.toArray('.fade-in-sculpt').forEach(panel => {
   gsap.to(panel, {
-    opacity: 1, y: 0, duration: 1.4, ease: 'power3.out',
+    opacity: 1, y: 0, duration: 1.3, ease: 'power3.out',
     scrollTrigger: { trigger: panel, start: 'top 85%', toggleActions: 'play none none reverse' }
   });
 });
 
-// Mecánica Horizontal del Showcase de Proyectos (Pinned Engine)
-const galleryTrack = document.querySelector('.gallery-track');
-gsap.to(galleryTrack, {
-  x: () => -(galleryTrack.scrollWidth - window.innerWidth),
+// Mecánica Horizontal del Showcase de Proyectos
+const track = document.querySelector('.gallery-track');
+gsap.to(track, {
+  x: () => -(track.scrollWidth - window.innerWidth),
   ease: 'none',
   scrollTrigger: {
-    trigger: '.art-gallery',
-    pin: true,
-    scrub: 1,
-    start: 'top top',
-    end: () => '+=' + (galleryTrack.scrollWidth - window.innerWidth),
-    invalidateOnRefresh: true
+    trigger: '.gallery-pin-container', pin: true, scrub: 1, start: 'top top',
+    end: () => '+=' + (track.scrollWidth - window.innerWidth), invalidateOnRefresh: true
   }
 });
 
 /* =====================================================
-   THREE.JS — WEBGL EXPERIMENTAL HOLOGRAPHIC SCULPTURE
+   THREE.JS — MOTOR DE SHADERS PROCEDURAL GLSL (IRIDISCENCIA CUÁNTICA)
 ===================================================== */
-const webglCanvas = document.getElementById('webgl-artwork');
-const graphicScene = new THREE.Scene();
-const mainCamera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 100);
-mainCamera.position.set(0, 0, 9);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(0, 0, 9);
 
-const webglRenderer = new THREE.WebGLRenderer({ canvas: webglCanvas, alpha: true, antialias: true });
-webglRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-webglRenderer.setSize(window.innerWidth, window.innerHeight);
-webglRenderer.toneMapping = THREE.ACESFilmicToneMapping;
-webglRenderer.toneMappingExposure = 1.4;
+const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('webgl-canvas'), alpha: true, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.3;
 
-// Luces Bioluminiscentes Estables en Coordenadas de Contrapeso
-const neonCyanLight = new THREE.PointLight(0x00f0ff, 20, 30);
-graphicScene.add(neonCyanLight);
+// Luces Bioluminiscentes de Contraposición Cromática
+const cyanLight = new THREE.PointLight(0x00f0ff, 25, 30);
+scene.add(cyanLight);
 
-const neonMagentaLight = new THREE.PointLight(0xff007f, 20, 30);
-graphicScene.add(neonMagentaLight);
+const magentaLight = new THREE.PointLight(0xff007f, 25, 30);
+scene.add(magentaLight);
 
-const atmosphericDirectional = new THREE.DirectionalLight(0xffffff, 1.2);
-atmosphericDirectional.position.set(5, 5, 2);
-graphicScene.add(atmosphericDirectional);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+scene.add(ambientLight);
 
-// Geometría Esférica de Alta Densidad para Inyección de Ruido Matemático Procedural
-const sculptureGeometry = new THREE.IcosahedronGeometry(2.1, 64);
+// Malla Esférica de Alta Densidad Geométrica
+const geometry = new THREE.IcosahedronGeometry(2.1, 64);
 
-// Shaders Inyectados (GLSL Procedural Symplex Noise) sobre Material Físico Premium
-const customSculptureMaterial = new THREE.MeshPhysicalMaterial({
-  color: 0x05050a,
-  metalness: 0.1,
-  roughness: 0.08,
+// Material de Cristal Físico Avanzado con Transmisión y Refracción Realista
+const material = new THREE.MeshPhysicalMaterial({
+  color: 0x020205,
+  metalness: 0.05,
+  roughness: 0.05,
   transparent: true,
-  transmission: 0.95,  // Transmisión de luz de alta fidelidad
-  ior: 1.48,           // Refracción avanzada
-  thickness: 3.0,      // Grosor volumétrico interno para dispersión lumínica
+  transmission: 0.98,
+  ior: 1.55,
+  thickness: 3.5,
   clearcoat: 1.0,
-  clearcoatRoughness: 0.02,
+  clearcoatRoughness: 0.01,
   side: THREE.DoubleSide
 });
 
-// Modificación Dinámica de Vértices mediante código Shader antes de compilación
-let shaderRuntimeUniforms = { uTime: { value: 0 } };
-customSculptureMaterial.onBeforeCompile = (shader) => {
-  shader.uniforms.uTime = shaderRuntimeUniforms.uTime;
+let runtimeUniforms = { uTime: { value: 0 }, uScrollProgress: { value: 0 } };
+
+material.onBeforeCompile = (shader) => {
+  shader.uniforms.uTime = runtimeUniforms.uTime;
+  shader.uniforms.uScrollProgress = runtimeUniforms.uScrollProgress;
   
-  // Inyección de Algoritmia de Ruido Simplex 3D en el Vertex Shader
+  // Algoritmo Simplex Noise 3D Inyectado por Hardware (GPU)
   shader.vertexShader = `
     uniform float uTime;
-    varying vec3 vCustomNormal;
-    varying vec3 vCustomPosition;
+    uniform float uScrollProgress;
+    varying vec3 vNorm;
+    varying vec3 vPos;
     
     vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
     vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
@@ -484,90 +488,109 @@ customSculptureMaterial.onBeforeCompile = (shader) => {
   shader.vertexShader = shader.vertexShader.replace(
     '#include <begin_vertex>',
     `
-    // Mutación geométrica procedimental en base al tiempo y posición espacial
-    float noiseDisplacement = snoise(position * 0.78 + uTime * 0.28);
-    vec3 transformed = position + normal * noiseDisplacement * 0.42;
-    vCustomNormal = normal;
-    vCustomPosition = transformed;
+    // Deformador líquido inteligente controlado por el tiempo y el scroll
+    float noise = snoise(position * (0.6 + uScrollProgress * 0.4) + uTime * 0.32);
+    vec3 transformed = position + normal * noise * (0.45 + uScrollProgress * 0.3);
+    vNorm = normal;
+    vPos = transformed;
+    `
+  );
+  
+  // Inyección de un efecto fresnel holográfico personalizado en el fragmento
+  shader.fragmentShader = `
+    varying vec3 vNorm;
+    varying vec3 vPos;
+  ` + shader.fragmentShader;
+  
+  shader.fragmentShader = shader.fragmentShader.replace(
+    '#include <dithering_fragment>',
+    `
+    #include <dithering_fragment>
+    // Cálculo espectral para simular reflejos iridiscentes cuánticos de lujo
+    vec3 viewDir = normalize(cameraPosition - vPos);
+    float fresnel = pow(1.0 - max(dot(vNorm, viewDir), 0.0), 2.5);
+    vec3 spectralGlow = mix(vec3(0.0, 0.94, 1.0), vec3(1.0, 0.0, 0.5), fresnel);
+    gl_FragColor.rgb += spectralGlow * fresnel * 0.45;
     `
   );
 };
 
-const masterMesh = new THREE.Mesh(sculptureGeometry, customSculptureMaterial);
-graphicScene.add(masterMesh);
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
 
-// Anillo Orbital Secundario de Estructura Aérea (Partículas Cuánticas)
-const particleGeometry = new THREE.BufferGeometry();
-const particleCount = 400;
-const particlePositions = new Float32Array(particleCount * 3);
-for(let i=0; i<particleCount; i++) {
-  const angle = (i / particleCount) * Math.PI * 2;
-  const radiusOffset = 3.2 + (Math.random() - 0.5) * 0.6;
-  particlePositions[i*3] = Math.cos(angle) * radiusOffset;
-  particlePositions[i*3+1] = (Math.random() - 0.5) * 0.5;
-  particlePositions[i*3+2] = Math.sin(angle) * radiusOffset;
+// Sistema de partículas cuánticas secundarias flotantes
+const pGeometry = new THREE.BufferGeometry();
+const pCount = 500;
+const pCoords = new Float32Array(pCount * 3);
+for(let i=0; i<pCount; i++) {
+  const u = Math.random(); const v = Math.random();
+  const theta = u * 2.0 * Math.PI; const phi = Math.acos(2.0 * v - 1.0);
+  const r = 3.3 + Math.random() * 0.8;
+  pCoords[i*3] = r * Math.sin(phi) * Math.cos(theta);
+  pCoords[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+  pCoords[i*3+2] = r * Math.cos(phi);
 }
-particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
-const particleMaterial = new THREE.PointsMaterial({ color: 0x00f0ff, size: 0.025, transparent: true, opacity: 0.4 });
-const particleCloud = new THREE.Points(particleGeometry, particleMaterial);
-graphicScene.add(particleCloud);
+pGeometry.setAttribute('position', new THREE.BufferAttribute(pCoords, 3));
+const pMaterial = new THREE.PointsMaterial({ color: 0x00f0ff, size: 0.02, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending });
+const particles = new THREE.Points(pGeometry, pMaterial);
+scene.add(particles);
 
-/* Captura de Telemetría Global de Scroll */
-let globalScrollTimelineProgress = 0;
+/* Telemetría de Scroll de Alta Sensibilidad */
+let sProgress = 0;
 ScrollTrigger.create({
-  trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 0.4,
-  onUpdate: (self) => { globalScrollTimelineProgress = self.progress; }
+  trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: true,
+  onUpdate: (self) => { sProgress = self.progress; runtimeUniforms.uScrollProgress.value = sProgress; }
 });
 
-/* Captura y Amortiguación de Coordenadas de Ratón (Parallax Cinemático) */
-let rawMouseX = 0, rawMouseY = 0;
-let smoothInterpolatedX = 0, smoothInterpolatedY = 0;
+/* Telemetría del Ratón Amortiguada (Parallax) */
+let rawX = 0, rawY = 0;
+let lerpX = 0, lerpY = 0;
 window.addEventListener('mousemove', (e) => {
-  rawMouseX = (e.clientX / window.innerWidth - 0.5) * 2.0;
-  rawMouseY = (e.clientY / window.innerHeight - 0.5) * -2.0;
+  rawX = (e.clientX / window.innerWidth - 0.5) * 2.0;
+  rawY = (e.clientY / window.innerHeight - 0.5) * -2.0;
 });
 
-/* Bucle Autónomo de Renderizado Cuántico */
-const dynamicClock = new THREE.Clock();
-function systemRenderTick() {
-  const elapsedRuntime = dynamicClock.getElapsedTime();
-  shaderRuntimeUniforms.uTime.value = elapsedRuntime;
+/* Loop de Animación Maestro */
+const clock = new THREE.Clock();
+function frameTick() {
+  const t = clock.getElapsedTime();
+  runtimeUniforms.uTime.value = t;
 
-  // Rotaciones sutiles continuas
-  masterMesh.rotation.y = elapsedRuntime * 0.08;
-  particleCloud.rotation.y = -elapsedRuntime * 0.04;
-  particleCloud.rotation.x = Math.sin(elapsedRuntime * 0.2) * 0.1;
+  // Rotaciones sutiles continuas de las mallas
+  mesh.rotation.y = t * 0.1;
+  mesh.rotation.x = t * 0.04;
+  particles.rotation.y = -t * 0.03;
 
-  // Órbitas de las fuentes de iluminación dentro y fuera de la refracción del cristal
-  neonCyanLight.position.x = Math.sin(elapsedRuntime * 1.1) * 5;
-  neonCyanLight.position.y = Math.cos(elapsedTime = elapsedRuntime * 0.7) * 4;
-  neonCyanLight.position.z = Math.sin(elapsedRuntime * 0.3) * 3;
+  // Dinámica orbital de las fuentes de luz de neón
+  cyanLight.position.x = Math.sin(t * 1.3) * 5;
+  cyanLight.position.y = Math.cos(t * 0.8) * 4;
+  cyanLight.position.z = Math.sin(t * 0.5) * 3;
 
-  neonMagentaLight.position.x = Math.cos(elapsedRuntime * 0.8) * 5;
-  neonMagentaLight.position.y = Math.sin(elapsedRuntime * 1.2) * 4;
-  neonMagentaLight.position.z = Math.cos(elapsedRuntime * 0.6) * 3;
+  magentaLight.position.x = Math.cos(t * 0.9) * 5;
+  magentaLight.position.y = Math.sin(t * 1.5) * 4;
+  magentaLight.position.z = Math.cos(t * 0.7) * 3;
 
-  // Amortiguación matemática (Lerp) de las coordenadas del ratón
-  smoothInterpolatedX += (rawMouseX - smoothInterpolatedX) * 0.05;
-  smoothInterpolatedY += (rawMouseY - smoothInterpolatedY) * 0.05;
+  // Factor de amortiguación lineal (Lerp) para el ratón
+  lerpX += (rawX - lerpX) * 0.06;
+  lerpY += (rawY - lerpY) * 0.06;
 
-  // CONTROL PARABÓLICO DE CÁMARA LIGADO AL SCROLL GLOBAL
-  // La cámara genera trayectorias asimétricas y zooms matemáticos dinámicos
-  mainCamera.position.z = 9.0 - (globalScrollTimelineProgress * 3.8) + (smoothInterpolatedX * 0.3);
-  mainCamera.position.x = Math.sin(globalScrollTimelineProgress * Math.PI * 1.2) * 2.4 + smoothInterpolatedX;
-  mainCamera.position.y = -(globalScrollTimelineProgress * 2.0) + smoothInterpolatedY;
-  mainCamera.lookAt(0, -(globalScrollTimelineProgress * 0.9), 0);
+  // CINEMÁTICA TRIDIMENSIONAL DE CÁMARA LIGADA AL SCROLL
+  // La cámara ejecuta un viaje parabólico envolvente mientras bajas por la web
+  camera.position.z = 9.0 - (sProgress * 4.0) + (lerpX * 0.25);
+  camera.position.x = Math.sin(sProgress * Math.PI * 1.3) * 2.5 + lerpX;
+  camera.position.y = -(sProgress * 2.5) + lerpY;
+  camera.lookAt(0, -(sProgress * 1.1), 0);
 
-  webglRenderer.render(graphicScene, mainCamera);
-  requestAnimationFrame(systemRenderTick);
+  renderer.render(scene, camera);
+  requestAnimationFrame(frameTick);
 }
-systemRenderTick();
+frameTick();
 
-/* Optimización Elástica ante Redimensionamiento de Pantalla */
+/* Responsive */
 window.addEventListener('resize', () => {
-  mainCamera.aspect = window.innerWidth / window.innerHeight;
-  mainCamera.updateProjectionMatrix();
-  webglRenderer.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
 });
 </script>
 </body>
