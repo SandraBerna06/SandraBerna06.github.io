@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>SANDRA BERNÁ — Arte Digital · Dev · IA</title>
   <meta name="description" content="Sandra Berná Zaplana — Desarrollo Web, Inteligencia Artificial y creación digital de vanguardia." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -35,11 +35,12 @@
       overflow-x: hidden;
       cursor: none;
       scroll-behavior: smooth;
+      -webkit-tap-highlight-color: transparent;
     }
     ::selection { background: var(--magenta); color: #000; }
     .disp { font-family: 'Clash Display', sans-serif; font-weight: 700; letter-spacing: -0.02em; }
 
-    /* ===== CURSOR ===== */
+    /* ===== CURSOR (solo escritorio) ===== */
     #cursor {
       position: fixed;
       top: 0; left: 0;
@@ -90,12 +91,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 28px 5vw;
+      padding: 20px 5vw;
       mix-blend-mode: difference;
       background: linear-gradient(180deg, rgba(3,3,8,0.7) 0%, transparent 100%);
     }
     .topbar .mark {
-      font-size: 20px;
+      font-size: clamp(14px, 2vw, 20px);
       letter-spacing: 0.25em;
       color: var(--ink);
       opacity: 0.5;
@@ -109,9 +110,9 @@
       border: 1px solid rgba(255,255,255,0.06);
       color: var(--ink);
       font-family: 'JetBrains Mono';
-      font-size: 12px;
+      font-size: clamp(10px, 1.5vw, 12px);
       letter-spacing: 0.25em;
-      padding: 10px 30px;
+      padding: 8px 20px;
       border-radius: 80px;
       cursor: none;
       transition: all 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
@@ -125,6 +126,7 @@
       transform: scale(1.06);
       box-shadow: var(--glow-cyan);
     }
+    @media (hover: none) { .menu-btn { cursor: auto; } }
 
     /* ===== MENU OVERLAY ===== */
     .menu-overlay {
@@ -145,7 +147,7 @@
       display: block;
       font-family: 'Clash Display';
       font-weight: 700;
-      font-size: clamp(40px, 6vw, 90px);
+      font-size: clamp(28px, 6vw, 90px);
       line-height: 1.0;
       color: #030308;
       text-decoration: none;
@@ -159,23 +161,25 @@
     }
     .menu-close {
       position: absolute;
-      top: 28px;
+      top: 20px;
       right: 5vw;
       background: none;
       border: none;
       font-family: 'JetBrains Mono';
-      font-size: 14px;
+      font-size: clamp(12px, 1.5vw, 14px);
       letter-spacing: 0.1em;
       color: #030308;
       cursor: none;
       transition: opacity 0.3s;
+      padding: 10px;
     }
     .menu-close:hover { opacity: 0.25; }
     .menu-foot {
-      margin-top: 50px;
+      margin-top: 40px;
       display: flex;
-      gap: 50px;
-      font-size: 14px;
+      gap: clamp(20px, 5vw, 50px);
+      font-size: clamp(12px, 1.2vw, 14px);
+      flex-wrap: wrap;
     }
     .menu-foot a {
       color: #030308;
@@ -194,11 +198,12 @@
       justify-content: center;
       align-items: center;
       pointer-events: none;
+      padding: 0 5vw;
     }
     .hero-title {
       font-family: 'Clash Display';
       font-weight: 700;
-      font-size: clamp(80px, 20vw, 300px);
+      font-size: clamp(48px, 20vw, 300px);
       line-height: 0.70;
       text-align: center;
       letter-spacing: -0.06em;
@@ -210,22 +215,23 @@
       color: transparent;
     }
     .hero-sub {
-      margin-top: 34px;
-      font-size: 15px;
-      letter-spacing: 0.6em;
+      margin-top: 20px;
+      font-size: clamp(10px, 1.5vw, 15px);
+      letter-spacing: 0.4em;
       color: var(--dim);
       text-transform: uppercase;
       background: var(--glass);
-      padding: 8px 36px;
+      padding: 6px 20px;
       border-radius: 100px;
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255,255,255,0.03);
+      text-align: center;
     }
     .hero-scroll {
       position: absolute;
-      bottom: 48px;
+      bottom: 30px;
       left: 5vw;
-      font-size: 11px;
+      font-size: 10px;
       letter-spacing: 0.35em;
       color: var(--dim);
       writing-mode: vertical-rl;
@@ -236,37 +242,37 @@
 
     /* ===== SECTION LABEL ===== */
     .pin-label {
-      font-size: 12px;
+      font-size: clamp(10px, 1.2vw, 12px);
       letter-spacing: 0.4em;
       color: var(--dim);
       text-transform: uppercase;
       z-index: 6;
       background: var(--glass);
       backdrop-filter: blur(10px);
-      padding: 4px 22px;
+      padding: 4px 16px;
       border-radius: 80px;
       border: 1px solid rgba(255,255,255,0.03);
       display: inline-block;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     /* ===== ABOUT ===== */
     .about {
-      min-height: 140vh;
-      padding: 22vh 8vw 18vh;
+      min-height: 120vh;
+      padding: 18vh 6vw 14vh;
       max-width: 1100px;
       position: relative;
       z-index: 5;
     }
     .about .pin-label {
       position: absolute;
-      top: 40px;
-      left: 5vw;
+      top: 30px;
+      left: 6vw;
     }
     .about p {
       font-family: 'Clash Display';
       font-weight: 600;
-      font-size: clamp(32px, 5vw, 66px);
+      font-size: clamp(22px, 4.8vw, 66px);
       line-height: 1.18;
       letter-spacing: -0.02em;
       filter: blur(16px);
@@ -275,17 +281,17 @@
     .about .hl { color: var(--cyan); text-shadow: 0 0 60px rgba(0, 245, 255, 0.3); }
     .about .hl2 { color: var(--magenta); text-shadow: 0 0 60px rgba(255, 0, 230, 0.3); }
     .about-meta {
-      margin-top: 60px;
+      margin-top: 40px;
       display: flex;
-      gap: 80px;
+      gap: clamp(30px, 6vw, 80px);
       flex-wrap: wrap;
-      font-size: 14px;
+      font-size: clamp(12px, 1.2vw, 14px);
       color: var(--dim);
     }
     .about-meta strong {
       display: block;
       color: var(--ink);
-      font-size: 17px;
+      font-size: clamp(14px, 1.5vw, 17px);
       margin-bottom: 6px;
       font-family: 'Clash Display';
       font-weight: 600;
@@ -294,8 +300,8 @@
 
     /* ===== EXPERIENCE ===== */
     .exp {
-      min-height: 90vh;
-      padding: 18vh 8vw;
+      min-height: 80vh;
+      padding: 16vh 6vw;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -304,55 +310,53 @@
     }
     .exp .pin-label {
       position: absolute;
-      top: 40px;
-      left: 5vw;
+      top: 30px;
+      left: 6vw;
     }
     .exp-subtitle {
       font-family: 'Clash Display';
       font-weight: 600;
-      font-size: clamp(22px, 2.4vw, 32px);
+      font-size: clamp(18px, 2vw, 32px);
       letter-spacing: 0.05em;
       color: var(--gold);
-      margin: 30px 0 10px 0;
+      margin: 24px 0 8px 0;
       border-bottom: 1px solid rgba(255,215,0,0.06);
-      padding-bottom: 12px;
+      padding-bottom: 10px;
     }
     .exp-subtitle:first-of-type { margin-top: 0; }
     .exp-row {
       display: flex;
-      align-items: baseline;
-      gap: 30px;
+      flex-direction: column;
+      gap: 6px;
       border-top: 1px solid rgba(255,255,255,0.02);
-      padding: 30px 0;
+      padding: 24px 0;
       opacity: 0;
       transform: translateY(40px);
       transition: border-color 0.6s;
     }
     .exp-row:hover { border-color: rgba(0, 245, 255, 0.12); }
     .exp-row .y {
-      font-size: 13px;
+      font-size: clamp(11px, 1.2vw, 13px);
       color: var(--cyan);
-      width: 140px;
-      flex-shrink: 0;
       letter-spacing: 0.1em;
       font-weight: 500;
     }
     .exp-row h3 {
       font-family: 'Clash Display';
       font-weight: 700;
-      font-size: clamp(28px, 3.6vw, 50px);
+      font-size: clamp(24px, 3.2vw, 50px);
     }
     .exp-row .org {
       color: var(--dim);
-      font-size: 14px;
-      margin-top: 6px;
+      font-size: clamp(12px, 1.2vw, 14px);
+      margin-top: 2px;
     }
     .exp-row .desc {
       color: var(--dim);
-      font-size: 14px;
-      margin-top: 10px;
+      font-size: clamp(12px, 1.2vw, 14px);
+      margin-top: 6px;
       max-width: 560px;
-      line-height: 1.8;
+      line-height: 1.7;
     }
 
     /* ===== PROJECTS (HORIZONTAL) ===== */
@@ -361,13 +365,14 @@
       overflow: hidden;
       position: relative;
       z-index: 5;
-      padding-top: 80px;
+      padding-top: 70px;
     }
     .h-track {
       height: 100%;
       width: 200vw;
       display: flex;
       will-change: transform;
+      touch-action: pan-x;
     }
     .h-panel {
       width: 100vw;
@@ -376,67 +381,66 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 0 8vw;
+      padding: 0 6vw;
       position: relative;
     }
+    .h-panel .project-label {
+      margin-bottom: 12px;
+    }
     .h-panel .pidx {
-      font-size: 13px;
+      font-size: clamp(11px, 1.2vw, 13px);
       color: var(--gold);
       letter-spacing: 0.3em;
-      margin-bottom: 20px;
+      margin-bottom: 14px;
       background: rgba(255,215,0,0.05);
       display: inline-block;
-      padding: 4px 24px;
+      padding: 4px 18px;
       border-radius: 80px;
       backdrop-filter: blur(4px);
       border: 1px solid rgba(255,215,0,0.06);
     }
-    .h-panel .project-label {
-      margin-bottom: 16px;
-    }
     .h-panel h2 {
       font-family: 'Clash Display';
       font-weight: 700;
-      font-size: clamp(64px, 14vw, 200px);
+      font-size: clamp(40px, 14vw, 200px);
       line-height: 0.80;
       letter-spacing: -0.03em;
       mix-blend-mode: difference;
       text-shadow: 0 0 100px rgba(0, 245, 255, 0.05);
     }
     .h-panel .ptag {
-      font-size: 16px;
+      font-size: clamp(13px, 1.5vw, 16px);
       color: var(--dim);
-      margin-top: 24px;
+      margin-top: 18px;
       max-width: 540px;
       line-height: 1.7;
     }
     .h-panel .pstack {
-      margin-top: 32px;
+      margin-top: 24px;
       display: flex;
-      gap: 16px;
+      gap: 12px;
       flex-wrap: wrap;
     }
     .h-panel .pstack span {
-      font-size: 12px;
+      font-size: clamp(10px, 1vw, 12px);
       border: 1px solid rgba(255,255,255,0.05);
-      padding: 6px 20px;
+      padding: 5px 16px;
       color: var(--dim);
       border-radius: 80px;
       transition: all 0.4s;
       backdrop-filter: blur(4px);
       background: var(--glass);
     }
-    .h-panel .pstack span:hover {
+    .h-panel .pstack span:active {
       background: var(--cyan);
       color: #030308;
       border-color: var(--cyan);
-      transform: scale(1.08);
-      box-shadow: var(--glow-cyan);
+      transform: scale(0.95);
     }
     .h-panel a.plink {
-      margin-top: 40px;
+      margin-top: 30px;
       display: inline-block;
-      font-size: 15px;
+      font-size: clamp(13px, 1.3vw, 15px);
       letter-spacing: 0.1em;
       text-decoration: underline;
       color: var(--ink);
@@ -444,14 +448,14 @@
       transition: color 0.3s, text-shadow 0.3s;
       text-underline-offset: 6px;
     }
-    .h-panel a.plink:hover {
+    .h-panel a.plink:active {
       color: var(--cyan);
       text-shadow: var(--glow-cyan);
     }
 
     /* ===== MARQUEE SKILLS ===== */
     .marquee-wrap {
-      height: 60vh;
+      height: 50vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -461,8 +465,8 @@
     }
     .marquee-wrap .pin-label {
       position: absolute;
-      top: 40px;
-      left: 5vw;
+      top: 30px;
+      left: 6vw;
     }
     .mq-row {
       display: flex;
@@ -472,8 +476,8 @@
     .mq-row span {
       font-family: 'Clash Display';
       font-weight: 700;
-      font-size: clamp(62px, 11vw, 170px);
-      padding: 0 50px;
+      font-size: clamp(36px, 10vw, 170px);
+      padding: 0 clamp(20px, 4vw, 50px);
       color: transparent;
       -webkit-text-stroke: 1px var(--ink);
       transition: all 0.3s;
@@ -483,51 +487,52 @@
     .mq-row span.fill { color: var(--ink); -webkit-text-stroke: 0; }
     .mq-row.r2 span { color: var(--ink); -webkit-text-stroke: 0; }
     .mq-row.r2 span.fill { color: transparent; -webkit-text-stroke: 1px var(--magenta); }
-    .mq-row span:hover {
+    .mq-row span:active {
       color: var(--gold) !important;
       -webkit-text-stroke: 1px var(--gold) !important;
-      transform: scale(1.04);
+      transform: scale(0.95);
     }
 
     /* ===== CONTACT ===== */
     .contact {
-      min-height: 100vh;
+      min-height: 80vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: flex-start;
-      padding: 0 8vw;
+      padding: 0 6vw;
       position: relative;
       z-index: 5;
     }
     .contact .pin-label {
       position: absolute;
-      top: 40px;
-      left: 5vw;
+      top: 30px;
+      left: 6vw;
     }
     .contact h2 {
       font-family: 'Clash Display';
       font-weight: 700;
-      font-size: clamp(60px, 11vw, 180px);
+      font-size: clamp(40px, 10vw, 180px);
       line-height: 0.82;
       letter-spacing: -0.03em;
     }
     .contact h2 a {
       color: var(--ink);
       text-decoration: none;
-      border-bottom: 4px solid transparent;
+      border-bottom: 3px solid transparent;
       transition: border-color 0.4s, color 0.4s, text-shadow 0.4s;
     }
-    .contact h2 a:hover {
+    .contact h2 a:active {
       color: var(--gold);
       border-color: var(--gold);
       text-shadow: var(--glow-gold);
     }
     .contact-links {
-      margin-top: 50px;
+      margin-top: 30px;
       display: flex;
-      gap: 60px;
-      font-size: 15px;
+      gap: clamp(20px, 5vw, 60px);
+      font-size: clamp(13px, 1.3vw, 15px);
+      flex-wrap: wrap;
     }
     .contact-links a {
       color: var(--dim);
@@ -537,7 +542,7 @@
       border-bottom: 1px solid transparent;
       padding-bottom: 2px;
     }
-    .contact-links a:hover {
+    .contact-links a:active {
       color: var(--ink);
       border-color: var(--ink);
     }
@@ -545,20 +550,20 @@
     /* ===== SCROLL TOP ===== */
     .scroll-top {
       position: fixed;
-      bottom: 40px;
+      bottom: 20px;
       right: 5vw;
       z-index: 50;
       background: var(--glass);
       backdrop-filter: blur(20px);
       border: 1px solid rgba(255,255,255,0.04);
       color: var(--ink);
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 26px;
+      font-size: 22px;
       cursor: none;
       transition: all 0.5s cubic-bezier(0.2, 0.9, 0.3, 1);
       opacity: 0;
@@ -566,35 +571,51 @@
       box-shadow: 0 0 40px rgba(0, 245, 255, 0.03);
     }
     .scroll-top.visible { opacity: 1; pointer-events: all; }
-    .scroll-top:hover {
+    .scroll-top:active {
       background: var(--cyan);
       color: #030308;
       border-color: var(--cyan);
-      transform: scale(1.15) rotate(-15deg);
+      transform: scale(0.9) rotate(-15deg);
       box-shadow: var(--glow-cyan);
     }
+    @media (hover: none) { .scroll-top { cursor: auto; } }
 
     /* ===== FOOTER ===== */
     footer {
-      padding: 40px 8vw 50px;
+      padding: 30px 6vw 40px;
       display: flex;
+      flex-direction: column;
+      gap: 10px;
       justify-content: space-between;
-      font-size: 12px;
+      font-size: clamp(10px, 1vw, 12px);
       color: var(--dim);
       letter-spacing: 0.08em;
       position: relative;
       z-index: 5;
       border-top: 1px solid rgba(255,255,255,0.015);
     }
+    @media (min-width: 600px) {
+      footer { flex-direction: row; }
+    }
 
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 760px) {
-      .exp-row { flex-direction: column; gap: 8px; }
-      .exp-row .y { width: auto; }
-      .about { padding: 18vh 6vw 14vh; }
-      .h-wrap { height: 80vh; }
-      .h-panel h2 { font-size: clamp(48px, 15vw, 100px); }
-      .menu-overlay a { font-size: clamp(32px, 8vw, 52px); }
+    /* ===== RESPONSIVE AJUSTES ===== */
+    @media (max-width: 480px) {
+      .topbar { padding: 16px 5vw; }
+      .menu-btn { padding: 6px 16px; font-size: 10px; }
+      .hero-title { font-size: clamp(36px, 18vw, 60px); }
+      .about { padding: 14vh 5vw 10vh; }
+      .about .pin-label { top: 20px; left: 5vw; }
+      .exp { padding: 12vh 5vw; }
+      .exp .pin-label { top: 20px; left: 5vw; }
+      .h-wrap { padding-top: 60px; height: 80vh; }
+      .h-panel { padding: 0 5vw; }
+      .h-panel h2 { font-size: clamp(32px, 13vw, 56px); }
+      .marquee-wrap { height: 40vh; }
+      .marquee-wrap .pin-label { top: 20px; left: 5vw; }
+      .contact { min-height: 70vh; padding: 0 5vw; }
+      .contact .pin-label { top: 20px; left: 5vw; }
+      .contact h2 { font-size: clamp(32px, 12vw, 56px); }
+      .scroll-top { width: 44px; height: 44px; font-size: 18px; bottom: 16px; }
     }
   </style>
 </head>
@@ -683,7 +704,6 @@
     <div class="h-wrap">
       <div class="h-track" id="hTrack">
         <div class="h-panel">
-          <!-- Etiqueta 003 dentro del primer panel, encima del título -->
           <div class="pin-label project-label">003 / PROYECTOS</div>
           <div class="pidx">01 — JAVA / POO</div>
           <h2>HÉROES<br>DEL REINO</h2>
@@ -737,24 +757,26 @@
 
   <script>
     // ============================================================
-    //  CURSOR + TRAIL
+    //  CURSOR + TRAIL (solo escritorio)
     // ============================================================
     const cursor = document.getElementById('cursor');
     const trail = document.getElementById('cursor-trail');
     let mx = 0, my = 0;
 
-    document.addEventListener('mousemove', e => {
-      mx = e.clientX; my = e.clientY;
-      cursor.style.left = mx + 'px';
-      cursor.style.top = my + 'px';
-      trail.style.left = mx + 'px';
-      trail.style.top = my + 'px';
-    });
+    if (window.matchMedia('(hover: hover)').matches) {
+      document.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        cursor.style.left = mx + 'px';
+        cursor.style.top = my + 'px';
+        trail.style.left = mx + 'px';
+        trail.style.top = my + 'px';
+      });
 
-    document.querySelectorAll('a, button, .pstack span, .mq-row span').forEach(el => {
-      el.addEventListener('mouseenter', () => cursor.classList.add('big'));
-      el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
-    });
+      document.querySelectorAll('a, button, .pstack span, .mq-row span').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+      });
+    }
 
     // ============================================================
     //  MENU
@@ -817,9 +839,9 @@
       });
     });
 
-    // Horizontal projects
+    // Horizontal projects — con soporte táctil
     const track = document.getElementById('hTrack');
-    gsap.to(track, {
+    let hScroll = gsap.to(track, {
       x: () => -(track.scrollWidth - window.innerWidth),
       ease: 'none',
       scrollTrigger: {
@@ -832,6 +854,23 @@
         invalidateOnRefresh: true
       }
     });
+
+    // Para móviles, permitir scroll horizontal con touch
+    if ('ontouchstart' in window) {
+      let startX = 0, startY = 0;
+      const hWrap = document.querySelector('.h-wrap');
+      hWrap.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      }, { passive: true });
+      hWrap.addEventListener('touchmove', (e) => {
+        const dx = e.touches[0].clientX - startX;
+        const dy = e.touches[0].clientY - startY;
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+    }
 
     // Marquee skills
     const r1 = document.getElementById('mqRow1');
@@ -863,7 +902,7 @@
     });
 
     // ============================================================
-    //  THREE.JS — ESCENA 3D DE ALTA GAMA CON DOS OBJETOS
+    //  THREE.JS — ESCENA 3D OPTIMIZADA PARA MÓVIL
     // ============================================================
     const canvas = document.getElementById('webgl');
     const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
@@ -897,8 +936,8 @@
     rim.position.set(0, 12, -12);
     scene.add(rim);
 
-    // ----- OBJETO PRINCIPAL: Torus Knot con desplazamiento orgánico -----
-    const geo1 = new THREE.TorusKnotGeometry(2.4, 0.75, 240, 36);
+    // ----- OBJETO PRINCIPAL: Torus Knot -----
+    const geo1 = new THREE.TorusKnotGeometry(2.4, 0.75, 180, 24);
     const mat1 = new THREE.MeshStandardMaterial({
       color: 0x080825,
       metalness: 0.98,
@@ -914,7 +953,6 @@
       shader.vertexShader = `
         uniform float uTime;
         varying float vDisp;
-        // Simplex noise
         vec3 mod289(vec3 x){return x - floor(x*(1.0/289.0))*289.0;}
         vec4 mod289(vec4 x){return x - floor(x*(1.0/289.0))*289.0;}
         vec4 permute(vec4 x){return mod289(((x*34.0)+1.0)*x);}
@@ -987,8 +1025,8 @@
     const mesh1 = new THREE.Mesh(geo1, mat1);
     scene.add(mesh1);
 
-    // ----- SEGUNDO OBJETO: Esfera con wireframe dinámico (orbita) -----
-    const geo2 = new THREE.SphereGeometry(0.9, 48, 48);
+    // ----- SEGUNDO OBJETO: Esfera wireframe -----
+    const geo2 = new THREE.SphereGeometry(0.9, 32, 32);
     const mat2 = new THREE.MeshBasicMaterial({
       color: 0xffd700,
       wireframe: true,
@@ -999,8 +1037,8 @@
     mesh2.position.set(3.2, 1.8, 0);
     scene.add(mesh2);
 
-    // Anillo exterior (wireframe brillante) alrededor del objeto principal
-    const ringGeo = new THREE.TorusKnotGeometry(2.6, 0.9, 220, 28);
+    // Anillo exterior
+    const ringGeo = new THREE.TorusKnotGeometry(2.6, 0.9, 160, 20);
     const ringMat = new THREE.MeshBasicMaterial({
       color: 0x00f5ff,
       wireframe: true,
@@ -1010,7 +1048,12 @@
     const ringMesh = new THREE.Mesh(ringGeo, ringMat);
     scene.add(ringMesh);
 
-    // Partículas de fondo (tres sistemas con colores neón y oro)
+    // Partículas de fondo (reducidas en móvil)
+    const isMobile = window.innerWidth < 768;
+    const particleCount1 = isMobile ? 800 : 3000;
+    const particleCount2 = isMobile ? 500 : 1800;
+    const particleCount3 = isMobile ? 300 : 1000;
+
     const createParticles = (count, color, size, spread, opacity = 0.4) => {
       const g = new THREE.BufferGeometry();
       const pos = new Float32Array(count * 3);
@@ -1025,7 +1068,7 @@
       g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
       const m = new THREE.PointsMaterial({
         color,
-        size,
+        size: isMobile ? size * 0.6 : size,
         transparent: true,
         opacity,
         blending: THREE.AdditiveBlending,
@@ -1034,21 +1077,23 @@
       return new THREE.Points(g, m);
     };
 
-    const particles1 = createParticles(3000, 0x00f5ff, 0.09, 45, 0.5);
-    const particles2 = createParticles(1800, 0xff00e6, 0.06, 50, 0.4);
-    const particles3 = createParticles(1000, 0xffd700, 0.04, 40, 0.3);
+    const particles1 = createParticles(particleCount1, 0x00f5ff, 0.09, 45, 0.5);
+    const particles2 = createParticles(particleCount2, 0xff00e6, 0.06, 50, 0.4);
+    const particles3 = createParticles(particleCount3, 0xffd700, 0.04, 40, 0.3);
     scene.add(particles1);
     scene.add(particles2);
     scene.add(particles3);
 
-    // Mouse tracking
+    // Mouse tracking (solo escritorio)
     let targetRotY = 0, targetRotX = 0;
-    window.addEventListener('mousemove', (e) => {
-      const nx = (e.clientX / window.innerWidth) * 2 - 1;
-      const ny = (e.clientY / window.innerHeight) * 2 - 1;
-      targetRotY = nx * 0.4;
-      targetRotX = ny * 0.3;
-    });
+    if (window.matchMedia('(hover: hover)').matches) {
+      window.addEventListener('mousemove', (e) => {
+        const nx = (e.clientX / window.innerWidth) * 2 - 1;
+        const ny = (e.clientY / window.innerHeight) * 2 - 1;
+        targetRotY = nx * 0.4;
+        targetRotX = ny * 0.3;
+      });
+    }
 
     // Scroll camera
     ScrollTrigger.create({
@@ -1081,8 +1126,10 @@
       // Rotación suave del objeto principal
       mesh1.rotation.y += 0.0015;
       mesh1.rotation.x += 0.0008;
-      mesh1.rotation.y += (targetRotY - mesh1.rotation.y) * 0.02;
-      mesh1.rotation.x += (targetRotX - mesh1.rotation.x) * 0.02;
+      if (window.matchMedia('(hover: hover)').matches) {
+        mesh1.rotation.y += (targetRotY - mesh1.rotation.y) * 0.02;
+        mesh1.rotation.x += (targetRotX - mesh1.rotation.x) * 0.02;
+      }
       ringMesh.rotation.copy(mesh1.rotation);
 
       // El segundo objeto orbita y rota
