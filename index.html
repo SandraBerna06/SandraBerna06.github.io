@@ -226,7 +226,7 @@
       font-family: 'Clash Display';
       font-weight: 700;
       font-size: clamp(48px, 20vw, 300px);
-      line-height: 0.70;
+      line-height: 0.78;
       text-align: center;
       letter-spacing: -0.06em;
       mix-blend-mode: difference;
@@ -404,7 +404,7 @@
     }
     .h-track {
       height: 100%;
-      width: 400vw; /* 4 paneles */
+      width: 400vw;
       display: flex;
       will-change: transform;
       touch-action: pan-y;
@@ -567,6 +567,149 @@
     }
     @media (min-width: 600px) { footer { flex-direction: row; } }
 
+    /* ===== CHATBOT (Sandra AI) ===== */
+    #chatbot-container {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 1000;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    #chatbot-toggle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--cyan);
+      color: #000;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      box-shadow: 0 0 30px rgba(0, 245, 255, 0.3);
+      transition: transform 0.2s;
+    }
+    #chatbot-toggle:hover { transform: scale(1.1); }
+    @media (hover: none) { #chatbot-toggle { cursor: pointer; } }
+    #chatbot-window {
+      position: absolute;
+      bottom: 80px;
+      right: 0;
+      width: 340px;
+      max-width: 85vw;
+      height: 450px;
+      background: rgba(7, 7, 8, 0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+      overflow: hidden;
+    }
+    #chatbot-header {
+      padding: 16px 20px;
+      background: rgba(0, 245, 255, 0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      color: var(--cyan);
+      letter-spacing: 0.1em;
+    }
+    #chatbot-close {
+      background: none;
+      border: none;
+      color: var(--dim);
+      font-size: 18px;
+      cursor: pointer;
+      padding: 0 8px;
+    }
+    #chatbot-messages {
+      flex: 1;
+      padding: 16px 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      scroll-behavior: smooth;
+    }
+    #chatbot-messages .bot,
+    #chatbot-messages .user {
+      max-width: 85%;
+      padding: 10px 16px;
+      border-radius: 16px;
+      line-height: 1.5;
+      font-size: 14px;
+      word-wrap: break-word;
+    }
+    #chatbot-messages .bot {
+      background: rgba(0, 245, 255, 0.08);
+      color: var(--ink);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+    #chatbot-messages .user {
+      background: rgba(255, 0, 230, 0.12);
+      color: var(--ink);
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+    #chatbot-messages .typing {
+      color: var(--dim);
+      font-style: italic;
+      font-size: 13px;
+      align-self: flex-start;
+      padding: 6px 0;
+    }
+    #chatbot-input-area {
+      display: flex;
+      padding: 12px 16px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      gap: 10px;
+      background: rgba(0,0,0,0.2);
+    }
+    #chatbot-input {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 40px;
+      padding: 10px 16px;
+      color: var(--ink);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      outline: none;
+    }
+    #chatbot-input:focus { border-color: var(--cyan); }
+    #chatbot-send {
+      background: var(--cyan);
+      color: #000;
+      border: none;
+      border-radius: 40px;
+      padding: 0 20px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    #chatbot-send:hover { background: var(--magenta); color: #fff; }
+    @media (hover: none) { #chatbot-send { cursor: pointer; } }
+    #chatbot-messages::-webkit-scrollbar { width: 4px; }
+    #chatbot-messages::-webkit-scrollbar-track { background: transparent; }
+    #chatbot-messages::-webkit-scrollbar-thumb { background: var(--cyan); border-radius: 10px; }
+
+    @media (max-width: 480px) {
+      #chatbot-container { bottom: 16px; right: 16px; }
+      #chatbot-toggle { width: 52px; height: 52px; font-size: 24px; }
+      #chatbot-window {
+        bottom: 72px;
+        width: 92vw;
+        height: 70vh;
+        right: -4vw;
+        border-radius: 16px;
+      }
+      #chatbot-messages .bot,
+      #chatbot-messages .user { font-size: 13px; padding: 8px 14px; }
+    }
+
     /* ===== RESPONSIVE ===== */
     @media (max-width: 480px) {
       .topbar { padding: 10px 5vw; }
@@ -593,20 +736,20 @@
 </head>
 <body>
 
-  <!-- Cursor -->
+  <!-- ===== CURSOR ===== -->
   <div id="cursor"></div>
   <div id="cursor-trail"></div>
 
-  <!-- Canvas 3D -->
+  <!-- ===== CANVAS 3D ===== -->
   <canvas id="webgl"></canvas>
 
-  <!-- Robot -->
+  <!-- ===== ROBOT 3D INTERACTIVO ===== -->
   <div id="robotContainer">
     <canvas id="robotCanvas"></canvas>
     <div class="drag-hint">↕ arrastra</div>
   </div>
 
-  <!-- Top Bar -->
+  <!-- ===== TOP BAR ===== -->
   <header class="topbar">
     <div class="mark disp">S.B.</div>
     <div class="topbar-right">
@@ -616,7 +759,7 @@
     </div>
   </header>
 
-  <!-- Menu -->
+  <!-- ===== MENU OVERLAY ===== -->
   <div class="menu-overlay" id="menuOverlay">
     <button class="menu-close" id="menuClose">CERRAR ✕</button>
     <a href="#about" data-i18n="menu_about">SOBRE MÍ</a>
@@ -631,7 +774,7 @@
     </div>
   </div>
 
-  <!-- HERO -->
+  <!-- ===== HERO ===== -->
   <section class="hero">
     <h1 class="hero-title">
       SANDRA<br>
@@ -641,7 +784,7 @@
     <div class="hero-scroll" data-i18n="hero_scroll">SCROLL ↓</div>
   </section>
 
-  <!-- ABOUT -->
+  <!-- ===== ABOUT ===== -->
   <section class="about" id="about">
     <div class="pin-label" data-i18n="about_label">001 / SOBRE MÍ</div>
     <p data-i18n="about_text">
@@ -657,7 +800,7 @@
     </div>
   </section>
 
-  <!-- TOOLS -->
+  <!-- ===== TOOLS ===== -->
   <section class="tools" id="tools">
     <div class="pin-label" data-i18n="tools_label">HERRAMIENTAS</div>
     <div class="tools-grid" id="toolsGrid">
@@ -673,7 +816,7 @@
     </div>
   </section>
 
-  <!-- EXPERIENCE -->
+  <!-- ===== EXPERIENCE ===== -->
   <section class="exp" id="exp">
     <div class="pin-label" data-i18n="exp_label">002 / TRAYECTORIA</div>
 
@@ -698,7 +841,7 @@
     </div>
   </section>
 
-  <!-- PROJECTS (4 paneles) -->
+  <!-- ===== PROJECTS (4 paneles) ===== -->
   <section id="proyectos">
     <div class="h-wrap">
       <div class="h-track" id="hTrack">
@@ -739,7 +882,7 @@
     </div>
   </section>
 
-  <!-- SKILLS -->
+  <!-- ===== SKILLS MARQUEE ===== -->
   <section class="marquee-wrap" id="skills">
     <div class="pin-label" data-i18n="skills_label">004 / SKILLS</div>
     <div class="mq-row r1" id="mqRow1">
@@ -752,7 +895,7 @@
     </div>
   </section>
 
-  <!-- CONTACT -->
+  <!-- ===== CONTACT ===== -->
   <section class="contact" id="contacto">
     <div class="pin-label" data-i18n="contact_label">005 / CONTACTO</div>
     <h2 data-i18n="contact_title">¿HABLAMOS?<br><a href="mailto:sandraberna2006@gmail.com">ESCRÍBEME →</a></h2>
@@ -763,18 +906,39 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- ===== FOOTER ===== -->
   <footer>
     <span>© 2026 SANDRA BERNÁ ZAPLANA</span>
-    <span>THREE.JS · GSAP · WEBGL</span>
+    <span>THREE.JS · GSAP · WEBGL · GEMINI AI</span>
   </footer>
 
-  <!-- SCROLL TOP -->
+  <!-- ===== SCROLL TOP ===== -->
   <button class="scroll-top" id="scrollTop">↑</button>
 
+  <!-- ============================================================
+       CHATBOT (Sandra AI) — Frontend
+       ============================================================ -->
+  <div id="chatbot-container">
+    <button id="chatbot-toggle" aria-label="Abrir chat">💬</button>
+    <div id="chatbot-window" style="display:none;">
+      <div id="chatbot-header">
+        <span>🤖 Sandra AI</span>
+        <button id="chatbot-close">✕</button>
+      </div>
+      <div id="chatbot-messages"></div>
+      <div id="chatbot-input-area">
+        <input type="text" id="chatbot-input" placeholder="Pregunta sobre mi carrera..." />
+        <button id="chatbot-send">Enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SCRIPTS
+       ============================================================ -->
   <script>
     // ============================================================
-    //  TRADUCCIONES COMPLETAS (ES/EN)
+    //  TRADUCCIONES (ES/EN)
     // ============================================================
     const translations = {
       es: {
@@ -806,22 +970,18 @@
         exp_ucam_role: "CFGS Desarrollo de Aplicaciones Web",
         exp_ucam_desc: "Formación práctica en frontend, backend y bases de datos: Java, PHP/Node, MySQL y Git.",
         projects_label: "003 / PROYECTOS",
-        // Proyecto 1: Videojuego de Cartas
         project1_idx: "01 — JAVA / SWING / JDBC",
         project1_title: "VIDEOJUEGO<br>DE CARTAS",
         project1_desc: "Aplicación de escritorio con interfaz Swing que gestiona un juego de cartas coleccionables. Permite administrar jugadores, visualizar catálogo de cartas con filtros avanzados y simular batallas asíncronas entre jugadores. Incluye conexión a MySQL y música de fondo.",
         project1_link: "VER CÓDIGO →",
-        // Proyecto 2: Gestión de Biblioteca
         project2_idx: "02 — JAVA / JDBC / MySQL",
         project2_title: "GESTIÓN DE<br>BIBLIOTECA",
         project2_desc: "Aplicación de consola en Java para gestionar el inventario de una biblioteca utilizando MySQL y JDBC. Operaciones CRUD completas sobre libros, con validación de entrada y menú interactivo.",
         project2_link: "VER CÓDIGO →",
-        // Proyecto 3: Héroes del Reino
         project3_idx: "03 — JAVA / POO",
         project3_title: "HÉROES<br>DEL REINO",
         project3_desc: "Juego de combate por turnos con herencia y polimorfismo, sistema de pociones y gestión de enemigos. Ideal para practicar y preparar exámenes en Java.",
         project3_link: "VER CÓDIGO →",
-        // Proyecto 4: Juego de Ajedrez
         project4_idx: "04 — JAVA / POO",
         project4_title: "JUEGO DE<br>AJEDREZ",
         project4_desc: "Ajedrez completo con interfaz de texto, movimientos legales, turnos y control de victoria. Práctica de lógica, estructuras de datos y POO.",
@@ -859,22 +1019,18 @@
         exp_ucam_role: "CFGS Web Application Development",
         exp_ucam_desc: "Hands-on training in frontend, backend and databases: Java, PHP/Node, MySQL and Git.",
         projects_label: "003 / PROJECTS",
-        // Project 1: Card Game
         project1_idx: "01 — JAVA / SWING / JDBC",
         project1_title: "CARD<br>GAME",
         project1_desc: "Desktop application with Swing interface that manages a collectible card game. Allows managing players, viewing card catalog with advanced filters and simulating asynchronous battles between players. Includes MySQL connection and background music.",
         project1_link: "VIEW CODE →",
-        // Project 2: Library Management
         project2_idx: "02 — JAVA / JDBC / MySQL",
         project2_title: "LIBRARY<br>MANAGEMENT",
         project2_desc: "Console application in Java to manage a library inventory using MySQL and JDBC. Complete CRUD operations on books, with input validation and interactive menu.",
         project2_link: "VIEW CODE →",
-        // Project 3: Heroes of the Kingdom
         project3_idx: "03 — JAVA / OOP",
         project3_title: "HEROES<br>OF THE KINGDOM",
         project3_desc: "Turn-based combat game with inheritance and polymorphism, potion system and enemy management. Ideal for practicing and preparing Java exams.",
         project3_link: "VIEW CODE →",
-        // Project 4: Chess Game
         project4_idx: "04 — JAVA / OOP",
         project4_title: "CHESS<br>GAME",
         project4_desc: "Full chess game with text interface, legal moves, turns and victory control. Practice of logic, data structures and OOP.",
@@ -1000,7 +1156,6 @@
       });
     });
 
-    // Scroll horizontal con 4 paneles (400vw)
     const track = document.getElementById('hTrack');
     gsap.to(track, {
       x: () => -(track.scrollWidth - window.innerWidth),
@@ -1016,7 +1171,7 @@
       }
     });
 
-    // Mejorar touch horizontal (solo cuando es claramente horizontal)
+    // Touch horizontal (evitar conflicto con scroll vertical)
     if ('ontouchstart' in window) {
       let startX = 0, startY = 0;
       const hWrap = document.querySelector('.h-wrap');
@@ -1067,7 +1222,7 @@
     });
 
     // ============================================================
-    //  THREE.JS — ESCENA PRINCIPAL (optimizada para móvil)
+    //  THREE.JS — ESCENA 3D PRINCIPAL
     // ============================================================
     const canvas = document.getElementById('webgl');
     const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
@@ -1280,7 +1435,7 @@
     animate();
 
     // ============================================================
-    //  ROBOT 3D CON FÍSICA (optimizado para móvil)
+    //  ROBOT 3D CON FÍSICA (arrastrable con inercia)
     // ============================================================
     const robotContainer = document.getElementById('robotContainer');
     const robotCanvas = document.getElementById('robotCanvas');
@@ -1410,7 +1565,7 @@
     }
     physicsLoop();
 
-    // --- Arrastre optimizado ---
+    // --- Arrastre optimizado (no bloquea scroll) ---
     function startDrag(clientX, clientY) {
       isDragging = true;
       dragPrevX = clientX;
@@ -1462,7 +1617,7 @@
     });
     window.addEventListener('mouseup', endDrag);
 
-    // Táctil: solo arrastrar si el movimiento es claramente horizontal
+    // Táctil: solo arrastrar si movimiento horizontal
     let touchStartX = 0, touchStartY = 0;
     let isTouchDrag = false;
 
@@ -1480,12 +1635,10 @@
       const dy = touch.clientY - touchStartY;
       const isHorizontal = Math.abs(dx) > Math.abs(dy);
 
-      // Si el movimiento es vertical y no hemos empezado arrastre, dejamos scroll
       if (!isTouchDrag && !isHorizontal && Math.abs(dy) > 15) {
         return; // scroll vertical libre
       }
 
-      // Si es horizontal o ya estamos arrastrando
       if (isHorizontal && Math.abs(dx) > 15) {
         e.preventDefault();
         if (!isTouchDrag) {
@@ -1540,6 +1693,102 @@
       updatePosition();
     });
     setTimeout(resizeRobot, 100);
+
+    // ============================================================
+    //  CHATBOT — Sandra AI (Frontend)
+    //  ★★★ CAMBIA LA URL POR LA DE TU BACKEND EN RENDER ★★★
+    // ============================================================
+    (function() {
+      const API_URL = 'https://chatbot-server-rx8o.onrender.com'; // ← CAMBIA ESTA URL
+
+      const toggleBtn = document.getElementById('chatbot-toggle');
+      const chatWindow = document.getElementById('chatbot-window');
+      const closeBtn = document.getElementById('chatbot-close');
+      const messagesDiv = document.getElementById('chatbot-messages');
+      const inputField = document.getElementById('chatbot-input');
+      const sendBtn = document.getElementById('chatbot-send');
+
+      let isOpen = false;
+
+      toggleBtn.addEventListener('click', () => {
+        isOpen = !isOpen;
+        chatWindow.style.display = isOpen ? 'flex' : 'none';
+        if (isOpen) inputField.focus();
+      });
+
+      closeBtn.addEventListener('click', () => {
+        isOpen = false;
+        chatWindow.style.display = 'none';
+      });
+
+      async function sendMessage() {
+        const message = inputField.value.trim();
+        if (!message) return;
+
+        addMessage('user', message);
+        inputField.value = '';
+        inputField.disabled = true;
+        sendBtn.disabled = true;
+
+        const typingEl = addTypingIndicator();
+
+        try {
+          const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message })
+          });
+
+          if (!response.ok) throw new Error('Error en el servidor');
+
+          const data = await response.json();
+          removeTypingIndicator(typingEl);
+          addMessage('bot', data.reply || 'No pude procesar tu pregunta.');
+        } catch (error) {
+          console.error('Error:', error);
+          removeTypingIndicator(typingEl);
+          addMessage('bot', '⚠️ Ocurrió un error. Inténtalo de nuevo más tarde.');
+        } finally {
+          inputField.disabled = false;
+          sendBtn.disabled = false;
+          inputField.focus();
+        }
+      }
+
+      function addMessage(role, text) {
+        const div = document.createElement('div');
+        div.className = role;
+        div.textContent = text;
+        messagesDiv.appendChild(div);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }
+
+      function addTypingIndicator() {
+        const div = document.createElement('div');
+        div.className = 'typing';
+        div.textContent = 'Escribiendo...';
+        messagesDiv.appendChild(div);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        return div;
+      }
+
+      function removeTypingIndicator(el) {
+        if (el && el.parentNode) el.parentNode.removeChild(el);
+      }
+
+      sendBtn.addEventListener('click', sendMessage);
+      inputField.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+
+      // Mensaje de bienvenida (con acento)
+      setTimeout(() => {
+        addMessage('bot', '👋 ¡Hola! Soy Sandra AI. Pregúntame sobre mi trayectoria profesional.');
+      }, 500);
+    })();
 
     // ============================================================
     //  RESIZE GENERAL
