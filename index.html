@@ -34,11 +34,12 @@
       scroll-behavior: smooth;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
+      touch-action: pan-y;
     }
     ::selection { background: var(--magenta); color: #000; }
     .disp { font-family: 'Clash Display', sans-serif; font-weight: 700; letter-spacing: -0.02em; }
 
-    /* ===== CURSOR PERSONALIZADO (escritorio y móvil) ===== */
+    /* ===== CURSOR PERSONALIZADO ===== */
     #cursor {
       position: fixed;
       top: 0; left: 0;
@@ -54,12 +55,7 @@
       will-change: transform;
       opacity: 0;
     }
-    #cursor.big {
-      width: 140px;
-      height: 140px;
-      background: radial-gradient(circle, var(--magenta) 10%, transparent 80%);
-      box-shadow: 0 0 120px rgba(255, 0, 230, 0.45);
-    }
+    #cursor.big { width: 140px; height: 140px; background: radial-gradient(circle, var(--magenta) 10%, transparent 80%); box-shadow: 0 0 120px rgba(255, 0, 230, 0.45); }
     #cursor-trail {
       position: fixed;
       width: 10px; height: 10px;
@@ -72,69 +68,61 @@
       transform: translate(-50%, -50%);
       transition: all 0.05s linear;
     }
-    /* En escritorio mostramos el cursor, en móvil lo ocultamos excepto cuando se toca */
-    @media (hover: hover) {
-      #cursor { opacity: 1; }
-      #cursor-trail { opacity: 0.15; }
-      body { cursor: none; }
-    }
-    @media (hover: none) {
-      #cursor, #cursor-trail { display: none; }
-      /* Cursor táctil se crea dinámicamente */
-    }
+    @media (hover: hover) { #cursor { opacity: 1; } #cursor-trail { opacity: 0.15; } body { cursor: none; } }
+    @media (hover: none) { #cursor, #cursor-trail { display: none; } }
 
     /* ===== CANVAS 3D PRINCIPAL ===== */
-    #webgl {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-    }
+    #webgl { position: fixed; inset: 0; z-index: 1; pointer-events: none; will-change: transform; }
 
-    /* ===== ROBOT 3D FLOTANTE (arrastrable) ===== */
+    /* ===== ROBOT 3D FLOTANTE (arrastrable con física) ===== */
     #robotContainer {
       position: fixed;
-      width: 160px;
-      height: 160px;
+      width: 140px;
+      height: 140px;
       z-index: 100;
-      pointer-events: all;
+      pointer-events: auto;
       touch-action: none;
       cursor: grab;
-      left: calc(50% - 80px);
-      top: calc(50% - 80px);
       border-radius: 50%;
       background: rgba(0, 245, 255, 0.03);
       backdrop-filter: blur(2px);
       border: 1px solid rgba(255,255,255,0.04);
       box-shadow: 0 0 60px rgba(0,245,255,0.04);
-      transition: transform 0.2s ease;
+      transition: transform 0.15s ease;
       will-change: transform, left, top;
+      top: 8vh;
+      left: 50%;
+      transform: translateX(-50%) scale(1);
     }
-    #robotContainer:active { cursor: grabbing; transform: scale(1.05); }
+    #robotContainer:active { cursor: grabbing; transform: translateX(-50%) scale(1.08); }
     #robotContainer canvas {
       width: 100% !important;
       height: 100% !important;
       display: block;
       border-radius: 50%;
     }
-    @media (max-width: 480px) {
-      #robotContainer { width: 120px; height: 120px; left: calc(50% - 60px); top: calc(50% - 60px); }
-    }
-    /* Indicador de arrastre */
     #robotContainer .drag-hint {
       position: absolute;
-      bottom: -24px;
+      bottom: -30px;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 9px;
-      letter-spacing: 0.15em;
+      font-size: 10px;
+      letter-spacing: 0.2em;
       color: var(--dim);
-      opacity: 0.4;
+      opacity: 0.5;
       white-space: nowrap;
       pointer-events: none;
       font-family: 'JetBrains Mono', monospace;
+      background: var(--glass);
+      padding: 2px 12px;
+      border-radius: 40px;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.03);
     }
-    @media (max-width: 480px) { #robotContainer .drag-hint { display: none; } }
+    @media (max-width: 480px) {
+      #robotContainer { width: 100px; height: 100px; top: 6vh; }
+      #robotContainer .drag-hint { font-size: 8px; bottom: -24px; padding: 2px 10px; }
+    }
 
     /* ===== TOP BAR ===== */
     .topbar {
@@ -149,20 +137,10 @@
       background: linear-gradient(180deg, rgba(3,3,8,0.7) 0%, transparent 100%);
       gap: 10px;
       flex-wrap: wrap;
+      pointer-events: none;
     }
-    .topbar .mark {
-      font-size: clamp(14px, 2vw, 20px);
-      letter-spacing: 0.25em;
-      color: var(--ink);
-      opacity: 0.5;
-      font-weight: 500;
-    }
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+    .topbar .mark { font-size: clamp(14px, 2vw, 20px); letter-spacing: 0.25em; color: var(--ink); opacity: 0.5; font-weight: 500; }
+    .topbar-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; pointer-events: auto; }
     .menu-btn, .lang-btn {
       background: var(--glass);
       backdrop-filter: blur(20px);
@@ -178,11 +156,7 @@
       text-transform: uppercase;
       background: rgba(255,255,255,0.04);
     }
-    .menu-btn:hover, .lang-btn:hover {
-      background: rgba(255,255,255,0.08);
-      border-color: var(--cyan);
-      transform: scale(1.05);
-    }
+    .menu-btn:hover, .lang-btn:hover { background: rgba(255,255,255,0.08); border-color: var(--cyan); transform: scale(1.05); }
     .lang-btn.active { border-color: var(--gold); color: var(--gold); }
     @media (hover: hover) { .menu-btn, .lang-btn { cursor: none; } }
 
@@ -213,10 +187,7 @@
       transition: transform 0.7s, opacity 0.4s;
       letter-spacing: -0.02em;
     }
-    .menu-overlay a:hover {
-      transform: translateX(50px) scale(1.04);
-      opacity: 0.15;
-    }
+    .menu-overlay a:hover { transform: translateX(50px) scale(1.04); opacity: 0.15; }
     .menu-close {
       position: absolute;
       top: 20px;
@@ -237,10 +208,7 @@
       font-size: clamp(12px, 1.2vw, 14px);
       flex-wrap: wrap;
     }
-    .menu-foot a {
-      color: #030308;
-      text-decoration: underline;
-    }
+    .menu-foot a { color: #030308; text-decoration: underline; }
 
     /* ===== HERO ===== */
     .hero {
@@ -263,11 +231,9 @@
       letter-spacing: -0.06em;
       mix-blend-mode: difference;
       text-shadow: 0 0 120px rgba(0, 245, 255, 0.1);
+      margin-top: 5vh;
     }
-    .hero-title .line2 {
-      -webkit-text-stroke: 1.5px var(--ink);
-      color: transparent;
-    }
+    .hero-title .line2 { -webkit-text-stroke: 1.5px var(--ink); color: transparent; }
     .hero-sub {
       margin-top: 20px;
       font-size: clamp(10px, 1.5vw, 15px);
@@ -316,11 +282,7 @@
       position: relative;
       z-index: 5;
     }
-    .about .pin-label {
-      position: absolute;
-      top: 30px;
-      left: 6vw;
-    }
+    .about .pin-label { position: absolute; top: 30px; left: 6vw; }
     .about p {
       font-family: 'Clash Display';
       font-weight: 600;
@@ -352,17 +314,13 @@
       letter-spacing: 0.02em;
     }
 
-    /* ===== TOOLS SECTION ===== */
+    /* ===== TOOLS ===== */
     .tools {
       padding: 8vh 6vw 10vh;
       position: relative;
       z-index: 5;
     }
-    .tools .pin-label {
-      position: absolute;
-      top: 30px;
-      left: 6vw;
-    }
+    .tools .pin-label { position: absolute; top: 30px; left: 6vw; }
     .tools-grid {
       display: flex;
       flex-wrap: wrap;
@@ -394,16 +352,8 @@
       background: var(--glass);
       backdrop-filter: blur(4px);
     }
-    .tools-grid .tool-item:hover {
-      filter: grayscale(0) brightness(1);
-      transform: scale(1.1);
-      border-color: var(--cyan);
-      box-shadow: var(--glow-cyan);
-    }
-    @media (max-width: 480px) {
-      .tools-grid .tool-item { width: 48px; height: 48px; padding: 6px; }
-      .tools-grid { gap: 12px; }
-    }
+    .tools-grid .tool-item:hover { filter: grayscale(0) brightness(1); transform: scale(1.1); border-color: var(--cyan); box-shadow: var(--glow-cyan); }
+    @media (max-width: 480px) { .tools-grid .tool-item { width: 48px; height: 48px; padding: 6px; } .tools-grid { gap: 12px; } }
 
     /* ===== EXPERIENCE ===== */
     .exp {
@@ -415,11 +365,7 @@
       position: relative;
       z-index: 5;
     }
-    .exp .pin-label {
-      position: absolute;
-      top: 30px;
-      left: 6vw;
-    }
+    .exp .pin-label { position: absolute; top: 30px; left: 6vw; }
     .exp-subtitle {
       font-family: 'Clash Display';
       font-weight: 600;
@@ -442,29 +388,10 @@
       opacity: 0;
       transform: translateY(30px);
     }
-    .exp-row .y {
-      font-size: clamp(11px, 1.2vw, 13px);
-      color: var(--cyan);
-      letter-spacing: 0.1em;
-      font-weight: 500;
-    }
-    .exp-row h3 {
-      font-family: 'Clash Display';
-      font-weight: 700;
-      font-size: clamp(24px, 3.2vw, 50px);
-    }
-    .exp-row .org {
-      color: var(--dim);
-      font-size: clamp(12px, 1.2vw, 14px);
-      margin-top: 2px;
-    }
-    .exp-row .desc {
-      color: var(--dim);
-      font-size: clamp(12px, 1.2vw, 14px);
-      margin-top: 6px;
-      max-width: 560px;
-      line-height: 1.7;
-    }
+    .exp-row .y { font-size: clamp(11px, 1.2vw, 13px); color: var(--cyan); letter-spacing: 0.1em; font-weight: 500; }
+    .exp-row h3 { font-family: 'Clash Display'; font-weight: 700; font-size: clamp(24px, 3.2vw, 50px); }
+    .exp-row .org { color: var(--dim); font-size: clamp(12px, 1.2vw, 14px); margin-top: 2px; }
+    .exp-row .desc { color: var(--dim); font-size: clamp(12px, 1.2vw, 14px); margin-top: 6px; max-width: 560px; line-height: 1.7; }
 
     /* ===== PROJECTS (horizontal) ===== */
     .h-wrap {
@@ -473,13 +400,14 @@
       position: relative;
       z-index: 5;
       padding-top: 70px;
+      touch-action: pan-y;
     }
     .h-track {
       height: 100%;
       width: 200vw;
       display: flex;
       will-change: transform;
-      touch-action: pan-x;
+      touch-action: pan-y;
     }
     .h-panel {
       width: 100vw;
@@ -513,19 +441,8 @@
       mix-blend-mode: difference;
       text-shadow: 0 0 100px rgba(0, 245, 255, 0.05);
     }
-    .h-panel .ptag {
-      font-size: clamp(13px, 1.5vw, 16px);
-      color: var(--dim);
-      margin-top: 18px;
-      max-width: 540px;
-      line-height: 1.7;
-    }
-    .h-panel .pstack {
-      margin-top: 24px;
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
+    .h-panel .ptag { font-size: clamp(13px, 1.5vw, 16px); color: var(--dim); margin-top: 18px; max-width: 540px; line-height: 1.7; }
+    .h-panel .pstack { margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap; }
     .h-panel .pstack span {
       font-size: clamp(10px, 1vw, 12px);
       border: 1px solid rgba(255,255,255,0.05);
@@ -555,11 +472,7 @@
       position: relative;
       z-index: 5;
     }
-    .marquee-wrap .pin-label {
-      position: absolute;
-      top: 30px;
-      left: 6vw;
-    }
+    .marquee-wrap .pin-label { position: absolute; top: 30px; left: 6vw; }
     .mq-row {
       display: flex;
       white-space: nowrap;
@@ -589,11 +502,7 @@
       position: relative;
       z-index: 5;
     }
-    .contact .pin-label {
-      position: absolute;
-      top: 30px;
-      left: 6vw;
-    }
+    .contact .pin-label { position: absolute; top: 30px; left: 6vw; }
     .contact h2 {
       font-family: 'Clash Display';
       font-weight: 700;
@@ -603,12 +512,7 @@
       opacity: 0;
       transform: translateY(30px);
     }
-    .contact h2 a {
-      color: var(--ink);
-      text-decoration: none;
-      border-bottom: 3px solid transparent;
-      transition: border-color 0.4s, color 0.4s;
-    }
+    .contact h2 a { color: var(--ink); text-decoration: none; border-bottom: 3px solid transparent; transition: border-color 0.4s, color 0.4s; }
     .contact-links {
       margin-top: 30px;
       display: flex;
@@ -618,13 +522,7 @@
       opacity: 0;
       transform: translateY(20px);
     }
-    .contact-links a {
-      color: var(--dim);
-      text-decoration: none;
-      letter-spacing: 0.05em;
-      border-bottom: 1px solid transparent;
-      padding-bottom: 2px;
-    }
+    .contact-links a { color: var(--dim); text-decoration: none; letter-spacing: 0.05em; border-bottom: 1px solid transparent; padding-bottom: 2px; }
 
     /* ===== SCROLL TOP ===== */
     .scroll-top {
@@ -650,12 +548,7 @@
       box-shadow: 0 0 40px rgba(0, 245, 255, 0.03);
     }
     .scroll-top.visible { opacity: 1; pointer-events: all; }
-    .scroll-top:active {
-      background: var(--cyan);
-      color: #030308;
-      border-color: var(--cyan);
-      transform: scale(0.9);
-    }
+    .scroll-top:active { background: var(--cyan); color: #030308; border-color: var(--cyan); transform: scale(0.9); }
     @media (hover: hover) { .scroll-top { cursor: none; } }
 
     /* ===== FOOTER ===== */
@@ -678,7 +571,7 @@
     @media (max-width: 480px) {
       .topbar { padding: 10px 5vw; }
       .menu-btn, .lang-btn { padding: 4px 12px; font-size: 8px; }
-      .hero-title { font-size: clamp(36px, 18vw, 60px); }
+      .hero-title { font-size: clamp(36px, 18vw, 60px); margin-top: 2vh; }
       .about { padding: 14vh 5vw 10vh; min-height: 90vh; }
       .about .pin-label { top: 20px; left: 5vw; }
       .exp { padding: 12vh 5vw; min-height: 70vh; }
@@ -700,14 +593,14 @@
 </head>
 <body>
 
-  <!-- Cursor personalizado -->
+  <!-- Cursor -->
   <div id="cursor"></div>
   <div id="cursor-trail"></div>
 
   <!-- Canvas 3D principal -->
   <canvas id="webgl"></canvas>
 
-  <!-- Robot 3D flotante (arrastrable) -->
+  <!-- Robot 3D flotante (arrastrable con física) -->
   <div id="robotContainer">
     <canvas id="robotCanvas"></canvas>
     <div class="drag-hint">↕ arrastra</div>
@@ -972,12 +865,11 @@
     document.getElementById('langEn').addEventListener('click', () => setLanguage('en'));
 
     // ============================================================
-    //  CURSOR PERSONALIZADO (escritorio y móvil táctil)
+    //  CURSOR PERSONALIZADO
     // ============================================================
     const cursorEl = document.getElementById('cursor');
     const trailEl = document.getElementById('cursor-trail');
 
-    // En escritorio: mover con ratón
     if (window.matchMedia('(hover: hover)').matches) {
       document.addEventListener('mousemove', e => {
         cursorEl.style.left = e.clientX + 'px';
@@ -990,7 +882,6 @@
         el.addEventListener('mouseleave', () => cursorEl.classList.remove('big'));
       });
     } else {
-      // En móvil: mostrar un cursor táctil al tocar
       let touchCursor = document.createElement('div');
       touchCursor.style.cssText = `
         position: fixed;
@@ -1007,7 +898,6 @@
         border: 1px solid rgba(255,255,255,0.1);
       `;
       document.body.appendChild(touchCursor);
-
       document.addEventListener('touchstart', (e) => {
         const t = e.touches[0];
         touchCursor.style.left = t.clientX + 'px';
@@ -1019,9 +909,7 @@
         touchCursor.style.left = t.clientX + 'px';
         touchCursor.style.top = t.clientY + 'px';
       });
-      document.addEventListener('touchend', () => {
-        touchCursor.style.opacity = 0;
-      });
+      document.addEventListener('touchend', () => { touchCursor.style.opacity = 0; });
     }
 
     // ============================================================
@@ -1115,6 +1003,7 @@
       }
     });
 
+    // En móvil, solo prevenir el scroll vertical cuando el usuario está arrastrando horizontalmente
     if ('ontouchstart' in window) {
       let startX = 0, startY = 0;
       const hWrap = document.querySelector('.h-wrap');
@@ -1125,7 +1014,8 @@
       hWrap.addEventListener('touchmove', (e) => {
         const dx = e.touches[0].clientX - startX;
         const dy = e.touches[0].clientY - startY;
-        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
+        // Solo prevenir si el movimiento horizontal es mayor y estamos dentro del contenedor
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 15) {
           e.preventDefault();
         }
       }, { passive: false });
@@ -1165,7 +1055,7 @@
     });
 
     // ============================================================
-    //  THREE.JS — ESCENA 3D PRINCIPAL
+    //  THREE.JS — ESCENA 3D PRINCIPAL (optimizada para móvil)
     // ============================================================
     const canvas = document.getElementById('webgl');
     const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
@@ -1194,7 +1084,9 @@
     rim.position.set(0, 12, -12);
     scene.add(rim);
 
-    const geo1 = new THREE.TorusKnotGeometry(2.4, 0.75, 180, 24);
+    // Geometría más ligera en móvil
+    const isMobile = window.innerWidth < 768;
+    const geo1 = new THREE.TorusKnotGeometry(2.4, 0.75, isMobile ? 120 : 180, isMobile ? 16 : 24);
     const mat1 = new THREE.MeshStandardMaterial({
       color: 0x080825,
       metalness: 0.98,
@@ -1281,7 +1173,7 @@
     const mesh1 = new THREE.Mesh(geo1, mat1);
     scene.add(mesh1);
 
-    const geo2 = new THREE.SphereGeometry(0.9, 32, 32);
+    const geo2 = new THREE.SphereGeometry(0.9, isMobile ? 20 : 32, isMobile ? 20 : 32);
     const mat2 = new THREE.MeshBasicMaterial({
       color: 0xffd700,
       wireframe: true,
@@ -1292,7 +1184,7 @@
     mesh2.position.set(3.2, 1.8, 0);
     scene.add(mesh2);
 
-    const ringGeo = new THREE.TorusKnotGeometry(2.6, 0.9, 160, 20);
+    const ringGeo = new THREE.TorusKnotGeometry(2.6, 0.9, isMobile ? 100 : 160, isMobile ? 14 : 20);
     const ringMat = new THREE.MeshBasicMaterial({
       color: 0x00f5ff,
       wireframe: true,
@@ -1302,10 +1194,10 @@
     const ringMesh = new THREE.Mesh(ringGeo, ringMat);
     scene.add(ringMesh);
 
-    const isMobile = window.innerWidth < 768;
-    const pCount1 = isMobile ? 600 : 2500;
-    const pCount2 = isMobile ? 400 : 1500;
-    const pCount3 = isMobile ? 200 : 800;
+    // Partículas reducidas en móvil
+    const pCount1 = isMobile ? 300 : 2000;
+    const pCount2 = isMobile ? 200 : 1200;
+    const pCount3 = isMobile ? 100 : 600;
 
     const createParticles = (count, color, size, spread, opacity = 0.4) => {
       const g = new THREE.BufferGeometry();
@@ -1321,7 +1213,7 @@
       g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
       const m = new THREE.PointsMaterial({
         color,
-        size: isMobile ? size * 0.5 : size,
+        size: isMobile ? size * 0.4 : size,
         transparent: true,
         opacity,
         blending: THREE.AdditiveBlending,
@@ -1389,10 +1281,11 @@
     animate();
 
     // ============================================================
-    //  ROBOT 3D INTERACTIVO (arrastrable por toda la pantalla)
+    //  ROBOT 3D CON FÍSICA DE PELOTA
     // ============================================================
     const robotContainer = document.getElementById('robotContainer');
     const robotCanvas = document.getElementById('robotCanvas');
+
     const robotRenderer = new THREE.WebGLRenderer({ canvas: robotCanvas, alpha: true, antialias: true });
     robotRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     robotRenderer.setSize(robotContainer.clientWidth, robotContainer.clientHeight);
@@ -1481,44 +1374,94 @@
     robotGroup.scale.set(0.7, 0.7, 0.7);
     robotScene.add(robotGroup);
 
-    // Arrastre del robot por toda la pantalla
-    let isDraggingRobot = false;
-    let robotOffsetX = 0, robotOffsetY = 0;
-    let robotTargetX = robotContainer.offsetLeft || (window.innerWidth/2 - 80);
-    let robotTargetY = robotContainer.offsetTop || (window.innerHeight/2 - 80);
+    // --- Física de pelota ---
+    let robotX = window.innerWidth/2 - robotContainer.offsetWidth/2;
+    let robotY = 8 * window.innerHeight / 100;
+    let vx = 0, vy = 0;
+    const friction = 0.92;
+    const bounce = 0.6;
+    let isDragging = false;
+    let dragPrevX = 0, dragPrevY = 0;
+    let dragVx = 0, dragVy = 0;
+    let dragStartTime = 0;
 
-    // Inicializar posición centrada
-    robotTargetX = window.innerWidth/2 - robotContainer.offsetWidth/2;
-    robotTargetY = window.innerHeight/2 - robotContainer.offsetHeight/2;
-    robotContainer.style.left = robotTargetX + 'px';
-    robotContainer.style.top = robotTargetY + 'px';
+    robotContainer.style.left = robotX + 'px';
+    robotContainer.style.top = robotY + 'px';
 
+    function updatePosition() {
+      robotContainer.style.left = robotX + 'px';
+      robotContainer.style.top = robotY + 'px';
+    }
+
+    function physicsUpdate() {
+      if (isDragging) return;
+      vx *= friction;
+      vy *= friction;
+      if (Math.abs(vx) < 0.01) vx = 0;
+      if (Math.abs(vy) < 0.01) vy = 0;
+
+      robotX += vx;
+      robotY += vy;
+
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const rw = robotContainer.offsetWidth;
+      const rh = robotContainer.offsetHeight;
+
+      if (robotX < 0) { robotX = 0; vx = -vx * bounce; }
+      if (robotX + rw > w) { robotX = w - rw; vx = -vx * bounce; }
+      if (robotY < 0) { robotY = 0; vy = -vy * bounce; }
+      if (robotY + rh > h) { robotY = h - rh; vy = -vy * bounce; }
+
+      updatePosition();
+    }
+
+    function physicsLoop() {
+      physicsUpdate();
+      requestAnimationFrame(physicsLoop);
+    }
+    physicsLoop();
+
+    // --- Arrastre ---
     function startDrag(clientX, clientY) {
-      isDraggingRobot = true;
-      const rect = robotContainer.getBoundingClientRect();
-      robotOffsetX = clientX - rect.left;
-      robotOffsetY = clientY - rect.top;
+      isDragging = true;
+      dragPrevX = clientX;
+      dragPrevY = clientY;
+      dragVx = 0;
+      dragVy = 0;
+      vx = 0; vy = 0;
       robotContainer.style.cursor = 'grabbing';
-      robotContainer.style.transform = 'scale(1.05)';
+      robotContainer.style.transform = 'translateX(-50%) scale(1.08)';
     }
 
     function moveDrag(clientX, clientY) {
-      if (!isDraggingRobot) return;
-      let newX = clientX - robotOffsetX;
-      let newY = clientY - robotOffsetY;
-      // Limitar al viewport
-      newX = Math.max(0, Math.min(window.innerWidth - robotContainer.offsetWidth, newX));
-      newY = Math.max(0, Math.min(window.innerHeight - robotContainer.offsetHeight, newY));
-      robotTargetX = newX;
-      robotTargetY = newY;
-      robotContainer.style.left = newX + 'px';
-      robotContainer.style.top = newY + 'px';
+      if (!isDragging) return;
+      const dx = clientX - dragPrevX;
+      const dy = clientY - dragPrevY;
+      dragVx = dx * 0.5;
+      dragVy = dy * 0.5;
+      dragPrevX = clientX;
+      dragPrevY = clientY;
+
+      let newX = robotX + dx;
+      let newY = robotY + dy;
+      const rw = robotContainer.offsetWidth;
+      const rh = robotContainer.offsetHeight;
+      newX = Math.max(0, Math.min(window.innerWidth - rw, newX));
+      newY = Math.max(0, Math.min(window.innerHeight - rh, newY));
+      robotX = newX;
+      robotY = newY;
+      updatePosition();
     }
 
     function endDrag() {
-      isDraggingRobot = false;
-      robotContainer.style.cursor = 'grab';
-      robotContainer.style.transform = 'scale(1)';
+      if (isDragging) {
+        isDragging = false;
+        vx = dragVx * 0.8;
+        vy = dragVy * 0.8;
+        robotContainer.style.cursor = 'grab';
+        robotContainer.style.transform = 'translateX(-50%) scale(1)';
+      }
     }
 
     // Eventos ratón
@@ -1527,40 +1470,51 @@
       startDrag(e.clientX, e.clientY);
     });
     window.addEventListener('mousemove', (e) => {
-      if (isDraggingRobot) moveDrag(e.clientX, e.clientY);
+      if (isDragging) moveDrag(e.clientX, e.clientY);
     });
     window.addEventListener('mouseup', endDrag);
 
-    // Eventos táctiles
+    // Eventos táctiles optimizados para no bloquear scroll
+    let touchStartX = 0, touchStartY = 0;
+    let isTouchDrag = false;
+
     robotContainer.addEventListener('touchstart', (e) => {
-      e.preventDefault();
       const touch = e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+      isTouchDrag = false;
       startDrag(touch.clientX, touch.clientY);
-    }, { passive: false });
+    }, { passive: true });
+
     window.addEventListener('touchmove', (e) => {
-      if (isDraggingRobot && e.touches.length > 0) {
-        e.preventDefault();
-        const touch = e.touches[0];
-        moveDrag(touch.clientX, touch.clientY);
+      if (!isDragging) return;
+      if (e.touches.length === 0) return;
+      const touch = e.touches[0];
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+      // Si el movimiento es principalmente vertical, cancelamos arrastre para dejar scroll
+      if (!isTouchDrag && Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 20) {
+        endDrag();
+        return;
       }
+      isTouchDrag = true;
+      e.preventDefault();
+      moveDrag(touch.clientX, touch.clientY);
     }, { passive: false });
-    window.addEventListener('touchend', endDrag);
+
+    window.addEventListener('touchend', () => {
+      if (isDragging) endDrag();
+    });
 
     // Animación del robot
     function animateRobot() {
       requestAnimationFrame(animateRobot);
       const t = clock.getElapsedTime();
-
-      // Movimiento suave hacia el objetivo (ya está en posición directa)
-      // Pero añadimos un pequeño balanceo
       robotGroup.rotation.y = Math.sin(t * 0.5) * 0.1;
       robotGroup.rotation.x = Math.sin(t * 0.3) * 0.05;
-
-      // Parpadeo de ojos
       const blink = Math.sin(t * 2) > 0.95 ? 0.1 : 1;
       eyeL.scale.y = blink;
       eyeR.scale.y = blink;
-
       robotRenderer.render(robotScene, robotCamera);
     }
     animateRobot();
@@ -1576,15 +1530,13 @@
     }
     window.addEventListener('resize', () => {
       resizeRobot();
-      // Asegurar que el robot no se salga de la pantalla
-      if (robotTargetX + robotContainer.offsetWidth > window.innerWidth) {
-        robotTargetX = window.innerWidth - robotContainer.offsetWidth;
-        robotContainer.style.left = robotTargetX + 'px';
-      }
-      if (robotTargetY + robotContainer.offsetHeight > window.innerHeight) {
-        robotTargetY = window.innerHeight - robotContainer.offsetHeight;
-        robotContainer.style.top = robotTargetY + 'px';
-      }
+      const rw = robotContainer.offsetWidth;
+      const rh = robotContainer.offsetHeight;
+      if (robotX + rw > window.innerWidth) robotX = window.innerWidth - rw;
+      if (robotY + rh > window.innerHeight) robotY = window.innerHeight - rh;
+      if (robotX < 0) robotX = 0;
+      if (robotY < 0) robotY = 0;
+      updatePosition();
     });
     setTimeout(resizeRobot, 100);
 
@@ -1603,9 +1555,6 @@
       resizeRobot();
     });
 
-    // ============================================================
-    //  INICIALIZAR IDIOMA
-    // ============================================================
     setLanguage('es');
   </script>
 </body>
